@@ -111,8 +111,8 @@ class MouseInput {
 export default class OrbitCamera extends GameObject {
   constructor(entity) {
     super();
-    this.distanceMax = 0;
-    this.distanceMin = 0;
+    this.distanceMax = 700;
+    this.distanceMin = 100;
     this.pitchAngleMax = 90;
     this.pitchAngleMin = -90;
     this.inertiaFactor = 0;
