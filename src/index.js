@@ -1,5 +1,5 @@
 import GameObject from 'gameobject';
-import OrbitCamera from 'environment/orbitCamera';
+import OrbitCamera from 'environment/orbitCamera.ts';
 import { Stage } from 'environment/stages';
 
 const pc = require('playcanvas');

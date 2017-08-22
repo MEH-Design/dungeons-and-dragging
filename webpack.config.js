@@ -5,13 +5,17 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'docs'),
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: '/',
   },
   resolve: {
     modules: ['src', 'node_modules'],
   },
   module: {
     loaders: [
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+      },
       // {
       //   test: /.js$/,
       //   loader: 'babel-loader',
@@ -20,6 +24,6 @@ module.exports = {
       //     path.resolve(__dirname, 'src')
       //   ]
       // }
-    ]
+    ],
   },
 };

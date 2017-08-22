@@ -17,6 +17,7 @@
     "eslint-plugin-import": "^2.7.0",
     "javascript-astar": "^0.4.1",
     "noisejs": "^2.1.0",
+    "ts-loader": "^2.3.3",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"
   },

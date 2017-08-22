@@ -8,6 +8,8 @@
     "no-underscore-dangle": 0,
     "import/no-extraneous-dependencies": 0,
     "import/no-unresolved": 0,
-    "import/extensions": 0
+    "import/extensions": 0,
+    "no-new": 1,
+    "class-methods-use-this": 1
   }
 }
