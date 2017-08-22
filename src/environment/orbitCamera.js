@@ -11,9 +11,8 @@ class MouseInput {
     this.worldDiff = new pc.Vec3();
     this.app = GameObject.getApp();
     this.orbitCamera = orbitCamera;
-    this.mouse = new pc.Mouse(orbitCamera.entity);
-    this.mouse.attach(document.getElementById('canvas'));
-
+    this.mouse = GameObject.getMouse();
+    
     this.entity = orbitCamera.entity;
 
     if (this.orbitCamera) {

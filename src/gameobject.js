@@ -8,6 +8,14 @@ export default class GameObject {
     return GameObject._getResource(GameObject.getApp().root, 'findByName', names);
   }
 
+  static getMouse() {
+    if(!this.mouse) {
+      this.mouse = new pc.Mouse(GameObject.getApp().root);
+      this.mouse.attach(document.getElementById('canvas'));
+    }
+    return this.mouse;
+  }
+
   static getAsset(path, type) {
     this.knownAssets = this.knownAssets || {};
 
