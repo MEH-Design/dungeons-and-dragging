@@ -12,10 +12,10 @@ module.exports = {
   },
   module: {
     loaders: [
-      {
-        test: /\.tsx?$/,
-        loader: 'ts-loader',
-      },
+      // {
+      //   test: /\.tsx?$/,
+      //   loader: 'ts-loader',
+      // },
       // {
       //   test: /.js$/,
       //   loader: 'babel-loader',
@@ -25,5 +25,9 @@ module.exports = {
       //   ]
       // }
     ],
+  },
+  externals: {
+    pc: 'pc',
+    ammo: 'Ammo',
   },
 };
