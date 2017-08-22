@@ -1,5 +1,3 @@
-const pc = require('./playcanvas');
-
 export default class GameObject {
   static _addObject(obj) {
     this.objects = this.objects || [];
