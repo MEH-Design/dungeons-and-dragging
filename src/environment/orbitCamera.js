@@ -64,7 +64,7 @@ class MouseInput {
 
       case pc.MOUSEBUTTON_MIDDLE:
       case pc.MOUSEBUTTON_RIGHT:
-        this.panButtonDown = true;
+        // this.panButtonDown = true;
         break;
       default: break;
     }
@@ -202,7 +202,7 @@ export default class OrbitCamera extends GameObject {
   }
 
   // Moves the camera to look at an entity and all its children so they are all in the view
-  focus(focusEntity) {
+  focus(focusEntity, transition = false) {
     // Calculate an bounding box that encompasses all the models to frame in the camera view
     this._buildAabb(focusEntity, 0);
 
@@ -213,22 +213,28 @@ export default class OrbitCamera extends GameObject {
     distance *= 2;
 
     this.distance = distance;
-
     this._removeInertia();
-
-    this._pivotPoint.copy(this._modelsAabb.center);
+    this._pivotPoint.copy(focusEntity.getPosition());
+    this.transition = transition;
+    // this._pivotPoint.copy(this._modelsAabb.center);
   }
 
   _updatePosition() {
     // Work out the camera position based on the pivot point, pitch, yaw and distance
-    this.entity.setLocalPosition(0, 0, 0);
     this.entity.setLocalEulerAngles(this._pitch, this._yaw, 0);
 
     const position = this.entity.getPosition();
     position.copy(this.entity.forward);
     position.scale(-this._distance * this.distanceFactor);
     position.add(this.pivotPoint);
-    this.entity.setPosition(position);
+
+    const diff = position.clone().sub(this.entity.getPosition());
+    if (diff.length() <= 0.1) {
+      this.transition = false;
+    }
+
+    diff.scale(this.transition ? 0.1 : 1);
+    this.entity.setPosition(this.entity.getPosition().add(diff));
   }
 
 
@@ -265,10 +271,10 @@ export default class OrbitCamera extends GameObject {
         modelsAdded += 1;
       }
     }
-
-    for (i = 1; i <= entity.children.length; i += 1) {
-      modelsAdded += this._buildAabb(entity.children[i], modelsAdded);
-    }
+    //
+    // for (i = 1; i < entity.children.length; i += 1) {
+    //   modelsAdded += this._buildAabb(entity.children[i], modelsAdded);
+    // }
 
     return modelsAdded;
   }

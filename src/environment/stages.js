@@ -16,13 +16,6 @@ const rand = (...arr) => {
   // use 2: rand(min, max)
   return Math.floor((Math.random() * (args[1] - args[0])) + args[0]);
 };
-// class Stage extends GameObject {
-//     constructor(levelCount=5) {
-//         this.currentLevelId = 0;
-//         let level = new Level();
-//     }
-// }
-
 
 export class Terrain extends GameObject {
   _createNoiseMap(options) {
@@ -296,47 +289,89 @@ export class Level extends GameObject {
     });
     this.endZone.model.material = this.attributes.endzoneMaterial;
 
-    this.endZone.setLocalScale(this.attributes.offset.x + (this.attributes.size.x - 1), 10, 5);
-    this.endZone.setLocalPosition(0, 5, this.attributes.offset.y +
-      (this.attributes.size.y / -2.0) + 3);
-
-    super.addTimedUpdate(() => {
-      if (this.isCompleted() && !this.grayedOut) {
-        this.grayedOut = true;
-        this.terrain.grayOut();
-        this.endZone.destroy();
-
-        this.onComplete();
-      }
-    }, 1);
+    this.endZone.setLocalScale(this.attributes.size.x - 1, 10, 5);
+    this.endZone.setLocalPosition(0, 5, (this.attributes.size.y / -2.0) + 3);
+    //
+    // super.addTimedUpdate(() => {
+    //   if (this.isCompleted() && !this.grayedOut) {
+    //     this.grayedOut = true;
+    //     this.terrain.grayOut();
+    //     this.endZone.destroy();
+    //
+    //     this.onComplete();
+    //   }
+    // }, 1);
     this.entity.addChild(this.endZone);
   }
   isCompleted() {
     // TODO: check if all players are in the endzone
-    return false;
+    return true;
   }
   onComplete() {
     // this is usually overridden from an external function
   }
-  constructor(entity, attributes = {}) {
+  constructor(parent, attributes = {}) {
     super();
+    super.setAttributes({
+      size: new pc.Vec2(15, 45),
+      offset: new pc.Vec2(0, 0),
+    }, attributes);
+
     GameObject.getAsset('assets/materials/endzone.json', 'material').then((asset) => {
       super.setAttributes({
-        size: new pc.Vec2(15, 45),
         endzoneMaterial: asset.resource,
-        offset: new pc.Vec2(0, 0),
-      }, attributes);
-
-      this.entity = entity;
-      const terrainEntity = new pc.Entity();
-      this.entity.addChild(terrainEntity);
-
-      this.terrain = new Terrain(terrainEntity, {
-        size: this.attributes.size,
-        offset: this.attributes.offset,
       });
 
       this._createEndZone();
     });
+
+    this.entity = new pc.Entity();
+    this.entity.setPosition(this.attributes.offset.x, 0, this.attributes.offset.y);
+    parent.addChild(this.entity);
+
+    const terrainEntity = new pc.Entity();
+    this.entity.addChild(terrainEntity);
+
+    this.terrain = new Terrain(terrainEntity, {
+      size: this.attributes.size,
+    });
+  }
+}
+
+export class Stage extends GameObject {
+  constructor(entity, orbitCamera, attributes = {}) {
+    super();
+    super.setAttributes({
+      levelCount: 3,
+    }, attributes);
+
+    this.orbitCam = orbitCamera;
+    this.currentOffset = new pc.Vec2(0, 0);
+    this.levels = [];
+
+    this.levelParent = new pc.Entity();
+    entity.addChild(this.levelParent);
+
+    this.createNextLevel();
+  }
+
+  createNextLevel() {
+    const attributes = {
+      offset: this.currentOffset,
+    };
+
+    if (this.levels.length > 0) {
+      attributes.extend = this.levels[this.levels.length - 1].terrain.heightMap[0];
+    }
+
+    const level = new Level(this.levelParent, attributes);
+
+    setTimeout(() => this.orbitCam.focus(level.entity, true), 500);
+
+    this.levels.push(level);
+    this.currentOffset.y -= 43;
+    if (this.levels.length < this.attributes.levelCount) {
+      level.onComplete = () => this.createNextLevel();
+    }
   }
 }

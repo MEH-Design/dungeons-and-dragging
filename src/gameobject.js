@@ -9,9 +9,20 @@ export default class GameObject {
   static getEntity(...names) {
     return GameObject._getResource(GameObject.getApp().root, 'findByName', names);
   }
+
   static getAsset(path, type) {
+    this.knownAssets = this.knownAssets || {};
+
+    if (this.knownAssets[path]) {
+      return new Promise((resolve) => {
+        resolve(this.knownAssets[path]);
+      });
+    }
+
     return new Promise((resolve, reject) => {
       GameObject.getApp().assets.loadFromUrl(path, type, (err, asset) => {
+        GameObject.knownAssets[path] = asset;
+
         if (err) reject(err);
         resolve(asset);
       });
