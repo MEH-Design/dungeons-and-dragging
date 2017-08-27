@@ -1,5 +1,5 @@
-export default class GameObject {
-  static _addObject(obj) {
+export default abstract class GameObject {
+  static _addObject(obj): void {
     this.objects = this.objects || [];
     this.objects.push(obj);
   }

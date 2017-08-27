@@ -18,6 +18,8 @@
     "javascript-astar": "^0.4.1",
     "noisejs": "^2.1.0",
     "ts-loader": "^2.3.3",
+    "typescript": "^2.4.2",
+    "typescript-eslint-parser": "^6.0.1",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"
   },

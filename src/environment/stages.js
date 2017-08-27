@@ -2,8 +2,6 @@ import { Noise } from 'noisejs';
 import { astar, Graph } from 'javascript-astar';
 import GameObject from '../gameobject';
 
-const pc = require('../playcanvas');
-
 const rand = (...arr) => {
   let args = arr;
   if (args.length === 0) {

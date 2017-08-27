@@ -1,9 +1,1 @@
 # Dungeons and Dragging
-"babel-core": "^6.9.1",
-"babel-loader": "^6.2.4",
-"babel-preset-es2015": "^6.9.0",
-"eslint": "^2.13.0",
-"eslint-config-airbnb-base": "^3.0.1",
-"eslint-plugin-import": "^1.8.1",
-"webpack": "^1.13.1",
-"webpack-dev-server": "^1.14.1"

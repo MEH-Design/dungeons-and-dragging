@@ -1,6 +1,5 @@
 import GameObject from 'gameobject';
-
-const pc = require('playcanvas');
+import Player from 'characters/player/player';
 
 class MouseInput {
   constructor(orbitCamera) {
@@ -12,9 +11,8 @@ class MouseInput {
     this.worldDiff = new pc.Vec3();
     this.app = GameObject.getApp();
     this.orbitCamera = orbitCamera;
-    this.mouse = new pc.Mouse(orbitCamera.entity);
-    this.mouse.attach(document.getElementById('canvas'));
-
+    this.mouse = GameObject.getMouse();
+    
     this.entity = orbitCamera.entity;
 
     if (this.orbitCamera) {
@@ -57,14 +55,27 @@ class MouseInput {
   }
 
   onMouseDown(event) {
+    // select players on click
+    const camera = this.entity.camera;
+    const from = camera.screenToWorld(event.x, event.y, camera.nearClip);
+    const to = camera.screenToWorld(event.x, event.y, camera.farClip);
+
+    var result = GameObject.getApp().systems.rigidbody.raycastFirst(from, to);
+    if(result) {
+        const player = Player.getByEntity(result.entity);
+        if(player) {
+          player.select();
+        }
+    }
+    
     switch (event.button) {
       case pc.MOUSEBUTTON_LEFT:
-        this.lookButtonDown = true;
+        // this.lookButtonDown = true;
         break;
 
       case pc.MOUSEBUTTON_MIDDLE:
       case pc.MOUSEBUTTON_RIGHT:
-        // this.panButtonDown = true;
+        this.lookButtonDown = true;
         break;
       default: break;
     }
