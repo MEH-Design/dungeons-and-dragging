@@ -1,18 +1,18 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.tsx',
+  entry: './src/index.ts',
   output: {
     path: path.join(__dirname, 'docs'),
     filename: 'bundle.js',
     publicPath: '/',
   },
   resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js', ]
+    modules: ['src', 'node_modules'],
+    extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js', ]
   },
   module: {
     loaders: [
-<<<<<<< Updated upstream
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
@@ -26,9 +26,9 @@ module.exports = {
       //   ]
       // }
     ],
-=======
-        { test: /\.tsx?$/, loader: 'ts-loader' },
-    ]
->>>>>>> Stashed changes
+  },
+  externals: {
+    pc: 'pc',
+    ammo: 'Ammo',
   },
 };

@@ -12,7 +12,7 @@ class MouseInput {
     this.app = GameObject.getApp();
     this.orbitCamera = orbitCamera;
     this.mouse = GameObject.getMouse();
-    
+
     this.entity = orbitCamera.entity;
 
     if (this.orbitCamera) {
@@ -67,7 +67,7 @@ class MouseInput {
           player.select();
         }
     }
-    
+
     switch (event.button) {
       case pc.MOUSEBUTTON_LEFT:
         // this.lookButtonDown = true;
@@ -120,7 +120,7 @@ class MouseInput {
 
 
 export default class OrbitCamera extends GameObject {
-  constructor(entity) {
+  constructor() {
     super();
     this.distanceMax = 700;
     this.distanceMin = 100;
@@ -128,11 +128,17 @@ export default class OrbitCamera extends GameObject {
     this.pitchAngleMin = -90;
     this.inertiaFactor = 0;
     this.distanceFactor = 0.4;
-    this.focusEntity = entity;
     this.frameOnStart = true;
 
     this.app = GameObject.getApp();
-    this.entity = entity;
+    this.entity = new pc.Entity('OrbitCamera');
+    this.entity.addComponent('camera', {
+      clearColor: new pc.Color(1, 1, 1),
+    });
+    this.entity.setPosition(0, 20, 30);
+    this.entity.setEulerAngles(-30, 0, 0);
+
+    GameObject.getApp().root.addChild(this.entity);
 
     this.distanceBetween = new pc.Vec3();
     this.quatWithoutYaw = new pc.Quat();
@@ -158,7 +164,7 @@ export default class OrbitCamera extends GameObject {
 
     // Find all the models in the scene that are under the focused entity
     this._modelsAabb = new pc.BoundingBox();
-    this._buildAabb(this.focusEntity || this.app.root, 0);
+    this._buildAabb(this.entity || this.app.root, 0);
 
     this.entity.lookAt(this._modelsAabb.center);
 
@@ -183,7 +189,7 @@ export default class OrbitCamera extends GameObject {
     // the focused entity and move the pivot point to entity's position otherwise, set the distance
     // to be between the camera position in the scene and the pivot point
     if (this.frameOnStart) {
-      this.focus(this.focusEntity || this.app.root);
+      this.focus(this.entity || this.app.root);
     } else {
       const distanceBetween = new pc.Vec3();
       distanceBetween.sub2(this.entity.getPosition(), this._pivotPoint);

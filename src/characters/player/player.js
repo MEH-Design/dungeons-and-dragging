@@ -1,10 +1,6 @@
 import Character from 'characters/character.js';
 
 export default class Player extends Character {
-<<<<<<< Updated upstream
-
-}
-=======
   static getByEntity(entity) {
     let result;
     this.players.forEach((player) => {
@@ -14,12 +10,12 @@ export default class Player extends Character {
     });
     return result;
   }
-  
+
   static _addPlayer(player) {
     this.players = this.players || [];
     this.players.push(player);
   }
-  
+
   constructor(parent, position) {
     const entity = new pc.Entity();
     parent.addChild(entity);
@@ -35,13 +31,12 @@ export default class Player extends Character {
     super(entity, position);
     Player._addPlayer(this);
   }
-  
+
   handleTargets() {
     return;
   }
-  
+
   select() {
     console.log('im selected!');
   }
 }
->>>>>>> Stashed changes

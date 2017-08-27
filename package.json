@@ -30,5 +30,8 @@
   "bugs": {
     "url": "https://github.com/MEH-Design/dungeons-and-dragging/issues"
   },
-  "homepage": "https://github.com/MEH-Design/dungeons-and-dragging#readme"
+  "homepage": "https://github.com/MEH-Design/dungeons-and-dragging#readme",
+  "dependencies": {
+    "commonjs": "0.0.1"
+  }
 }
