@@ -1,0 +1,27 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint-microsoft-contrib"
+    ],
+    "jsRules": {},
+    "rules": {
+      "missing-jsdoc": false,
+      "no-default-export": false,
+      "no-parameter-properties": false,
+      "align": false,
+      "no-console": {
+        "severity": "warning"
+      },
+      "no-any": {
+        "severity": "warning"
+      },
+      "typedef": {
+        "options": [
+          "parameter",
+          "property-declaration",
+          "member-variable-declaration"
+        ]
+      }
+    },
+    "rulesDirectory": []
+}

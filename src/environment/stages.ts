@@ -1,8 +1,8 @@
 import { Noise } from 'noisejs';
 import { astar, Graph } from 'javascript-astar';
-import GameObject from '../gameobject';
+import GameObject from 'GameObject';
 
-const rand = (...arr) => {
+const rand = (...arr: number[]) => {
   let args = arr;
   if (args.length === 0) {
     args = [2];
@@ -15,12 +15,67 @@ const rand = (...arr) => {
   return Math.floor((Math.random() * (args[1] - args[0])) + args[0]);
 };
 
+interface INoiseOptions {
+  extend?: number[]
+}
+
 export class Terrain extends GameObject {
-  _createNoiseMap(options) {
+  entity: any;
+  topLeft: any;
+  heightMap: number[][];
+  normals: number[][];
+  model: any;
+
+  constructor(parent: any, attributes = {}) {
+    super();
+    Promise.all([
+      GameObject.getAsset('assets/materials/grass.json', 'material'),
+      GameObject.getAsset('assets/materials/water.json', 'material'),
+      GameObject.getAsset('assets/materials/gray.json', 'material'),
+    ]).then((arr) => {
+      const [terrainMaterial, waterMaterial, grayTerrainMaterial] =
+      arr.map(asset => asset.resource);
+      const defaultAttributes = {
+        offset: new pc.Vec2(0, 0),
+        size: new pc.Vec2(15, 45),
+        terrainMaterial,
+        waterMaterial,
+        grayTerrainMaterial,
+        waterLevel: 1,
+        meshHeightMultiplier: 5,
+        riverProbability: 1,
+        riverDepth: 0,
+        stoneRange: [2, 7],
+        minStoneOffset: 0.1,
+        groundThickness: 0.1,
+      };
+
+      super.setAttributes(defaultAttributes, attributes);
+      this.entity = parent;
+      this.topLeft = new pc.Vec2(-(this.attributes.offset.x + ((this.attributes.size.x - 1) / 2.0)),
+        this.attributes.offset.y + ((this.attributes.size.y - 1) / 2.0));
+
+      // this has to be called first in order for this.heightMap to exist
+      const noiseOptions: INoiseOptions = {};
+      if (this.attributes.extend) {
+        noiseOptions.extend = this.attributes.extend;
+      }
+      this._createNoiseMap(noiseOptions);
+
+      // these need this.heightMap
+      this._createMesh();
+      this._createGround();
+      this._createWater();
+      this._createRocks();
+    });
+  }
+
+  // TODO: make this static
+  _createNoiseMap(options: INoiseOptions) {
     const mapWidth = this.attributes.size.x - 2;
     const mapHeight = this.attributes.size.y - 2;
 
-    let noiseMap = [];
+    let noiseMap: number[][] = [];
     const noise = new Noise(Math.random());
     for (let y = 0; y < mapHeight; y += 1) {
       noiseMap[y] = [];
@@ -34,17 +89,23 @@ export class Terrain extends GameObject {
     }
 
     if (Math.random() <= this.attributes.riverProbability) {
-      const edges = {
+      interface IEdges {
+        x: [number, number],
+        y: [number, number],
+        [key: string]: [number, number]
+      }
+
+      const edges: IEdges = {
         x: [0, mapHeight - 1],
         y: [0, mapWidth - 1],
       };
 
       for (let i = 0; i < 2; i += 1) {
-        const key = Object.keys(edges)[rand()];
+        const key: string = Object.keys(edges)[rand()];
         edges[key].splice(rand(edges[key].length), 1);
       }
 
-      const actualEdges = [];
+      const actualEdges: number[][] = [];
       Object.keys(edges).forEach((key) => {
         edges[key].forEach((val) => {
           let xCoord;
@@ -77,7 +138,7 @@ export class Terrain extends GameObject {
 
       noiseMask = noiseMap.map(row => row.map(point => point + diffToMax));
 
-      const trySet = (x, y) => {
+      const trySet = (x: number, y: number) => {
         if (x < noiseMap.length && y < noiseMap[0].length) {
           noiseMap[x][y] = 0.5 - (this.attributes.riverDepth / 2);
         }
@@ -218,7 +279,7 @@ export class Terrain extends GameObject {
     }
   }
 
-  coord2pos(x, y) {
+  coord2pos(x: number, y: number) {
     return [(this.topLeft.x + x),
       (this.heightMap[y][x] ** 3) * this.attributes.meshHeightMultiplier,
       (this.topLeft.y - y),
@@ -233,55 +294,14 @@ export class Terrain extends GameObject {
     this.entity.findByName('Water').enabled = false;
     this.entity.findByName('Ground').model.material = this.attributes.grayTerrainMaterial;
   }
-
-  constructor(parent, attributes = {}) {
-    super();
-    Promise.all([
-      GameObject.getAsset('assets/materials/grass.json', 'material'),
-      GameObject.getAsset('assets/materials/water.json', 'material'),
-      GameObject.getAsset('assets/materials/gray.json', 'material'),
-    ]).then((arr) => {
-      const [terrainMaterial, waterMaterial, grayTerrainMaterial] =
-      arr.map(asset => asset.resource);
-      const defaultAttributes = {
-        offset: new pc.Vec2(0, 0),
-        size: new pc.Vec2(15, 45),
-        terrainMaterial,
-        waterMaterial,
-        grayTerrainMaterial,
-        waterLevel: 1,
-        meshHeightMultiplier: 5,
-        riverProbability: 1,
-        riverDepth: 0,
-        stoneRange: [2, 7],
-        minStoneOffset: 0.1,
-        groundThickness: 0.1,
-      };
-
-      super.setAttributes(defaultAttributes, attributes);
-      this.entity = parent;
-      this.topLeft = new pc.Vec2(-(this.attributes.offset.x + ((this.attributes.size.x - 1) / 2.0)),
-        this.attributes.offset.y + ((this.attributes.size.y - 1) / 2.0));
-
-      // this has to be called first in order for this.heightMap to exist
-      const noiseOptions = {};
-      if (this.attributes.extend) {
-        noiseOptions.extend = this.attributes.extend;
-      }
-      this._createNoiseMap(noiseOptions);
-
-      // these need this.heightMap
-      this._createMesh();
-      this._createGround();
-      this._createWater();
-      this._createRocks();
-    });
-  }
 }
 
 export class Level extends GameObject {
+  endZone = new pc.Entity();
+  entity = new pc.Entity();
+  terrain: Terrain;
+
   _createEndZone() {
-    this.endZone = new pc.Entity();
     this.endZone.addComponent('model', {
       type: 'box',
     });
@@ -308,7 +328,8 @@ export class Level extends GameObject {
   onComplete() {
     // this is usually overridden from an external function
   }
-  constructor(parent, attributes = {}) {
+
+  constructor(parent: any, attributes = {}) {
     super();
     super.setAttributes({
       size: new pc.Vec2(15, 45),
@@ -323,7 +344,6 @@ export class Level extends GameObject {
       this._createEndZone();
     });
 
-    this.entity = new pc.Entity();
     this.entity.setPosition(this.attributes.offset.x, 0, this.attributes.offset.y);
     parent.addChild(this.entity);
 
@@ -337,19 +357,20 @@ export class Level extends GameObject {
 }
 
 export class Stage extends GameObject {
-  constructor(entity, orbitCamera, attributes = {}) {
+  levels: any = [];
+  currentOffset: any = new pc.Vec2(0, 0);
+  orbitCam: any;
+  levelParent: any = new pc.Entity();
+
+
+  constructor(entity: any, orbitCamera: any, attributes = {}) {
     super();
     super.setAttributes({
       levelCount: 3,
     }, attributes);
 
     this.orbitCam = orbitCamera;
-    this.currentOffset = new pc.Vec2(0, 0);
-    this.levels = [];
-
-    this.levelParent = new pc.Entity();
     entity.addChild(this.levelParent);
-
     this.createNextLevel();
   }
 
@@ -359,7 +380,7 @@ export class Stage extends GameObject {
     };
 
     if (this.levels.length > 0) {
-      attributes.extend = this.levels[this.levels.length - 1].terrain.heightMap[0];
+      // attributes.extend = this.levels[this.levels.length - 1].terrain.heightMap[0];
     }
 
     const level = new Level(this.levelParent, attributes);

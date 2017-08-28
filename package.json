@@ -13,15 +13,15 @@
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
     "eslint": "^4.5.0",
-    "eslint-config-airbnb-base": "^11.3.1",
-    "eslint-plugin-import": "^2.7.0",
     "javascript-astar": "^0.4.1",
     "noisejs": "^2.1.0",
     "ts-loader": "^2.3.3",
     "typescript": "^2.4.2",
-    "typescript-eslint-parser": "^6.0.1",
     "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.7.1"
+    "webpack-dev-server": "^2.7.1",
+    "commonjs": "0.0.1",
+    "tslint": "^5.7.0",
+    "tslint-microsoft-contrib": "^5.0.1"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/MEH-Design/dungeons-and-dragging#readme",
   "dependencies": {
-    "commonjs": "0.0.1"
+    "@types/javascript-astar": "0.0.29",
+    "@types/noisejs": "0.0.28"
   }
 }

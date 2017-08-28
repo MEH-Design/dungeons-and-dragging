@@ -60,101 +60,1560 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/*!***************************!*\
-  !*** ./src/gameobject.ts ***!
-  \***************************/
-/*! no static exports found */
-/*! exports used: default */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("(void 0)([], function (exports_1, context_1) {\n    \"use strict\";\n    var __moduleName = context_1 && context_1.id;\n    var GameObject;\n    return {\n        setters: [],\n        execute: function () {\n            GameObject = class GameObject {\n                constructor() {\n                    GameObject._addObject(this);\n                    this.attributes = {};\n                    this.timedUpdates = [];\n                }\n                setAttributes(...attributes) {\n                    attributes.forEach(Object.assign.bind(this, this.attributes));\n                }\n                static _addObject(obj) {\n                    this.objects.push(obj);\n                }\n                static getEntity(...names) {\n                    return GameObject._getResource(GameObject.getApp().root, 'findByName', names);\n                }\n                static getMouse() {\n                    if (!this.mouse) {\n                        this.mouse = new pc.Mouse(GameObject.getApp().root);\n                        this.mouse.attach(document.getElementById('canvas'));\n                    }\n                    return this.mouse;\n                }\n                static getAsset(path, type) {\n                    if (this.knownAssets[path]) {\n                        return new Promise((resolve) => {\n                            resolve(this.knownAssets[path]);\n                        });\n                    }\n                    return new Promise((resolve, reject) => {\n                        GameObject.getApp().assets.loadFromUrl(path, type, (err, asset) => {\n                            GameObject.knownAssets[path] = asset;\n                            if (err)\n                                reject(err);\n                            resolve(asset);\n                        });\n                    });\n                }\n                static requireOverride() {\n                    const error = new Error();\n                    const functionName = ((error.stack).split('at ')[2]).trim().split(' ')[0];\n                    error.message = `${functionName} needs to be overriden`;\n                    throw error;\n                }\n                static _getResource(root, functionName, names) {\n                    let resource;\n                    names.forEach((name) => {\n                        resource = (resource || root)[functionName](name);\n                    });\n                    return resource;\n                }\n                static getApp() {\n                    return pc.Application.getApplication();\n                }\n                addTimedUpdate(callback, interval = 0.2) {\n                    this.timedUpdates.push({\n                        callback: callback.bind(this),\n                        interval,\n                        counter: 0\n                    });\n                }\n                update(dt) {\n                    this.timedUpdates.forEach((tu) => {\n                        tu.counter += dt;\n                        if (tu.counter >= tu.interval) {\n                            tu.callback(tu.counter);\n                            tu.counter = 0;\n                        }\n                    });\n                }\n            };\n            GameObject.objects = [];\n            exports_1(\"default\", GameObject);\n        }\n    };\n});\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL3NyYy9nYW1lb2JqZWN0LnRzPzA3N2UiXSwic291cmNlc0NvbnRlbnQiOlsiU3lzdGVtLnJlZ2lzdGVyKFtdLCBmdW5jdGlvbiAoZXhwb3J0c18xLCBjb250ZXh0XzEpIHtcbiAgICBcInVzZSBzdHJpY3RcIjtcbiAgICB2YXIgX19tb2R1bGVOYW1lID0gY29udGV4dF8xICYmIGNvbnRleHRfMS5pZDtcbiAgICB2YXIgR2FtZU9iamVjdDtcbiAgICByZXR1cm4ge1xuICAgICAgICBzZXR0ZXJzOiBbXSxcbiAgICAgICAgZXhlY3V0ZTogZnVuY3Rpb24gKCkge1xuICAgICAgICAgICAgR2FtZU9iamVjdCA9IGNsYXNzIEdhbWVPYmplY3Qge1xuICAgICAgICAgICAgICAgIGNvbnN0cnVjdG9yKCkge1xuICAgICAgICAgICAgICAgICAgICBHYW1lT2JqZWN0Ll9hZGRPYmplY3QodGhpcyk7XG4gICAgICAgICAgICAgICAgICAgIHRoaXMuYXR0cmlidXRlcyA9IHt9O1xuICAgICAgICAgICAgICAgICAgICB0aGlzLnRpbWVkVXBkYXRlcyA9IFtdO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBzZXRBdHRyaWJ1dGVzKC4uLmF0dHJpYnV0ZXMpIHtcbiAgICAgICAgICAgICAgICAgICAgYXR0cmlidXRlcy5mb3JFYWNoKE9iamVjdC5hc3NpZ24uYmluZCh0aGlzLCB0aGlzLmF0dHJpYnV0ZXMpKTtcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgc3RhdGljIF9hZGRPYmplY3Qob2JqKSB7XG4gICAgICAgICAgICAgICAgICAgIHRoaXMub2JqZWN0cy5wdXNoKG9iaik7XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIHN0YXRpYyBnZXRFbnRpdHkoLi4ubmFtZXMpIHtcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIEdhbWVPYmplY3QuX2dldFJlc291cmNlKEdhbWVPYmplY3QuZ2V0QXBwKCkucm9vdCwgJ2ZpbmRCeU5hbWUnLCBuYW1lcyk7XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIHN0YXRpYyBnZXRNb3VzZSgpIHtcbiAgICAgICAgICAgICAgICAgICAgaWYgKCF0aGlzLm1vdXNlKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLm1vdXNlID0gbmV3IHBjLk1vdXNlKEdhbWVPYmplY3QuZ2V0QXBwKCkucm9vdCk7XG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLm1vdXNlLmF0dGFjaChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnY2FudmFzJykpO1xuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgIHJldHVybiB0aGlzLm1vdXNlO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBzdGF0aWMgZ2V0QXNzZXQocGF0aCwgdHlwZSkge1xuICAgICAgICAgICAgICAgICAgICBpZiAodGhpcy5rbm93bkFzc2V0c1twYXRoXSkge1xuICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIG5ldyBQcm9taXNlKChyZXNvbHZlKSA9PiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb2x2ZSh0aGlzLmtub3duQXNzZXRzW3BhdGhdKTtcbiAgICAgICAgICAgICAgICAgICAgICAgIH0pO1xuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgIHJldHVybiBuZXcgUHJvbWlzZSgocmVzb2x2ZSwgcmVqZWN0KSA9PiB7XG4gICAgICAgICAgICAgICAgICAgICAgICBHYW1lT2JqZWN0LmdldEFwcCgpLmFzc2V0cy5sb2FkRnJvbVVybChwYXRoLCB0eXBlLCAoZXJyLCBhc3NldCkgPT4ge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdhbWVPYmplY3Qua25vd25Bc3NldHNbcGF0aF0gPSBhc3NldDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZiAoZXJyKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWplY3QoZXJyKTtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvbHZlKGFzc2V0KTtcbiAgICAgICAgICAgICAgICAgICAgICAgIH0pO1xuICAgICAgICAgICAgICAgICAgICB9KTtcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgc3RhdGljIHJlcXVpcmVPdmVycmlkZSgpIHtcbiAgICAgICAgICAgICAgICAgICAgY29uc3QgZXJyb3IgPSBuZXcgRXJyb3IoKTtcbiAgICAgICAgICAgICAgICAgICAgY29uc3QgZnVuY3Rpb25OYW1lID0gKChlcnJvci5zdGFjaykuc3BsaXQoJ2F0ICcpWzJdKS50cmltKCkuc3BsaXQoJyAnKVswXTtcbiAgICAgICAgICAgICAgICAgICAgZXJyb3IubWVzc2FnZSA9IGAke2Z1bmN0aW9uTmFtZX0gbmVlZHMgdG8gYmUgb3ZlcnJpZGVuYDtcbiAgICAgICAgICAgICAgICAgICAgdGhyb3cgZXJyb3I7XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIHN0YXRpYyBfZ2V0UmVzb3VyY2Uocm9vdCwgZnVuY3Rpb25OYW1lLCBuYW1lcykge1xuICAgICAgICAgICAgICAgICAgICBsZXQgcmVzb3VyY2U7XG4gICAgICAgICAgICAgICAgICAgIG5hbWVzLmZvckVhY2goKG5hbWUpID0+IHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID0gKHJlc291cmNlIHx8IHJvb3QpW2Z1bmN0aW9uTmFtZV0obmFtZSk7XG4gICAgICAgICAgICAgICAgICAgIH0pO1xuICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmVzb3VyY2U7XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIHN0YXRpYyBnZXRBcHAoKSB7XG4gICAgICAgICAgICAgICAgICAgIHJldHVybiBwYy5BcHBsaWNhdGlvbi5nZXRBcHBsaWNhdGlvbigpO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBhZGRUaW1lZFVwZGF0ZShjYWxsYmFjaywgaW50ZXJ2YWwgPSAwLjIpIHtcbiAgICAgICAgICAgICAgICAgICAgdGhpcy50aW1lZFVwZGF0ZXMucHVzaCh7XG4gICAgICAgICAgICAgICAgICAgICAgICBjYWxsYmFjazogY2FsbGJhY2suYmluZCh0aGlzKSxcbiAgICAgICAgICAgICAgICAgICAgICAgIGludGVydmFsLFxuICAgICAgICAgICAgICAgICAgICAgICAgY291bnRlcjogMFxuICAgICAgICAgICAgICAgICAgICB9KTtcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgdXBkYXRlKGR0KSB7XG4gICAgICAgICAgICAgICAgICAgIHRoaXMudGltZWRVcGRhdGVzLmZvckVhY2goKHR1KSA9PiB7XG4gICAgICAgICAgICAgICAgICAgICAgICB0dS5jb3VudGVyICs9IGR0O1xuICAgICAgICAgICAgICAgICAgICAgICAgaWYgKHR1LmNvdW50ZXIgPj0gdHUuaW50ZXJ2YWwpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0dS5jYWxsYmFjayh0dS5jb3VudGVyKTtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0dS5jb3VudGVyID0gMDtcbiAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgfSk7XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfTtcbiAgICAgICAgICAgIEdhbWVPYmplY3Qub2JqZWN0cyA9IFtdO1xuICAgICAgICAgICAgZXhwb3J0c18xKFwiZGVmYXVsdFwiLCBHYW1lT2JqZWN0KTtcbiAgICAgICAgfVxuICAgIH07XG59KTtcblxuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIC4vc3JjL2dhbWVvYmplY3QudHNcbi8vIG1vZHVsZSBpZCA9IDBcbi8vIG1vZHVsZSBjaHVua3MgPSAwIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTsiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///0\n");
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class GameObject {
+    constructor() {
+        this.timedUpdates = [];
+        this.attributes = {};
+        GameObject.addObject(this);
+    }
+    static addObject(obj) {
+        this.objects.push(obj);
+    }
+    static getEntity(...names) {
+        return GameObject.getResource(GameObject.getApp().root, 'findByName', names);
+    }
+    static getMouse() {
+        if (!GameObject.mouse) {
+            GameObject.mouse = new pc.Mouse(GameObject.getApp().root);
+            GameObject.mouse.attach(document.getElementById('canvas'));
+        }
+        return this.mouse;
+    }
+    static getAsset(path, assetType) {
+        if (this.knownAssets[path]) {
+            return new Promise((resolve) => {
+                resolve(this.knownAssets[path]);
+            });
+        }
+        return new Promise((resolve, reject) => {
+            GameObject.getApp().assets.loadFromUrl(path, assetType, (err, asset) => {
+                GameObject.knownAssets[path] = asset;
+                if (err) {
+                    reject(err);
+                }
+                resolve(asset);
+            });
+        });
+    }
+    static requireOverride() {
+        const error = new Error();
+        const functionName = ((error.stack).split('at ')[2]).trim().split(' ')[0];
+        error.message = `${functionName} needs to be overriden`;
+        throw error;
+    }
+    static getResource(root, functionName, names) {
+        let resource;
+        names.forEach((name) => {
+            resource = (resource || root)[functionName](name);
+        });
+        return resource;
+    }
+    static getApp() {
+        return pc.Application.getApplication();
+    }
+    setAttributes(...attributes) {
+        attributes.forEach(Object.assign.bind(this, this.attributes));
+    }
+    addTimedUpdate(callback, interval = 0.2) {
+        this.timedUpdates.push({
+            callback: callback.bind(this),
+            interval,
+            counter: 0
+        });
+    }
+    update(dt) {
+        this.timedUpdates.forEach((tu) => {
+            tu.counter += dt;
+            if (tu.counter >= tu.interval) {
+                tu.callback(tu.counter);
+                tu.counter = 0;
+            }
+        });
+    }
+}
+GameObject.objects = [];
+GameObject.knownAssets = {};
+exports.default = GameObject;
+
 
 /***/ }),
 /* 1 */
-/*!*****************************************!*\
-  !*** ./src/characters/player/player.js ***!
-  \*****************************************/
-/*! exports provided: default */
-/*! exports used: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_characters_character_js__ = __webpack_require__(/*! characters/character.js */ 4);\n\n\nclass Player extends __WEBPACK_IMPORTED_MODULE_0_characters_character_js__[\"a\" /* default */] {\n  static getByEntity(entity) {\n    let result;\n    this.players.forEach((player) => {\n      if(player.entity === entity) {\n        result = player;\n      }\n    });\n    return result;\n  }\n\n  static _addPlayer(player) {\n    this.players = this.players || [];\n    this.players.push(player);\n  }\n\n  constructor(parent, position) {\n    const entity = new pc.Entity();\n    parent.addChild(entity);\n\n    entity.addComponent('model', {\n      type: 'box',\n    });\n\n    entity.addComponent('collision', {\n      type: 'box'\n    });\n\n    super(entity, position);\n    Player._addPlayer(this);\n  }\n\n  handleTargets() {\n    return;\n  }\n\n  select() {\n    console.log('im selected!');\n  }\n}\n/* harmony export (immutable) */ __webpack_exports__[\"a\"] = Player;\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMS5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL3NyYy9jaGFyYWN0ZXJzL3BsYXllci9wbGF5ZXIuanM/ZmQ4YSJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgQ2hhcmFjdGVyIGZyb20gJ2NoYXJhY3RlcnMvY2hhcmFjdGVyLmpzJztcblxuZXhwb3J0IGRlZmF1bHQgY2xhc3MgUGxheWVyIGV4dGVuZHMgQ2hhcmFjdGVyIHtcbiAgc3RhdGljIGdldEJ5RW50aXR5KGVudGl0eSkge1xuICAgIGxldCByZXN1bHQ7XG4gICAgdGhpcy5wbGF5ZXJzLmZvckVhY2goKHBsYXllcikgPT4ge1xuICAgICAgaWYocGxheWVyLmVudGl0eSA9PT0gZW50aXR5KSB7XG4gICAgICAgIHJlc3VsdCA9IHBsYXllcjtcbiAgICAgIH1cbiAgICB9KTtcbiAgICByZXR1cm4gcmVzdWx0O1xuICB9XG5cbiAgc3RhdGljIF9hZGRQbGF5ZXIocGxheWVyKSB7XG4gICAgdGhpcy5wbGF5ZXJzID0gdGhpcy5wbGF5ZXJzIHx8IFtdO1xuICAgIHRoaXMucGxheWVycy5wdXNoKHBsYXllcik7XG4gIH1cblxuICBjb25zdHJ1Y3RvcihwYXJlbnQsIHBvc2l0aW9uKSB7XG4gICAgY29uc3QgZW50aXR5ID0gbmV3IHBjLkVudGl0eSgpO1xuICAgIHBhcmVudC5hZGRDaGlsZChlbnRpdHkpO1xuXG4gICAgZW50aXR5LmFkZENvbXBvbmVudCgnbW9kZWwnLCB7XG4gICAgICB0eXBlOiAnYm94JyxcbiAgICB9KTtcblxuICAgIGVudGl0eS5hZGRDb21wb25lbnQoJ2NvbGxpc2lvbicsIHtcbiAgICAgIHR5cGU6ICdib3gnXG4gICAgfSk7XG5cbiAgICBzdXBlcihlbnRpdHksIHBvc2l0aW9uKTtcbiAgICBQbGF5ZXIuX2FkZFBsYXllcih0aGlzKTtcbiAgfVxuXG4gIGhhbmRsZVRhcmdldHMoKSB7XG4gICAgcmV0dXJuO1xuICB9XG5cbiAgc2VsZWN0KCkge1xuICAgIGNvbnNvbGUubG9nKCdpbSBzZWxlY3RlZCEnKTtcbiAgfVxufVxuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9zcmMvY2hhcmFjdGVycy9wbGF5ZXIvcGxheWVyLmpzXG4vLyBtb2R1bGUgaWQgPSAxXG4vLyBtb2R1bGUgY2h1bmtzID0gMCJdLCJtYXBwaW5ncyI6IkFBQUE7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFBQTtBQUFBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///1\n");
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const Player_1 = __webpack_require__(2);
+const OrbitCamera_1 = __webpack_require__(5);
+const stages_1 = __webpack_require__(6);
+const GameObject_1 = __webpack_require__(0);
+class App extends pc.Application {
+    constructor(...args) {
+        super(...args);
+        this.lights = [];
+        super.start();
+        super.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);
+        super.setCanvasResolution(pc.RESOLUTION_AUTO);
+        window.addEventListener('resize', () => {
+            super.resizeCanvas();
+        });
+    }
+    start() {
+        this.lights.push(this.createLight(new pc.Color(1, 1, 1), new pc.Vec3(45, 0, 0)));
+        this.camera = new OrbitCamera_1.default(new pc.Color(1, 1, 1), new pc.Vec3(0, 20, 30), new pc.Vec3(-30, 0, 0));
+        const stageEntity = new pc.Entity();
+        const playerEntity = new pc.Entity();
+        this.root.addChild(stageEntity);
+        this.root.addChild(playerEntity);
+        this.stage = new stages_1.Stage(stageEntity, this.camera);
+        this.player = new Player_1.default(playerEntity, new pc.Vec3(0, 20, 0));
+    }
+    onUpdate(callback) {
+        this.on('update', callback);
+    }
+    createLight(color, angle) {
+        const light = new pc.Entity('light');
+        light.addComponent('light', {
+            color: new pc.Color(1, 1, 1)
+        });
+        this.root.addChild(light);
+        light.setEulerAngles(45, 0, 0);
+    }
+}
+const app = new App(document.getElementById('canvas'), {});
+app.onUpdate((dt) => {
+    GameObject_1.default.objects.forEach((obj) => obj.update(dt));
+});
+exports.default = app;
+
 
 /***/ }),
 /* 2 */
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
-/*! exports provided:  */
-/*! all exports used */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_gameobject__ = __webpack_require__(/*! gameobject */ 0);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_gameobject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_gameobject__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_environment_orbitCamera__ = __webpack_require__(/*! environment/orbitCamera */ 3);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_environment_stages__ = __webpack_require__(/*! environment/stages */ 5);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_characters_player_player__ = __webpack_require__(/*! characters/player/player */ 1);\n// import Test from 'test';\n\n\n\n\n\nconst canvas = document.getElementById('canvas');\nconst app = new pc.Application(canvas, { });\napp.start();\n\n// fill the available space at full resolution\napp.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);\napp.setCanvasResolution(pc.RESOLUTION_AUTO);\n\n\n// ensure canvas is resized when window changes size\nwindow.addEventListener('resize', () => {\n  app.resizeCanvas();\n});\n\n// create camera entity\nconst camera = new pc.Entity('camera');\ncamera.addComponent('camera', {\n  clearColor: new pc.Color(1, 1, 1),\n});\n\n// create directional light entity\nconst light = new pc.Entity('light');\nlight.addComponent('light', {\n  color: new pc.Color(1, 1, 1),\n});\n\n// add to hierarchy\napp.root.addChild(camera);\napp.root.addChild(light);\n\n// set up initial positions and orientations\ncamera.setPosition(0, 20, 30);\ncamera.setEulerAngles(-30, 0, 0);\nconst orbitCamera = new __WEBPACK_IMPORTED_MODULE_1_environment_orbitCamera__[\"a\" /* default */](camera);\n\nlight.setEulerAngles(45, 0, 0);\n\nconst stageEntity = new pc.Entity();\nconst playerEntity = new pc.Entity();\n\napp.root.addChild(stageEntity);\napp.root.addChild(playerEntity);\n\nnew __WEBPACK_IMPORTED_MODULE_2_environment_stages__[\"a\" /* Stage */](stageEntity, orbitCamera);\nnew __WEBPACK_IMPORTED_MODULE_3_characters_player_player__[\"a\" /* default */](playerEntity, new pc.Vec3(0, 20, 0));\n\napp.on('update', (dt) => {\n  __WEBPACK_IMPORTED_MODULE_0_gameobject___default.a.objects.forEach(obj => obj.update(dt));\n});\n//\n// app.assets.loadFromUrl('/assets/clouds.jpg', 'texture', (err, asset) => {\n//   const material = new pc.PhongMaterial();\n//   material.diffuseMap = asset.resource;\n//   material.update();\n//   box.model.model.meshInstances[0].material = material;\n// });\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMi5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL3NyYy9pbmRleC5qcz85NTUyIl0sInNvdXJjZXNDb250ZW50IjpbIi8vIGltcG9ydCBUZXN0IGZyb20gJ3Rlc3QnO1xuaW1wb3J0IEdhbWVPYmplY3QgZnJvbSAnZ2FtZW9iamVjdCc7XG5pbXBvcnQgT3JiaXRDYW1lcmEgZnJvbSAnZW52aXJvbm1lbnQvb3JiaXRDYW1lcmEnO1xuaW1wb3J0IHsgU3RhZ2UgfSBmcm9tICdlbnZpcm9ubWVudC9zdGFnZXMnO1xuaW1wb3J0IFBsYXllciBmcm9tICdjaGFyYWN0ZXJzL3BsYXllci9wbGF5ZXInO1xuXG5jb25zdCBjYW52YXMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnY2FudmFzJyk7XG5jb25zdCBhcHAgPSBuZXcgcGMuQXBwbGljYXRpb24oY2FudmFzLCB7IH0pO1xuYXBwLnN0YXJ0KCk7XG5cbi8vIGZpbGwgdGhlIGF2YWlsYWJsZSBzcGFjZSBhdCBmdWxsIHJlc29sdXRpb25cbmFwcC5zZXRDYW52YXNGaWxsTW9kZShwYy5GSUxMTU9ERV9GSUxMX1dJTkRPVyk7XG5hcHAuc2V0Q2FudmFzUmVzb2x1dGlvbihwYy5SRVNPTFVUSU9OX0FVVE8pO1xuXG5cbi8vIGVuc3VyZSBjYW52YXMgaXMgcmVzaXplZCB3aGVuIHdpbmRvdyBjaGFuZ2VzIHNpemVcbndpbmRvdy5hZGRFdmVudExpc3RlbmVyKCdyZXNpemUnLCAoKSA9PiB7XG4gIGFwcC5yZXNpemVDYW52YXMoKTtcbn0pO1xuXG4vLyBjcmVhdGUgY2FtZXJhIGVudGl0eVxuY29uc3QgY2FtZXJhID0gbmV3IHBjLkVudGl0eSgnY2FtZXJhJyk7XG5jYW1lcmEuYWRkQ29tcG9uZW50KCdjYW1lcmEnLCB7XG4gIGNsZWFyQ29sb3I6IG5ldyBwYy5Db2xvcigxLCAxLCAxKSxcbn0pO1xuXG4vLyBjcmVhdGUgZGlyZWN0aW9uYWwgbGlnaHQgZW50aXR5XG5jb25zdCBsaWdodCA9IG5ldyBwYy5FbnRpdHkoJ2xpZ2h0Jyk7XG5saWdodC5hZGRDb21wb25lbnQoJ2xpZ2h0Jywge1xuICBjb2xvcjogbmV3IHBjLkNvbG9yKDEsIDEsIDEpLFxufSk7XG5cbi8vIGFkZCB0byBoaWVyYXJjaHlcbmFwcC5yb290LmFkZENoaWxkKGNhbWVyYSk7XG5hcHAucm9vdC5hZGRDaGlsZChsaWdodCk7XG5cbi8vIHNldCB1cCBpbml0aWFsIHBvc2l0aW9ucyBhbmQgb3JpZW50YXRpb25zXG5jYW1lcmEuc2V0UG9zaXRpb24oMCwgMjAsIDMwKTtcbmNhbWVyYS5zZXRFdWxlckFuZ2xlcygtMzAsIDAsIDApO1xuY29uc3Qgb3JiaXRDYW1lcmEgPSBuZXcgT3JiaXRDYW1lcmEoY2FtZXJhKTtcblxubGlnaHQuc2V0RXVsZXJBbmdsZXMoNDUsIDAsIDApO1xuXG5jb25zdCBzdGFnZUVudGl0eSA9IG5ldyBwYy5FbnRpdHkoKTtcbmNvbnN0IHBsYXllckVudGl0eSA9IG5ldyBwYy5FbnRpdHkoKTtcblxuYXBwLnJvb3QuYWRkQ2hpbGQoc3RhZ2VFbnRpdHkpO1xuYXBwLnJvb3QuYWRkQ2hpbGQocGxheWVyRW50aXR5KTtcblxubmV3IFN0YWdlKHN0YWdlRW50aXR5LCBvcmJpdENhbWVyYSk7XG5uZXcgUGxheWVyKHBsYXllckVudGl0eSwgbmV3IHBjLlZlYzMoMCwgMjAsIDApKTtcblxuYXBwLm9uKCd1cGRhdGUnLCAoZHQpID0+IHtcbiAgR2FtZU9iamVjdC5vYmplY3RzLmZvckVhY2gob2JqID0+IG9iai51cGRhdGUoZHQpKTtcbn0pO1xuLy9cbi8vIGFwcC5hc3NldHMubG9hZEZyb21VcmwoJy9hc3NldHMvY2xvdWRzLmpwZycsICd0ZXh0dXJlJywgKGVyciwgYXNzZXQpID0+IHtcbi8vICAgY29uc3QgbWF0ZXJpYWwgPSBuZXcgcGMuUGhvbmdNYXRlcmlhbCgpO1xuLy8gICBtYXRlcmlhbC5kaWZmdXNlTWFwID0gYXNzZXQucmVzb3VyY2U7XG4vLyAgIG1hdGVyaWFsLnVwZGF0ZSgpO1xuLy8gICBib3gubW9kZWwubW9kZWwubWVzaEluc3RhbmNlc1swXS5tYXRlcmlhbCA9IG1hdGVyaWFsO1xuLy8gfSk7XG5cblxuXG4vLy8vLy8vLy8vLy8vLy8vLy9cbi8vIFdFQlBBQ0sgRk9PVEVSXG4vLyAuL3NyYy9pbmRleC5qc1xuLy8gbW9kdWxlIGlkID0gMlxuLy8gbW9kdWxlIGNodW5rcyA9IDAiXSwibWFwcGluZ3MiOiJBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7Iiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///2\n");
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const Character_1 = __webpack_require__(4);
+class Player extends Character_1.default {
+    constructor(parent, position) {
+        const entity = new pc.Entity();
+        parent.addChild(entity);
+        entity.addComponent('model', {
+            type: 'box'
+        });
+        entity.addComponent('collision', {
+            type: 'box'
+        });
+        super(entity, position);
+        Player.addPlayer(this);
+    }
+    static getByEntity(entity) {
+        let result;
+        this.players.forEach((player) => {
+            if (player.entity === entity) {
+                result = player;
+            }
+        });
+        return result;
+    }
+    static addPlayer(player) {
+        this.players = this.players || [];
+        this.players.push(player);
+    }
+    select() {
+        console.log('im selected!');
+    }
+    handleTargets() {
+        return;
+    }
+}
+Player.players = [];
+exports.default = Player;
+
 
 /***/ }),
 /* 3 */
-/*!****************************************!*\
-  !*** ./src/environment/orbitCamera.js ***!
-  \****************************************/
-/*! exports provided: default */
-/*! exports used: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_gameobject__ = __webpack_require__(/*! gameobject */ 0);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_gameobject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_gameobject__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_characters_player_player__ = __webpack_require__(/*! characters/player/player */ 1);\n\n\n\nclass MouseInput {\n  constructor(orbitCamera) {\n    this.distanceSensitivity = 0.3;\n    this.orbitSensitivity = 0.5;\n\n    this.fromWorldPoint = new pc.Vec3();\n    this.toWorldPoint = new pc.Vec3();\n    this.worldDiff = new pc.Vec3();\n    this.app = __WEBPACK_IMPORTED_MODULE_0_gameobject___default.a.getApp();\n    this.orbitCamera = orbitCamera;\n    this.mouse = __WEBPACK_IMPORTED_MODULE_0_gameobject___default.a.getMouse();\n    \n    this.entity = orbitCamera.entity;\n\n    if (this.orbitCamera) {\n      const onMouseOut = e => this.onMouseOut(e);\n\n      this.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);\n      this.mouse.on(pc.EVENT_MOUSEUP, this.onMouseUp, this);\n      this.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);\n      this.mouse.on(pc.EVENT_MOUSEWHEEL, this.onMouseWheel, this);\n\n      // Listen to when the mouse travels out of the window\n      window.addEventListener('mouseout', onMouseOut, false);\n    }\n\n    // Disabling the context menu stops the browser displaying a menu when\n    // you right-click the page\n    this.mouse.disableContextMenu();\n\n    this.lookButtonDown = false;\n    this.panButtonDown = false;\n    this.lastPoint = new pc.Vec2();\n  }\n\n  pan(screenPoint) {\n    const fromWorldPoint = this.fromWorldPoint;\n    const toWorldPoint = this.toWorldPoint;\n    const worldDiff = this.worldDiff;\n\n    // For panning to work at any zoom level, we use screen point to world projection\n    // to work out how far we need to pan the pivotEntity in world space\n    const camera = this.entity.camera;\n    const distance = this.orbitCamera.distance;\n\n    camera.screenToWorld(screenPoint.x, screenPoint.y, distance, fromWorldPoint);\n    camera.screenToWorld(this.lastPoint.x, this.lastPoint.y, distance, toWorldPoint);\n\n    worldDiff.sub2(toWorldPoint, fromWorldPoint);\n\n    this.orbitCamera.pivotPoint.add(worldDiff);\n  }\n\n  onMouseDown(event) {\n    // select players on click\n    const camera = this.entity.camera;\n    const from = camera.screenToWorld(event.x, event.y, camera.nearClip);\n    const to = camera.screenToWorld(event.x, event.y, camera.farClip);\n\n    var result = __WEBPACK_IMPORTED_MODULE_0_gameobject___default.a.getApp().systems.rigidbody.raycastFirst(from, to);\n    if(result) {\n        const player = __WEBPACK_IMPORTED_MODULE_1_characters_player_player__[\"a\" /* default */].getByEntity(result.entity);\n        if(player) {\n          player.select();\n        }\n    }\n    \n    switch (event.button) {\n      case pc.MOUSEBUTTON_LEFT:\n        // this.lookButtonDown = true;\n        break;\n\n      case pc.MOUSEBUTTON_MIDDLE:\n      case pc.MOUSEBUTTON_RIGHT:\n        this.lookButtonDown = true;\n        break;\n      default: break;\n    }\n  }\n\n  onMouseUp(event) {\n    switch (event.button) {\n      case pc.MOUSEBUTTON_LEFT:\n        this.lookButtonDown = false;\n        break;\n\n      case pc.MOUSEBUTTON_MIDDLE:\n      case pc.MOUSEBUTTON_RIGHT:\n        this.panButtonDown = false;\n        break;\n      default: break;\n    }\n  }\n\n  onMouseMove(event) {\n    if (this.lookButtonDown) {\n      this.orbitCamera.pitch -= event.dy * this.orbitSensitivity;\n      this.orbitCamera.yaw -= event.dx * this.orbitSensitivity;\n    } else if (this.panButtonDown) {\n      this.pan(event);\n    }\n\n    this.lastPoint.set(event.x, event.y);\n  }\n\n  onMouseWheel(event) {\n    this.orbitCamera.distance -=\n      event.wheel * this.distanceSensitivity * this.orbitCamera.distance * 0.1;\n    event.event.preventDefault();\n  }\n\n  onMouseOut() {\n    this.lookButtonDown = false;\n    this.panButtonDown = false;\n  }\n}\n\n\nclass OrbitCamera extends __WEBPACK_IMPORTED_MODULE_0_gameobject___default.a {\n  constructor(entity) {\n    super();\n    this.distanceMax = 700;\n    this.distanceMin = 100;\n    this.pitchAngleMax = 90;\n    this.pitchAngleMin = -90;\n    this.inertiaFactor = 0;\n    this.distanceFactor = 0.4;\n    this.focusEntity = entity;\n    this.frameOnStart = true;\n\n    this.app = __WEBPACK_IMPORTED_MODULE_0_gameobject___default.a.getApp();\n    this.entity = entity;\n\n    this.distanceBetween = new pc.Vec3();\n    this.quatWithoutYaw = new pc.Quat();\n    this.yawOffset = new pc.Quat();\n    this.mouseInput = new MouseInput(this);\n\n    const onWindowResize = () => {\n      this._checkAspectRatio();\n    };\n\n    super.addTimedUpdate((dt) => {\n      // Add inertia, if any\n      const t = this.inertiaFactor === 0 ? 1 : Math.min(dt / this.inertiaFactor, 1);\n      this._distance = pc.math.lerp(this._distance, this._targetDistance, t);\n      this._yaw = pc.math.lerp(this._yaw, this._targetYaw, t);\n      this._pitch = pc.math.lerp(this._pitch, this._targetPitch, t);\n\n      this._updatePosition();\n    }, 0);\n\n    window.addEventListener('resize', onWindowResize, false);\n    this._checkAspectRatio();\n\n    // Find all the models in the scene that are under the focused entity\n    this._modelsAabb = new pc.BoundingBox();\n    this._buildAabb(this.focusEntity || this.app.root, 0);\n\n    this.entity.lookAt(this._modelsAabb.center);\n\n    this._pivotPoint = new pc.Vec3();\n    this._pivotPoint.copy(this._modelsAabb.center);\n\n    // Calculate the camera euler angle rotation around x and y axes\n    // This allows us to place the camera at a particular rotation to begin with in the scene\n    const cameraQuat = this.entity.getRotation();\n\n    // Preset the camera\n    this._yaw = OrbitCamera._calcYaw(cameraQuat);\n    this._pitch = this._clampPitchAngle(this._calcPitch(cameraQuat, this._yaw));\n    this.entity.setLocalEulerAngles(this._pitch, this._yaw, 0);\n\n    this._distance = 0;\n\n    this._targetYaw = this._yaw;\n    this._targetPitch = this._pitch;\n\n    // If we have ticked focus on start, then attempt to position the camera where it frames\n    // the focused entity and move the pivot point to entity's position otherwise, set the distance\n    // to be between the camera position in the scene and the pivot point\n    if (this.frameOnStart) {\n      this.focus(this.focusEntity || this.app.root);\n    } else {\n      const distanceBetween = new pc.Vec3();\n      distanceBetween.sub2(this.entity.getPosition(), this._pivotPoint);\n      this._distance = this._clampDistance(distanceBetween.length());\n    }\n\n    this._targetDistance = this._distance;\n  }\n\n  _clampPitchAngle(pitch) {\n    // Negative due as the pitch is inversed since the camera is orbiting the entity\n    return pc.math.clamp(pitch, -this.pitchAngleMax, -this.pitchAngleMin);\n  }\n\n  _calcPitch(quat, yaw) {\n    const quatWithoutYaw = this.quatWithoutYaw;\n    const yawOffset = this.yawOffset;\n\n    yawOffset.setFromEulerAngles(0, -yaw, 0);\n    quatWithoutYaw.mul2(yawOffset, quat);\n\n    const transformedForward = new pc.Vec3();\n\n    quatWithoutYaw.transformVector(pc.Vec3.FORWARD, transformedForward);\n\n    return Math.atan2(transformedForward.y, -transformedForward.z) * pc.math.RAD_TO_DEG;\n  }\n\n  // Moves the camera to look at an entity and all its children so they are all in the view\n  focus(focusEntity, transition = false) {\n    // Calculate an bounding box that encompasses all the models to frame in the camera view\n    this._buildAabb(focusEntity, 0);\n\n    const halfExtents = this._modelsAabb.halfExtents;\n\n    let distance = Math.max(halfExtents.x, Math.max(halfExtents.y, halfExtents.z));\n    distance /= Math.tan(0.5 * this.entity.camera.fov * pc.math.DEG_TO_RAD);\n    distance *= 2;\n\n    this.distance = distance;\n    this._removeInertia();\n    this._pivotPoint.copy(focusEntity.getPosition());\n    this.transition = transition;\n    // this._pivotPoint.copy(this._modelsAabb.center);\n  }\n\n  _updatePosition() {\n    // Work out the camera position based on the pivot point, pitch, yaw and distance\n    this.entity.setLocalEulerAngles(this._pitch, this._yaw, 0);\n\n    const position = this.entity.getPosition();\n    position.copy(this.entity.forward);\n    position.scale(-this._distance * this.distanceFactor);\n    position.add(this.pivotPoint);\n\n    const diff = position.clone().sub(this.entity.getPosition());\n    if (diff.length() <= 0.1) {\n      this.transition = false;\n    }\n\n    diff.scale(this.transition ? 0.1 : 1);\n    this.entity.setPosition(this.entity.getPosition().add(diff));\n  }\n\n\n  _removeInertia() {\n    this._yaw = this._targetYaw;\n    this._pitch = this._targetPitch;\n    this._distance = this._targetDistance;\n  }\n\n\n  _checkAspectRatio() {\n    const height = this.app.graphicsDevice.height;\n    const width = this.app.graphicsDevice.width;\n\n    // Match the axis of FOV to match the aspect ratio of the canvas so\n    // the focused entities is always in frame\n    this.entity.camera.horizontalFov = height > width;\n  }\n\n\n  _buildAabb(entity, _modelsAdded) {\n    let i = 0;\n    let modelsAdded = _modelsAdded;\n\n    if (entity.model) {\n      const mi = entity.model.meshInstances;\n      for (i = 0; i < mi.length; i += 1) {\n        if (modelsAdded === 0) {\n          this._modelsAabb.copy(mi[i].aabb);\n        } else {\n          this._modelsAabb.add(mi[i].aabb);\n        }\n\n        modelsAdded += 1;\n      }\n    }\n    //\n    // for (i = 1; i < entity.children.length; i += 1) {\n    //   modelsAdded += this._buildAabb(entity.children[i], modelsAdded);\n    // }\n\n    return modelsAdded;\n  }\n\n  static _calcYaw(quat) {\n    const transformedForward = new pc.Vec3();\n    quat.transformVector(pc.Vec3.FORWARD, transformedForward);\n\n    return Math.atan2(-transformedForward.x, -transformedForward.z) * pc.math.RAD_TO_DEG;\n  }\n\n  _clampDistance(distance) {\n    if (this.distanceMax > 0) {\n      return pc.math.clamp(distance, this.distanceMin, this.distanceMax);\n    }\n    return Math.max(distance, this.distanceMin);\n  }\n\n  get distance() {\n    return this._targetDistance;\n  }\n\n  set distance(value) {\n    this._targetDistance = this._clampDistance(value);\n  }\n\n\n  get pitch() {\n    return this._targetPitch;\n  }\n\n  set pitch(value) {\n    this._targetPitch = this._clampPitchAngle(value);\n  }\n\n\n  get yaw() {\n    return this._targetYaw;\n  }\n\n  set yaw(value) {\n    this._targetYaw = value;\n\n    // Ensure that the yaw takes the shortest route by making sure that\n    // the difference between the targetYaw and the actual is 180 degrees\n    // in either direction\n    const diff = this._targetYaw - this._yaw;\n    const reminder = diff % 360;\n    if (reminder > 180) {\n      this._targetYaw = this._yaw - (360 - reminder);\n    } else if (reminder < -180) {\n      this._targetYaw = this._yaw + (360 + reminder);\n    } else {\n      this._targetYaw = this._yaw + reminder;\n    }\n  }\n\n\n  get pivotPoint() {\n    return this._pivotPoint;\n  }\n\n  set pivotPoint(value) {\n    this._pivotPoint.copy(value);\n  }\n}\n/* harmony export (immutable) */ __webpack_exports__[\"a\"] = OrbitCamera;\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL3NyYy9lbnZpcm9ubWVudC9vcmJpdENhbWVyYS5qcz9iYWI0Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBHYW1lT2JqZWN0IGZyb20gJ2dhbWVvYmplY3QnO1xuaW1wb3J0IFBsYXllciBmcm9tICdjaGFyYWN0ZXJzL3BsYXllci9wbGF5ZXInO1xuXG5jbGFzcyBNb3VzZUlucHV0IHtcbiAgY29uc3RydWN0b3Iob3JiaXRDYW1lcmEpIHtcbiAgICB0aGlzLmRpc3RhbmNlU2Vuc2l0aXZpdHkgPSAwLjM7XG4gICAgdGhpcy5vcmJpdFNlbnNpdGl2aXR5ID0gMC41O1xuXG4gICAgdGhpcy5mcm9tV29ybGRQb2ludCA9IG5ldyBwYy5WZWMzKCk7XG4gICAgdGhpcy50b1dvcmxkUG9pbnQgPSBuZXcgcGMuVmVjMygpO1xuICAgIHRoaXMud29ybGREaWZmID0gbmV3IHBjLlZlYzMoKTtcbiAgICB0aGlzLmFwcCA9IEdhbWVPYmplY3QuZ2V0QXBwKCk7XG4gICAgdGhpcy5vcmJpdENhbWVyYSA9IG9yYml0Q2FtZXJhO1xuICAgIHRoaXMubW91c2UgPSBHYW1lT2JqZWN0LmdldE1vdXNlKCk7XG4gICAgXG4gICAgdGhpcy5lbnRpdHkgPSBvcmJpdENhbWVyYS5lbnRpdHk7XG5cbiAgICBpZiAodGhpcy5vcmJpdENhbWVyYSkge1xuICAgICAgY29uc3Qgb25Nb3VzZU91dCA9IGUgPT4gdGhpcy5vbk1vdXNlT3V0KGUpO1xuXG4gICAgICB0aGlzLm1vdXNlLm9uKHBjLkVWRU5UX01PVVNFRE9XTiwgdGhpcy5vbk1vdXNlRG93biwgdGhpcyk7XG4gICAgICB0aGlzLm1vdXNlLm9uKHBjLkVWRU5UX01PVVNFVVAsIHRoaXMub25Nb3VzZVVwLCB0aGlzKTtcbiAgICAgIHRoaXMubW91c2Uub24ocGMuRVZFTlRfTU9VU0VNT1ZFLCB0aGlzLm9uTW91c2VNb3ZlLCB0aGlzKTtcbiAgICAgIHRoaXMubW91c2Uub24ocGMuRVZFTlRfTU9VU0VXSEVFTCwgdGhpcy5vbk1vdXNlV2hlZWwsIHRoaXMpO1xuXG4gICAgICAvLyBMaXN0ZW4gdG8gd2hlbiB0aGUgbW91c2UgdHJhdmVscyBvdXQgb2YgdGhlIHdpbmRvd1xuICAgICAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoJ21vdXNlb3V0Jywgb25Nb3VzZU91dCwgZmFsc2UpO1xuICAgIH1cblxuICAgIC8vIERpc2FibGluZyB0aGUgY29udGV4dCBtZW51IHN0b3BzIHRoZSBicm93c2VyIGRpc3BsYXlpbmcgYSBtZW51IHdoZW5cbiAgICAvLyB5b3UgcmlnaHQtY2xpY2sgdGhlIHBhZ2VcbiAgICB0aGlzLm1vdXNlLmRpc2FibGVDb250ZXh0TWVudSgpO1xuXG4gICAgdGhpcy5sb29rQnV0dG9uRG93biA9IGZhbHNlO1xuICAgIHRoaXMucGFuQnV0dG9uRG93biA9IGZhbHNlO1xuICAgIHRoaXMubGFzdFBvaW50ID0gbmV3IHBjLlZlYzIoKTtcbiAgfVxuXG4gIHBhbihzY3JlZW5Qb2ludCkge1xuICAgIGNvbnN0IGZyb21Xb3JsZFBvaW50ID0gdGhpcy5mcm9tV29ybGRQb2ludDtcbiAgICBjb25zdCB0b1dvcmxkUG9pbnQgPSB0aGlzLnRvV29ybGRQb2ludDtcbiAgICBjb25zdCB3b3JsZERpZmYgPSB0aGlzLndvcmxkRGlmZjtcblxuICAgIC8vIEZvciBwYW5uaW5nIHRvIHdvcmsgYXQgYW55IHpvb20gbGV2ZWwsIHdlIHVzZSBzY3JlZW4gcG9pbnQgdG8gd29ybGQgcHJvamVjdGlvblxuICAgIC8vIHRvIHdvcmsgb3V0IGhvdyBmYXIgd2UgbmVlZCB0byBwYW4gdGhlIHBpdm90RW50aXR5IGluIHdvcmxkIHNwYWNlXG4gICAgY29uc3QgY2FtZXJhID0gdGhpcy5lbnRpdHkuY2FtZXJhO1xuICAgIGNvbnN0IGRpc3RhbmNlID0gdGhpcy5vcmJpdENhbWVyYS5kaXN0YW5jZTtcblxuICAgIGNhbWVyYS5zY3JlZW5Ub1dvcmxkKHNjcmVlblBvaW50LngsIHNjcmVlblBvaW50LnksIGRpc3RhbmNlLCBmcm9tV29ybGRQb2ludCk7XG4gICAgY2FtZXJhLnNjcmVlblRvV29ybGQodGhpcy5sYXN0UG9pbnQueCwgdGhpcy5sYXN0UG9pbnQueSwgZGlzdGFuY2UsIHRvV29ybGRQb2ludCk7XG5cbiAgICB3b3JsZERpZmYuc3ViMih0b1dvcmxkUG9pbnQsIGZyb21Xb3JsZFBvaW50KTtcblxuICAgIHRoaXMub3JiaXRDYW1lcmEucGl2b3RQb2ludC5hZGQod29ybGREaWZmKTtcbiAgfVxuXG4gIG9uTW91c2VEb3duKGV2ZW50KSB7XG4gICAgLy8gc2VsZWN0IHBsYXllcnMgb24gY2xpY2tcbiAgICBjb25zdCBjYW1lcmEgPSB0aGlzLmVudGl0eS5jYW1lcmE7XG4gICAgY29uc3QgZnJvbSA9IGNhbWVyYS5zY3JlZW5Ub1dvcmxkKGV2ZW50LngsIGV2ZW50LnksIGNhbWVyYS5uZWFyQ2xpcCk7XG4gICAgY29uc3QgdG8gPSBjYW1lcmEuc2NyZWVuVG9Xb3JsZChldmVudC54LCBldmVudC55LCBjYW1lcmEuZmFyQ2xpcCk7XG5cbiAgICB2YXIgcmVzdWx0ID0gR2FtZU9iamVjdC5nZXRBcHAoKS5zeXN0ZW1zLnJpZ2lkYm9keS5yYXljYXN0Rmlyc3QoZnJvbSwgdG8pO1xuICAgIGlmKHJlc3VsdCkge1xuICAgICAgICBjb25zdCBwbGF5ZXIgPSBQbGF5ZXIuZ2V0QnlFbnRpdHkocmVzdWx0LmVudGl0eSk7XG4gICAgICAgIGlmKHBsYXllcikge1xuICAgICAgICAgIHBsYXllci5zZWxlY3QoKTtcbiAgICAgICAgfVxuICAgIH1cbiAgICBcbiAgICBzd2l0Y2ggKGV2ZW50LmJ1dHRvbikge1xuICAgICAgY2FzZSBwYy5NT1VTRUJVVFRPTl9MRUZUOlxuICAgICAgICAvLyB0aGlzLmxvb2tCdXR0b25Eb3duID0gdHJ1ZTtcbiAgICAgICAgYnJlYWs7XG5cbiAgICAgIGNhc2UgcGMuTU9VU0VCVVRUT05fTUlERExFOlxuICAgICAgY2FzZSBwYy5NT1VTRUJVVFRPTl9SSUdIVDpcbiAgICAgICAgdGhpcy5sb29rQnV0dG9uRG93biA9IHRydWU7XG4gICAgICAgIGJyZWFrO1xuICAgICAgZGVmYXVsdDogYnJlYWs7XG4gICAgfVxuICB9XG5cbiAgb25Nb3VzZVVwKGV2ZW50KSB7XG4gICAgc3dpdGNoIChldmVudC5idXR0b24pIHtcbiAgICAgIGNhc2UgcGMuTU9VU0VCVVRUT05fTEVGVDpcbiAgICAgICAgdGhpcy5sb29rQnV0dG9uRG93biA9IGZhbHNlO1xuICAgICAgICBicmVhaztcblxuICAgICAgY2FzZSBwYy5NT1VTRUJVVFRPTl9NSURETEU6XG4gICAgICBjYXNlIHBjLk1PVVNFQlVUVE9OX1JJR0hUOlxuICAgICAgICB0aGlzLnBhbkJ1dHRvbkRvd24gPSBmYWxzZTtcbiAgICAgICAgYnJlYWs7XG4gICAgICBkZWZhdWx0OiBicmVhaztcbiAgICB9XG4gIH1cblxuICBvbk1vdXNlTW92ZShldmVudCkge1xuICAgIGlmICh0aGlzLmxvb2tCdXR0b25Eb3duKSB7XG4gICAgICB0aGlzLm9yYml0Q2FtZXJhLnBpdGNoIC09IGV2ZW50LmR5ICogdGhpcy5vcmJpdFNlbnNpdGl2aXR5O1xuICAgICAgdGhpcy5vcmJpdENhbWVyYS55YXcgLT0gZXZlbnQuZHggKiB0aGlzLm9yYml0U2Vuc2l0aXZpdHk7XG4gICAgfSBlbHNlIGlmICh0aGlzLnBhbkJ1dHRvbkRvd24pIHtcbiAgICAgIHRoaXMucGFuKGV2ZW50KTtcbiAgICB9XG5cbiAgICB0aGlzLmxhc3RQb2ludC5zZXQoZXZlbnQueCwgZXZlbnQueSk7XG4gIH1cblxuICBvbk1vdXNlV2hlZWwoZXZlbnQpIHtcbiAgICB0aGlzLm9yYml0Q2FtZXJhLmRpc3RhbmNlIC09XG4gICAgICBldmVudC53aGVlbCAqIHRoaXMuZGlzdGFuY2VTZW5zaXRpdml0eSAqIHRoaXMub3JiaXRDYW1lcmEuZGlzdGFuY2UgKiAwLjE7XG4gICAgZXZlbnQuZXZlbnQucHJldmVudERlZmF1bHQoKTtcbiAgfVxuXG4gIG9uTW91c2VPdXQoKSB7XG4gICAgdGhpcy5sb29rQnV0dG9uRG93biA9IGZhbHNlO1xuICAgIHRoaXMucGFuQnV0dG9uRG93biA9IGZhbHNlO1xuICB9XG59XG5cblxuZXhwb3J0IGRlZmF1bHQgY2xhc3MgT3JiaXRDYW1lcmEgZXh0ZW5kcyBHYW1lT2JqZWN0IHtcbiAgY29uc3RydWN0b3IoZW50aXR5KSB7XG4gICAgc3VwZXIoKTtcbiAgICB0aGlzLmRpc3RhbmNlTWF4ID0gNzAwO1xuICAgIHRoaXMuZGlzdGFuY2VNaW4gPSAxMDA7XG4gICAgdGhpcy5waXRjaEFuZ2xlTWF4ID0gOTA7XG4gICAgdGhpcy5waXRjaEFuZ2xlTWluID0gLTkwO1xuICAgIHRoaXMuaW5lcnRpYUZhY3RvciA9IDA7XG4gICAgdGhpcy5kaXN0YW5jZUZhY3RvciA9IDAuNDtcbiAgICB0aGlzLmZvY3VzRW50aXR5ID0gZW50aXR5O1xuICAgIHRoaXMuZnJhbWVPblN0YXJ0ID0gdHJ1ZTtcblxuICAgIHRoaXMuYXBwID0gR2FtZU9iamVjdC5nZXRBcHAoKTtcbiAgICB0aGlzLmVudGl0eSA9IGVudGl0eTtcblxuICAgIHRoaXMuZGlzdGFuY2VCZXR3ZWVuID0gbmV3IHBjLlZlYzMoKTtcbiAgICB0aGlzLnF1YXRXaXRob3V0WWF3ID0gbmV3IHBjLlF1YXQoKTtcbiAgICB0aGlzLnlhd09mZnNldCA9IG5ldyBwYy5RdWF0KCk7XG4gICAgdGhpcy5tb3VzZUlucHV0ID0gbmV3IE1vdXNlSW5wdXQodGhpcyk7XG5cbiAgICBjb25zdCBvbldpbmRvd1Jlc2l6ZSA9ICgpID0+IHtcbiAgICAgIHRoaXMuX2NoZWNrQXNwZWN0UmF0aW8oKTtcbiAgICB9O1xuXG4gICAgc3VwZXIuYWRkVGltZWRVcGRhdGUoKGR0KSA9PiB7XG4gICAgICAvLyBBZGQgaW5lcnRpYSwgaWYgYW55XG4gICAgICBjb25zdCB0ID0gdGhpcy5pbmVydGlhRmFjdG9yID09PSAwID8gMSA6IE1hdGgubWluKGR0IC8gdGhpcy5pbmVydGlhRmFjdG9yLCAxKTtcbiAgICAgIHRoaXMuX2Rpc3RhbmNlID0gcGMubWF0aC5sZXJwKHRoaXMuX2Rpc3RhbmNlLCB0aGlzLl90YXJnZXREaXN0YW5jZSwgdCk7XG4gICAgICB0aGlzLl95YXcgPSBwYy5tYXRoLmxlcnAodGhpcy5feWF3LCB0aGlzLl90YXJnZXRZYXcsIHQpO1xuICAgICAgdGhpcy5fcGl0Y2ggPSBwYy5tYXRoLmxlcnAodGhpcy5fcGl0Y2gsIHRoaXMuX3RhcmdldFBpdGNoLCB0KTtcblxuICAgICAgdGhpcy5fdXBkYXRlUG9zaXRpb24oKTtcbiAgICB9LCAwKTtcblxuICAgIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKCdyZXNpemUnLCBvbldpbmRvd1Jlc2l6ZSwgZmFsc2UpO1xuICAgIHRoaXMuX2NoZWNrQXNwZWN0UmF0aW8oKTtcblxuICAgIC8vIEZpbmQgYWxsIHRoZSBtb2RlbHMgaW4gdGhlIHNjZW5lIHRoYXQgYXJlIHVuZGVyIHRoZSBmb2N1c2VkIGVudGl0eVxuICAgIHRoaXMuX21vZGVsc0FhYmIgPSBuZXcgcGMuQm91bmRpbmdCb3goKTtcbiAgICB0aGlzLl9idWlsZEFhYmIodGhpcy5mb2N1c0VudGl0eSB8fCB0aGlzLmFwcC5yb290LCAwKTtcblxuICAgIHRoaXMuZW50aXR5Lmxvb2tBdCh0aGlzLl9tb2RlbHNBYWJiLmNlbnRlcik7XG5cbiAgICB0aGlzLl9waXZvdFBvaW50ID0gbmV3IHBjLlZlYzMoKTtcbiAgICB0aGlzLl9waXZvdFBvaW50LmNvcHkodGhpcy5fbW9kZWxzQWFiYi5jZW50ZXIpO1xuXG4gICAgLy8gQ2FsY3VsYXRlIHRoZSBjYW1lcmEgZXVsZXIgYW5nbGUgcm90YXRpb24gYXJvdW5kIHggYW5kIHkgYXhlc1xuICAgIC8vIFRoaXMgYWxsb3dzIHVzIHRvIHBsYWNlIHRoZSBjYW1lcmEgYXQgYSBwYXJ0aWN1bGFyIHJvdGF0aW9uIHRvIGJlZ2luIHdpdGggaW4gdGhlIHNjZW5lXG4gICAgY29uc3QgY2FtZXJhUXVhdCA9IHRoaXMuZW50aXR5LmdldFJvdGF0aW9uKCk7XG5cbiAgICAvLyBQcmVzZXQgdGhlIGNhbWVyYVxuICAgIHRoaXMuX3lhdyA9IE9yYml0Q2FtZXJhLl9jYWxjWWF3KGNhbWVyYVF1YXQpO1xuICAgIHRoaXMuX3BpdGNoID0gdGhpcy5fY2xhbXBQaXRjaEFuZ2xlKHRoaXMuX2NhbGNQaXRjaChjYW1lcmFRdWF0LCB0aGlzLl95YXcpKTtcbiAgICB0aGlzLmVudGl0eS5zZXRMb2NhbEV1bGVyQW5nbGVzKHRoaXMuX3BpdGNoLCB0aGlzLl95YXcsIDApO1xuXG4gICAgdGhpcy5fZGlzdGFuY2UgPSAwO1xuXG4gICAgdGhpcy5fdGFyZ2V0WWF3ID0gdGhpcy5feWF3O1xuICAgIHRoaXMuX3RhcmdldFBpdGNoID0gdGhpcy5fcGl0Y2g7XG5cbiAgICAvLyBJZiB3ZSBoYXZlIHRpY2tlZCBmb2N1cyBvbiBzdGFydCwgdGhlbiBhdHRlbXB0IHRvIHBvc2l0aW9uIHRoZSBjYW1lcmEgd2hlcmUgaXQgZnJhbWVzXG4gICAgLy8gdGhlIGZvY3VzZWQgZW50aXR5IGFuZCBtb3ZlIHRoZSBwaXZvdCBwb2ludCB0byBlbnRpdHkncyBwb3NpdGlvbiBvdGhlcndpc2UsIHNldCB0aGUgZGlzdGFuY2VcbiAgICAvLyB0byBiZSBiZXR3ZWVuIHRoZSBjYW1lcmEgcG9zaXRpb24gaW4gdGhlIHNjZW5lIGFuZCB0aGUgcGl2b3QgcG9pbnRcbiAgICBpZiAodGhpcy5mcmFtZU9uU3RhcnQpIHtcbiAgICAgIHRoaXMuZm9jdXModGhpcy5mb2N1c0VudGl0eSB8fCB0aGlzLmFwcC5yb290KTtcbiAgICB9IGVsc2Uge1xuICAgICAgY29uc3QgZGlzdGFuY2VCZXR3ZWVuID0gbmV3IHBjLlZlYzMoKTtcbiAgICAgIGRpc3RhbmNlQmV0d2Vlbi5zdWIyKHRoaXMuZW50aXR5LmdldFBvc2l0aW9uKCksIHRoaXMuX3Bpdm90UG9pbnQpO1xuICAgICAgdGhpcy5fZGlzdGFuY2UgPSB0aGlzLl9jbGFtcERpc3RhbmNlKGRpc3RhbmNlQmV0d2Vlbi5sZW5ndGgoKSk7XG4gICAgfVxuXG4gICAgdGhpcy5fdGFyZ2V0RGlzdGFuY2UgPSB0aGlzLl9kaXN0YW5jZTtcbiAgfVxuXG4gIF9jbGFtcFBpdGNoQW5nbGUocGl0Y2gpIHtcbiAgICAvLyBOZWdhdGl2ZSBkdWUgYXMgdGhlIHBpdGNoIGlzIGludmVyc2VkIHNpbmNlIHRoZSBjYW1lcmEgaXMgb3JiaXRpbmcgdGhlIGVudGl0eVxuICAgIHJldHVybiBwYy5tYXRoLmNsYW1wKHBpdGNoLCAtdGhpcy5waXRjaEFuZ2xlTWF4LCAtdGhpcy5waXRjaEFuZ2xlTWluKTtcbiAgfVxuXG4gIF9jYWxjUGl0Y2gocXVhdCwgeWF3KSB7XG4gICAgY29uc3QgcXVhdFdpdGhvdXRZYXcgPSB0aGlzLnF1YXRXaXRob3V0WWF3O1xuICAgIGNvbnN0IHlhd09mZnNldCA9IHRoaXMueWF3T2Zmc2V0O1xuXG4gICAgeWF3T2Zmc2V0LnNldEZyb21FdWxlckFuZ2xlcygwLCAteWF3LCAwKTtcbiAgICBxdWF0V2l0aG91dFlhdy5tdWwyKHlhd09mZnNldCwgcXVhdCk7XG5cbiAgICBjb25zdCB0cmFuc2Zvcm1lZEZvcndhcmQgPSBuZXcgcGMuVmVjMygpO1xuXG4gICAgcXVhdFdpdGhvdXRZYXcudHJhbnNmb3JtVmVjdG9yKHBjLlZlYzMuRk9SV0FSRCwgdHJhbnNmb3JtZWRGb3J3YXJkKTtcblxuICAgIHJldHVybiBNYXRoLmF0YW4yKHRyYW5zZm9ybWVkRm9yd2FyZC55LCAtdHJhbnNmb3JtZWRGb3J3YXJkLnopICogcGMubWF0aC5SQURfVE9fREVHO1xuICB9XG5cbiAgLy8gTW92ZXMgdGhlIGNhbWVyYSB0byBsb29rIGF0IGFuIGVudGl0eSBhbmQgYWxsIGl0cyBjaGlsZHJlbiBzbyB0aGV5IGFyZSBhbGwgaW4gdGhlIHZpZXdcbiAgZm9jdXMoZm9jdXNFbnRpdHksIHRyYW5zaXRpb24gPSBmYWxzZSkge1xuICAgIC8vIENhbGN1bGF0ZSBhbiBib3VuZGluZyBib3ggdGhhdCBlbmNvbXBhc3NlcyBhbGwgdGhlIG1vZGVscyB0byBmcmFtZSBpbiB0aGUgY2FtZXJhIHZpZXdcbiAgICB0aGlzLl9idWlsZEFhYmIoZm9jdXNFbnRpdHksIDApO1xuXG4gICAgY29uc3QgaGFsZkV4dGVudHMgPSB0aGlzLl9tb2RlbHNBYWJiLmhhbGZFeHRlbnRzO1xuXG4gICAgbGV0IGRpc3RhbmNlID0gTWF0aC5tYXgoaGFsZkV4dGVudHMueCwgTWF0aC5tYXgoaGFsZkV4dGVudHMueSwgaGFsZkV4dGVudHMueikpO1xuICAgIGRpc3RhbmNlIC89IE1hdGgudGFuKDAuNSAqIHRoaXMuZW50aXR5LmNhbWVyYS5mb3YgKiBwYy5tYXRoLkRFR19UT19SQUQpO1xuICAgIGRpc3RhbmNlICo9IDI7XG5cbiAgICB0aGlzLmRpc3RhbmNlID0gZGlzdGFuY2U7XG4gICAgdGhpcy5fcmVtb3ZlSW5lcnRpYSgpO1xuICAgIHRoaXMuX3Bpdm90UG9pbnQuY29weShmb2N1c0VudGl0eS5nZXRQb3NpdGlvbigpKTtcbiAgICB0aGlzLnRyYW5zaXRpb24gPSB0cmFuc2l0aW9uO1xuICAgIC8vIHRoaXMuX3Bpdm90UG9pbnQuY29weSh0aGlzLl9tb2RlbHNBYWJiLmNlbnRlcik7XG4gIH1cblxuICBfdXBkYXRlUG9zaXRpb24oKSB7XG4gICAgLy8gV29yayBvdXQgdGhlIGNhbWVyYSBwb3NpdGlvbiBiYXNlZCBvbiB0aGUgcGl2b3QgcG9pbnQsIHBpdGNoLCB5YXcgYW5kIGRpc3RhbmNlXG4gICAgdGhpcy5lbnRpdHkuc2V0TG9jYWxFdWxlckFuZ2xlcyh0aGlzLl9waXRjaCwgdGhpcy5feWF3LCAwKTtcblxuICAgIGNvbnN0IHBvc2l0aW9uID0gdGhpcy5lbnRpdHkuZ2V0UG9zaXRpb24oKTtcbiAgICBwb3NpdGlvbi5jb3B5KHRoaXMuZW50aXR5LmZvcndhcmQpO1xuICAgIHBvc2l0aW9uLnNjYWxlKC10aGlzLl9kaXN0YW5jZSAqIHRoaXMuZGlzdGFuY2VGYWN0b3IpO1xuICAgIHBvc2l0aW9uLmFkZCh0aGlzLnBpdm90UG9pbnQpO1xuXG4gICAgY29uc3QgZGlmZiA9IHBvc2l0aW9uLmNsb25lKCkuc3ViKHRoaXMuZW50aXR5LmdldFBvc2l0aW9uKCkpO1xuICAgIGlmIChkaWZmLmxlbmd0aCgpIDw9IDAuMSkge1xuICAgICAgdGhpcy50cmFuc2l0aW9uID0gZmFsc2U7XG4gICAgfVxuXG4gICAgZGlmZi5zY2FsZSh0aGlzLnRyYW5zaXRpb24gPyAwLjEgOiAxKTtcbiAgICB0aGlzLmVudGl0eS5zZXRQb3NpdGlvbih0aGlzLmVudGl0eS5nZXRQb3NpdGlvbigpLmFkZChkaWZmKSk7XG4gIH1cblxuXG4gIF9yZW1vdmVJbmVydGlhKCkge1xuICAgIHRoaXMuX3lhdyA9IHRoaXMuX3RhcmdldFlhdztcbiAgICB0aGlzLl9waXRjaCA9IHRoaXMuX3RhcmdldFBpdGNoO1xuICAgIHRoaXMuX2Rpc3RhbmNlID0gdGhpcy5fdGFyZ2V0RGlzdGFuY2U7XG4gIH1cblxuXG4gIF9jaGVja0FzcGVjdFJhdGlvKCkge1xuICAgIGNvbnN0IGhlaWdodCA9IHRoaXMuYXBwLmdyYXBoaWNzRGV2aWNlLmhlaWdodDtcbiAgICBjb25zdCB3aWR0aCA9IHRoaXMuYXBwLmdyYXBoaWNzRGV2aWNlLndpZHRoO1xuXG4gICAgLy8gTWF0Y2ggdGhlIGF4aXMgb2YgRk9WIHRvIG1hdGNoIHRoZSBhc3BlY3QgcmF0aW8gb2YgdGhlIGNhbnZhcyBzb1xuICAgIC8vIHRoZSBmb2N1c2VkIGVudGl0aWVzIGlzIGFsd2F5cyBpbiBmcmFtZVxuICAgIHRoaXMuZW50aXR5LmNhbWVyYS5ob3Jpem9udGFsRm92ID0gaGVpZ2h0ID4gd2lkdGg7XG4gIH1cblxuXG4gIF9idWlsZEFhYmIoZW50aXR5LCBfbW9kZWxzQWRkZWQpIHtcbiAgICBsZXQgaSA9IDA7XG4gICAgbGV0IG1vZGVsc0FkZGVkID0gX21vZGVsc0FkZGVkO1xuXG4gICAgaWYgKGVudGl0eS5tb2RlbCkge1xuICAgICAgY29uc3QgbWkgPSBlbnRpdHkubW9kZWwubWVzaEluc3RhbmNlcztcbiAgICAgIGZvciAoaSA9IDA7IGkgPCBtaS5sZW5ndGg7IGkgKz0gMSkge1xuICAgICAgICBpZiAobW9kZWxzQWRkZWQgPT09IDApIHtcbiAgICAgICAgICB0aGlzLl9tb2RlbHNBYWJiLmNvcHkobWlbaV0uYWFiYik7XG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgdGhpcy5fbW9kZWxzQWFiYi5hZGQobWlbaV0uYWFiYik7XG4gICAgICAgIH1cblxuICAgICAgICBtb2RlbHNBZGRlZCArPSAxO1xuICAgICAgfVxuICAgIH1cbiAgICAvL1xuICAgIC8vIGZvciAoaSA9IDE7IGkgPCBlbnRpdHkuY2hpbGRyZW4ubGVuZ3RoOyBpICs9IDEpIHtcbiAgICAvLyAgIG1vZGVsc0FkZGVkICs9IHRoaXMuX2J1aWxkQWFiYihlbnRpdHkuY2hpbGRyZW5baV0sIG1vZGVsc0FkZGVkKTtcbiAgICAvLyB9XG5cbiAgICByZXR1cm4gbW9kZWxzQWRkZWQ7XG4gIH1cblxuICBzdGF0aWMgX2NhbGNZYXcocXVhdCkge1xuICAgIGNvbnN0IHRyYW5zZm9ybWVkRm9yd2FyZCA9IG5ldyBwYy5WZWMzKCk7XG4gICAgcXVhdC50cmFuc2Zvcm1WZWN0b3IocGMuVmVjMy5GT1JXQVJELCB0cmFuc2Zvcm1lZEZvcndhcmQpO1xuXG4gICAgcmV0dXJuIE1hdGguYXRhbjIoLXRyYW5zZm9ybWVkRm9yd2FyZC54LCAtdHJhbnNmb3JtZWRGb3J3YXJkLnopICogcGMubWF0aC5SQURfVE9fREVHO1xuICB9XG5cbiAgX2NsYW1wRGlzdGFuY2UoZGlzdGFuY2UpIHtcbiAgICBpZiAodGhpcy5kaXN0YW5jZU1heCA+IDApIHtcbiAgICAgIHJldHVybiBwYy5tYXRoLmNsYW1wKGRpc3RhbmNlLCB0aGlzLmRpc3RhbmNlTWluLCB0aGlzLmRpc3RhbmNlTWF4KTtcbiAgICB9XG4gICAgcmV0dXJuIE1hdGgubWF4KGRpc3RhbmNlLCB0aGlzLmRpc3RhbmNlTWluKTtcbiAgfVxuXG4gIGdldCBkaXN0YW5jZSgpIHtcbiAgICByZXR1cm4gdGhpcy5fdGFyZ2V0RGlzdGFuY2U7XG4gIH1cblxuICBzZXQgZGlzdGFuY2UodmFsdWUpIHtcbiAgICB0aGlzLl90YXJnZXREaXN0YW5jZSA9IHRoaXMuX2NsYW1wRGlzdGFuY2UodmFsdWUpO1xuICB9XG5cblxuICBnZXQgcGl0Y2goKSB7XG4gICAgcmV0dXJuIHRoaXMuX3RhcmdldFBpdGNoO1xuICB9XG5cbiAgc2V0IHBpdGNoKHZhbHVlKSB7XG4gICAgdGhpcy5fdGFyZ2V0UGl0Y2ggPSB0aGlzLl9jbGFtcFBpdGNoQW5nbGUodmFsdWUpO1xuICB9XG5cblxuICBnZXQgeWF3KCkge1xuICAgIHJldHVybiB0aGlzLl90YXJnZXRZYXc7XG4gIH1cblxuICBzZXQgeWF3KHZhbHVlKSB7XG4gICAgdGhpcy5fdGFyZ2V0WWF3ID0gdmFsdWU7XG5cbiAgICAvLyBFbnN1cmUgdGhhdCB0aGUgeWF3IHRha2VzIHRoZSBzaG9ydGVzdCByb3V0ZSBieSBtYWtpbmcgc3VyZSB0aGF0XG4gICAgLy8gdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiB0aGUgdGFyZ2V0WWF3IGFuZCB0aGUgYWN0dWFsIGlzIDE4MCBkZWdyZWVzXG4gICAgLy8gaW4gZWl0aGVyIGRpcmVjdGlvblxuICAgIGNvbnN0IGRpZmYgPSB0aGlzLl90YXJnZXRZYXcgLSB0aGlzLl95YXc7XG4gICAgY29uc3QgcmVtaW5kZXIgPSBkaWZmICUgMzYwO1xuICAgIGlmIChyZW1pbmRlciA+IDE4MCkge1xuICAgICAgdGhpcy5fdGFyZ2V0WWF3ID0gdGhpcy5feWF3IC0gKDM2MCAtIHJlbWluZGVyKTtcbiAgICB9IGVsc2UgaWYgKHJlbWluZGVyIDwgLTE4MCkge1xuICAgICAgdGhpcy5fdGFyZ2V0WWF3ID0gdGhpcy5feWF3ICsgKDM2MCArIHJlbWluZGVyKTtcbiAgICB9IGVsc2Uge1xuICAgICAgdGhpcy5fdGFyZ2V0WWF3ID0gdGhpcy5feWF3ICsgcmVtaW5kZXI7XG4gICAgfVxuICB9XG5cblxuICBnZXQgcGl2b3RQb2ludCgpIHtcbiAgICByZXR1cm4gdGhpcy5fcGl2b3RQb2ludDtcbiAgfVxuXG4gIHNldCBwaXZvdFBvaW50KHZhbHVlKSB7XG4gICAgdGhpcy5fcGl2b3RQb2ludC5jb3B5KHZhbHVlKTtcbiAgfVxufVxuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9zcmMvZW52aXJvbm1lbnQvb3JiaXRDYW1lcmEuanNcbi8vIG1vZHVsZSBpZCA9IDNcbi8vIG1vZHVsZSBjaHVua3MgPSAwIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFBQTtBQUFBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///3\n");
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const app_1 = __webpack_require__(1);
+app_1.default.start();
+
 
 /***/ }),
 /* 4 */
-/*!*************************************!*\
-  !*** ./src/characters/character.js ***!
-  \*************************************/
-/*! exports provided: default */
-/*! exports used: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_gameobject__ = __webpack_require__(/*! gameobject */ 0);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_gameobject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_gameobject__);\n\n\nclass Character extends __WEBPACK_IMPORTED_MODULE_0_gameobject___default.a {\n  constructor(entity, position, attributes = {}) {\n    super();\n    super.setAttributes({\n      searchInterval: 0.1,\n      range: 2,\n      material: new pc.PhongMaterial(),\n    }, attributes);\n    super.addTimedUpdate(this._searchForTargets, this.attributes.searchInterval);\n    this.targets = [];\n    this.entity = entity;\n    this.entity.model.material = this.attributes.material;\n    this.entity.setPosition(position);\n    this.entity.enabled = true;\n\n    this.entity.addComponent('rigidbody', {\n      type: 'dynamic',\n    });\n  }\n  addTarget(target) {\n    this.targets.push(target);\n  }\n  _searchForTargets(dt) {\n    const targetsInRange = [];\n    const targetsOutOfRange = [];\n    this.targets.forEach((target) => {\n      (this._isInRange(this.entity, target) ? targetsInRange : targetsOutOfRange).push(target);\n    });\n    this.handleTargets(dt, targetsInRange, targetsOutOfRange);\n  }\n  _isInRange(entity, target) {\n    const distance = target.getPosition().clone().sub(entity.getPosition()).length();\n    return distance <= this.attributes.range;\n  }\n  handleTargets(dt, targetsInRange, targetsOutOfRange) {\n    __WEBPACK_IMPORTED_MODULE_0_gameobject___default.a.requireOverride();\n  }\n}\n/* harmony export (immutable) */ __webpack_exports__[\"a\"] = Character;\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiNC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL3NyYy9jaGFyYWN0ZXJzL2NoYXJhY3Rlci5qcz8xODdjIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBHYW1lT2JqZWN0IGZyb20gJ2dhbWVvYmplY3QnO1xuXG5leHBvcnQgZGVmYXVsdCBjbGFzcyBDaGFyYWN0ZXIgZXh0ZW5kcyBHYW1lT2JqZWN0IHtcbiAgY29uc3RydWN0b3IoZW50aXR5LCBwb3NpdGlvbiwgYXR0cmlidXRlcyA9IHt9KSB7XG4gICAgc3VwZXIoKTtcbiAgICBzdXBlci5zZXRBdHRyaWJ1dGVzKHtcbiAgICAgIHNlYXJjaEludGVydmFsOiAwLjEsXG4gICAgICByYW5nZTogMixcbiAgICAgIG1hdGVyaWFsOiBuZXcgcGMuUGhvbmdNYXRlcmlhbCgpLFxuICAgIH0sIGF0dHJpYnV0ZXMpO1xuICAgIHN1cGVyLmFkZFRpbWVkVXBkYXRlKHRoaXMuX3NlYXJjaEZvclRhcmdldHMsIHRoaXMuYXR0cmlidXRlcy5zZWFyY2hJbnRlcnZhbCk7XG4gICAgdGhpcy50YXJnZXRzID0gW107XG4gICAgdGhpcy5lbnRpdHkgPSBlbnRpdHk7XG4gICAgdGhpcy5lbnRpdHkubW9kZWwubWF0ZXJpYWwgPSB0aGlzLmF0dHJpYnV0ZXMubWF0ZXJpYWw7XG4gICAgdGhpcy5lbnRpdHkuc2V0UG9zaXRpb24ocG9zaXRpb24pO1xuICAgIHRoaXMuZW50aXR5LmVuYWJsZWQgPSB0cnVlO1xuXG4gICAgdGhpcy5lbnRpdHkuYWRkQ29tcG9uZW50KCdyaWdpZGJvZHknLCB7XG4gICAgICB0eXBlOiAnZHluYW1pYycsXG4gICAgfSk7XG4gIH1cbiAgYWRkVGFyZ2V0KHRhcmdldCkge1xuICAgIHRoaXMudGFyZ2V0cy5wdXNoKHRhcmdldCk7XG4gIH1cbiAgX3NlYXJjaEZvclRhcmdldHMoZHQpIHtcbiAgICBjb25zdCB0YXJnZXRzSW5SYW5nZSA9IFtdO1xuICAgIGNvbnN0IHRhcmdldHNPdXRPZlJhbmdlID0gW107XG4gICAgdGhpcy50YXJnZXRzLmZvckVhY2goKHRhcmdldCkgPT4ge1xuICAgICAgKHRoaXMuX2lzSW5SYW5nZSh0aGlzLmVudGl0eSwgdGFyZ2V0KSA/IHRhcmdldHNJblJhbmdlIDogdGFyZ2V0c091dE9mUmFuZ2UpLnB1c2godGFyZ2V0KTtcbiAgICB9KTtcbiAgICB0aGlzLmhhbmRsZVRhcmdldHMoZHQsIHRhcmdldHNJblJhbmdlLCB0YXJnZXRzT3V0T2ZSYW5nZSk7XG4gIH1cbiAgX2lzSW5SYW5nZShlbnRpdHksIHRhcmdldCkge1xuICAgIGNvbnN0IGRpc3RhbmNlID0gdGFyZ2V0LmdldFBvc2l0aW9uKCkuY2xvbmUoKS5zdWIoZW50aXR5LmdldFBvc2l0aW9uKCkpLmxlbmd0aCgpO1xuICAgIHJldHVybiBkaXN0YW5jZSA8PSB0aGlzLmF0dHJpYnV0ZXMucmFuZ2U7XG4gIH1cbiAgaGFuZGxlVGFyZ2V0cyhkdCwgdGFyZ2V0c0luUmFuZ2UsIHRhcmdldHNPdXRPZlJhbmdlKSB7XG4gICAgR2FtZU9iamVjdC5yZXF1aXJlT3ZlcnJpZGUoKTtcbiAgfVxufVxuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9zcmMvY2hhcmFjdGVycy9jaGFyYWN0ZXIuanNcbi8vIG1vZHVsZSBpZCA9IDRcbi8vIG1vZHVsZSBjaHVua3MgPSAwIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFBQTtBQUFBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///4\n");
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const GameObject_1 = __webpack_require__(0);
+class Character extends GameObject_1.default {
+    constructor(entity, position, attributes = {}) {
+        super();
+        this.entity = entity;
+        this.targets = [];
+        super.setAttributes({
+            searchInterval: 0.1,
+            range: 2,
+            material: new pc.PhongMaterial()
+        }, attributes);
+        super.addTimedUpdate(this.searchForTargets, this.attributes.searchInterval);
+        this.targets = [];
+        this.entity = entity;
+        this.entity.model.material = this.attributes.material;
+        this.entity.setPosition(position);
+        this.entity.enabled = true;
+        this.entity.addComponent('rigidbody', {
+            type: 'dynamic'
+        });
+    }
+    addTarget(target) {
+        this.targets.push(target);
+    }
+    searchForTargets(dt) {
+        const targetsInRange = [];
+        const targetsOutOfRange = [];
+        this.targets.forEach((target) => {
+            (this.isInRange(this.entity, target) ? targetsInRange : targetsOutOfRange).push(target);
+        });
+        this.handleTargets(dt, targetsInRange, targetsOutOfRange);
+    }
+    isInRange(entity, target) {
+        const distance = target.getPosition().clone().sub(entity.getPosition()).length();
+        return distance <= this.attributes.range;
+    }
+}
+exports.default = Character;
+
 
 /***/ }),
 /* 5 */
-/*!***********************************!*\
-  !*** ./src/environment/stages.js ***!
-  \***********************************/
-/*! exports provided: Terrain, Level, Stage */
-/*! exports used: Stage */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_noisejs__ = __webpack_require__(/*! noisejs */ 6);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_noisejs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_noisejs__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_javascript_astar__ = __webpack_require__(/*! javascript-astar */ 7);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_javascript_astar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_javascript_astar__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__gameobject__ = __webpack_require__(/*! ../gameobject */ 0);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__gameobject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__gameobject__);\n\n\n\n\nconst rand = (...arr) => {\n  let args = arr;\n  if (args.length === 0) {\n    args = [2];\n  }\n  if (args.length === 1) {\n    // use 1: rand(max)\n    return Math.floor(Math.random() * args[0]);\n  }\n  // use 2: rand(min, max)\n  return Math.floor((Math.random() * (args[1] - args[0])) + args[0]);\n};\n\nclass Terrain extends __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a {\n  _createNoiseMap(options) {\n    const mapWidth = this.attributes.size.x - 2;\n    const mapHeight = this.attributes.size.y - 2;\n\n    let noiseMap = [];\n    const noise = new __WEBPACK_IMPORTED_MODULE_0_noisejs__[\"Noise\"](Math.random());\n    for (let y = 0; y < mapHeight; y += 1) {\n      noiseMap[y] = [];\n\n      for (let x = 0; x < mapWidth; x += 1) {\n        // .simplex2d is between -1 and 1 per default, we need it between 0 and 1\n        noiseMap[y][x] = (noise.simplex2(y * 0.1, x * 0.1) + 1) * 0.5;\n        // clamp the noiseMap between 0.5 and 1, to make room for possible rivers (0 to 0.5)\n        noiseMap[y][x] = (noiseMap[y][x] + 1) * 0.5;\n      }\n    }\n\n    if (Math.random() <= this.attributes.riverProbability) {\n      const edges = {\n        x: [0, mapHeight - 1],\n        y: [0, mapWidth - 1],\n      };\n\n      for (let i = 0; i < 2; i += 1) {\n        const key = Object.keys(edges)[rand()];\n        edges[key].splice(rand(edges[key].length), 1);\n      }\n\n      const actualEdges = [];\n      Object.keys(edges).forEach((key) => {\n        edges[key].forEach((val) => {\n          let xCoord;\n          let yCoord;\n          if (key === 'x') {\n            xCoord = val;\n            yCoord = rand(mapWidth);\n          } else if (key === 'y') {\n            yCoord = val;\n            xCoord = rand(mapHeight);\n          }\n          actualEdges.push([xCoord, yCoord]);\n        });\n      });\n\n      // 1 means walkable for astar, 0 means obstacle\n      let noiseMask = noiseMap.map(row => row.map(point => Number(point <= 1)));\n      const graph = new __WEBPACK_IMPORTED_MODULE_1_javascript_astar__[\"Graph\"](noiseMask, {\n        diagonal: true,\n      });\n\n      const start = graph.grid[actualEdges[0][0]][actualEdges[0][1]];\n      const end = graph.grid[actualEdges[1][0]][actualEdges[1][1]];\n      const result = __WEBPACK_IMPORTED_MODULE_1_javascript_astar__[\"astar\"].search(graph, start, end);\n\n\n      const flattened = noiseMap.reduce((a, b) => a.concat(b));\n      const diffToMax = 1 - Math.max(...flattened);\n      noiseMap.map(row => row.map(point => point + diffToMax));\n\n      noiseMask = noiseMap.map(row => row.map(point => point + diffToMax));\n\n      const trySet = (x, y) => {\n        if (x < noiseMap.length && y < noiseMap[0].length) {\n          noiseMap[x][y] = 0.5 - (this.attributes.riverDepth / 2);\n        }\n      };\n      result.forEach((point) => {\n        const x = point.x + rand();\n        const y = point.y + rand();\n        trySet(x, y);\n        trySet(x + 1, y);\n        trySet(x, y + 1);\n        trySet(x + 1, y + 1);\n      });\n    }\n\n    if (options.extend) {\n      // cut away zeros\n      const toExtend = options.extend.slice(1, 14);\n\n      noiseMap.unshift(toExtend);\n      const delta = noiseMap[3].map((point, i) => (point - noiseMap[0][i]) / 3.0);\n      for (let i = 1; i < 3; i += 1) {\n        noiseMap[i] = noiseMap[i - 1].map((point, j) => point + delta[j]);\n      }\n    } else {\n      noiseMap.unshift(new Array(mapWidth).fill(0));\n    }\n    noiseMap.push(new Array(mapWidth).fill(0));\n    noiseMap = noiseMap.map(row => [0].concat(row, [0]));\n\n    this.heightMap = noiseMap;\n  }\n  _createGround() {\n    const ground = new pc.Entity('Ground');\n    ground.addComponent('model', {\n      type: 'box',\n    });\n    ground.model.material = this.attributes.terrainMaterial;\n\n    ground.setLocalPosition(this.attributes.offset.x, 0, this.attributes.offset.y);\n    ground.setLocalScale(this.attributes.size.x - 1,\n      this.attributes.groundThickness, this.attributes.size.y - 1);\n    this.entity.addChild(ground);\n  }\n  _createWater() {\n    const water = new pc.Entity('Water');\n    water.addComponent('model', {\n      type: 'box',\n    });\n    water.model.material = this.attributes.waterMaterial;\n    water.setLocalScale(this.attributes.size.x - 4,\n      this.attributes.waterLevel, this.attributes.size.y - 4);\n    water.setLocalPosition(this.attributes.offset.x,\n      this.attributes.waterLevel / 2, this.attributes.offset.y);\n    this.entity.addChild(water);\n  }\n  _createMesh() {\n    const width = this.attributes.size.x;\n    const height = this.attributes.size.y;\n\n    // A one dimensional array of numbers, holding where the vertices should located be on the mesh.\n    const positions = [];\n    // A one dimensional array of numbers, holding where the triangles are located on the mesh.\n    const indices = [];\n    // A one dimensional array of numbers, holding where the texture should be placed on the mesh.\n    const uvs = [];\n    // A normal map to correctly display light.\n    let vertexIndex = 0;\n\n    for (let y = 0; y < height; y += 1) {\n      for (let x = 0; x < width; x += 1) {\n        positions.push(...this.coord2pos(x, y));\n        uvs.push(x / height, 1.0 - (y / width));\n\n        if (x < width - 1 && y < height - 1) {\n          // Creates first triangle of a square.\n          indices.push(vertexIndex, vertexIndex + width + 1, vertexIndex + width);\n          // Creates second triangle of a square.\n          indices.push(vertexIndex + width + 1, vertexIndex, vertexIndex + 1);\n        }\n\n        vertexIndex += 1;\n      }\n    }\n\n    const normals = pc.calculateNormals(positions, indices);\n    this.normals = normals;\n\n    const plane = pc.createMesh(__WEBPACK_IMPORTED_MODULE_2__gameobject___default.a.getApp().graphicsDevice, positions, {\n      indices,\n      normals,\n      uvs,\n    });\n\n    const node = new pc.GraphNode('TerrainNode');\n    const meshInstance = new pc.MeshInstance(node, plane, this.attributes.terrainMaterial);\n    const model = new pc.Model();\n\n    model.graph = node;\n    model.meshInstances = [meshInstance];\n\n    if (!this.entity.rigidbody) {\n      this.entity.addComponent('rigidbody', {\n        type: 'static',\n      });\n    }\n    if (!this.entity.collision) {\n      this.entity.addComponent('collision', {\n        type: 'mesh',\n      });\n    }\n\n    this.entity.collision.model = model;\n    __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a.getApp().scene.addModel(model);\n\n    const previousTerrainNode = this.entity.findByName('TerrainNode');\n    if (previousTerrainNode) {\n      this.entity.removeChild(previousTerrainNode);\n    }\n    this.entity.addChild(node);\n\n    if (this.model) {\n      __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a.getApp().scene.removeModel(this.model);\n    }\n    this.model = model;\n  }\n  _createRocks() {\n    const width = this.attributes.size.x;\n    const height = this.attributes.size.y;\n\n    for (let i = 0; i < rand(this.attributes.stoneRange.x, this.attributes.stoneRange.y); i += 1) {\n      const rock = __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a.getEntity('Prefabs', 'Rock').clone();\n      rock.enabled = true;\n      const y = rand(height * this.attributes.minStoneOffset,\n        height * (1 - this.attributes.minStoneOffset));\n      const x = rand(width * this.attributes.minStoneOffset,\n        width * (1 - this.attributes.minStoneOffset));\n      rock.setPosition(...this.coord2pos(x, y));\n    }\n  }\n\n  coord2pos(x, y) {\n    return [(this.topLeft.x + x),\n      (this.heightMap[y][x] ** 3) * this.attributes.meshHeightMultiplier,\n      (this.topLeft.y - y),\n    ];\n  }\n\n  grayOut() {\n    __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a.getApp().scene.removeModel(this.model);\n    this.model.meshInstances[0].material = this.attributes.grayTerrainMaterial;\n    __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a.getApp().scene.addModel(this.model);\n\n    this.entity.findByName('Water').enabled = false;\n    this.entity.findByName('Ground').model.material = this.attributes.grayTerrainMaterial;\n  }\n\n  constructor(parent, attributes = {}) {\n    super();\n    Promise.all([\n      __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a.getAsset('assets/materials/grass.json', 'material'),\n      __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a.getAsset('assets/materials/water.json', 'material'),\n      __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a.getAsset('assets/materials/gray.json', 'material'),\n    ]).then((arr) => {\n      const [terrainMaterial, waterMaterial, grayTerrainMaterial] =\n      arr.map(asset => asset.resource);\n      const defaultAttributes = {\n        offset: new pc.Vec2(0, 0),\n        size: new pc.Vec2(15, 45),\n        terrainMaterial,\n        waterMaterial,\n        grayTerrainMaterial,\n        waterLevel: 1,\n        meshHeightMultiplier: 5,\n        riverProbability: 1,\n        riverDepth: 0,\n        stoneRange: [2, 7],\n        minStoneOffset: 0.1,\n        groundThickness: 0.1,\n      };\n\n      super.setAttributes(defaultAttributes, attributes);\n      this.entity = parent;\n      this.topLeft = new pc.Vec2(-(this.attributes.offset.x + ((this.attributes.size.x - 1) / 2.0)),\n        this.attributes.offset.y + ((this.attributes.size.y - 1) / 2.0));\n\n      // this has to be called first in order for this.heightMap to exist\n      const noiseOptions = {};\n      if (this.attributes.extend) {\n        noiseOptions.extend = this.attributes.extend;\n      }\n      this._createNoiseMap(noiseOptions);\n\n      // these need this.heightMap\n      this._createMesh();\n      this._createGround();\n      this._createWater();\n      this._createRocks();\n    });\n  }\n}\n/* unused harmony export Terrain */\n\n\nclass Level extends __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a {\n  _createEndZone() {\n    this.endZone = new pc.Entity();\n    this.endZone.addComponent('model', {\n      type: 'box',\n    });\n    this.endZone.model.material = this.attributes.endzoneMaterial;\n\n    this.endZone.setLocalScale(this.attributes.size.x - 1, 10, 5);\n    this.endZone.setLocalPosition(0, 5, (this.attributes.size.y / -2.0) + 3);\n    //\n    // super.addTimedUpdate(() => {\n    //   if (this.isCompleted() && !this.grayedOut) {\n    //     this.grayedOut = true;\n    //     this.terrain.grayOut();\n    //     this.endZone.destroy();\n    //\n    //     this.onComplete();\n    //   }\n    // }, 1);\n    this.entity.addChild(this.endZone);\n  }\n  isCompleted() {\n    // TODO: check if all players are in the endzone\n    return true;\n  }\n  onComplete() {\n    // this is usually overridden from an external function\n  }\n  constructor(parent, attributes = {}) {\n    super();\n    super.setAttributes({\n      size: new pc.Vec2(15, 45),\n      offset: new pc.Vec2(0, 0),\n    }, attributes);\n\n    __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a.getAsset('assets/materials/endzone.json', 'material').then((asset) => {\n      super.setAttributes({\n        endzoneMaterial: asset.resource,\n      });\n\n      this._createEndZone();\n    });\n\n    this.entity = new pc.Entity();\n    this.entity.setPosition(this.attributes.offset.x, 0, this.attributes.offset.y);\n    parent.addChild(this.entity);\n\n    const terrainEntity = new pc.Entity();\n    this.entity.addChild(terrainEntity);\n\n    this.terrain = new Terrain(terrainEntity, {\n      size: this.attributes.size,\n    });\n  }\n}\n/* unused harmony export Level */\n\n\nclass Stage extends __WEBPACK_IMPORTED_MODULE_2__gameobject___default.a {\n  constructor(entity, orbitCamera, attributes = {}) {\n    super();\n    super.setAttributes({\n      levelCount: 3,\n    }, attributes);\n\n    this.orbitCam = orbitCamera;\n    this.currentOffset = new pc.Vec2(0, 0);\n    this.levels = [];\n\n    this.levelParent = new pc.Entity();\n    entity.addChild(this.levelParent);\n\n    this.createNextLevel();\n  }\n\n  createNextLevel() {\n    const attributes = {\n      offset: this.currentOffset,\n    };\n\n    if (this.levels.length > 0) {\n      attributes.extend = this.levels[this.levels.length - 1].terrain.heightMap[0];\n    }\n\n    const level = new Level(this.levelParent, attributes);\n\n    setTimeout(() => this.orbitCam.focus(level.entity, true), 500);\n\n    this.levels.push(level);\n    this.currentOffset.y -= 43;\n    if (this.levels.length < this.attributes.levelCount) {\n      level.onComplete = () => this.createNextLevel();\n    }\n  }\n}\n/* harmony export (immutable) */ __webpack_exports__[\"a\"] = Stage;\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiNS5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL3NyYy9lbnZpcm9ubWVudC9zdGFnZXMuanM/OTZlMiJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBOb2lzZSB9IGZyb20gJ25vaXNlanMnO1xuaW1wb3J0IHsgYXN0YXIsIEdyYXBoIH0gZnJvbSAnamF2YXNjcmlwdC1hc3Rhcic7XG5pbXBvcnQgR2FtZU9iamVjdCBmcm9tICcuLi9nYW1lb2JqZWN0JztcblxuY29uc3QgcmFuZCA9ICguLi5hcnIpID0+IHtcbiAgbGV0IGFyZ3MgPSBhcnI7XG4gIGlmIChhcmdzLmxlbmd0aCA9PT0gMCkge1xuICAgIGFyZ3MgPSBbMl07XG4gIH1cbiAgaWYgKGFyZ3MubGVuZ3RoID09PSAxKSB7XG4gICAgLy8gdXNlIDE6IHJhbmQobWF4KVxuICAgIHJldHVybiBNYXRoLmZsb29yKE1hdGgucmFuZG9tKCkgKiBhcmdzWzBdKTtcbiAgfVxuICAvLyB1c2UgMjogcmFuZChtaW4sIG1heClcbiAgcmV0dXJuIE1hdGguZmxvb3IoKE1hdGgucmFuZG9tKCkgKiAoYXJnc1sxXSAtIGFyZ3NbMF0pKSArIGFyZ3NbMF0pO1xufTtcblxuZXhwb3J0IGNsYXNzIFRlcnJhaW4gZXh0ZW5kcyBHYW1lT2JqZWN0IHtcbiAgX2NyZWF0ZU5vaXNlTWFwKG9wdGlvbnMpIHtcbiAgICBjb25zdCBtYXBXaWR0aCA9IHRoaXMuYXR0cmlidXRlcy5zaXplLnggLSAyO1xuICAgIGNvbnN0IG1hcEhlaWdodCA9IHRoaXMuYXR0cmlidXRlcy5zaXplLnkgLSAyO1xuXG4gICAgbGV0IG5vaXNlTWFwID0gW107XG4gICAgY29uc3Qgbm9pc2UgPSBuZXcgTm9pc2UoTWF0aC5yYW5kb20oKSk7XG4gICAgZm9yIChsZXQgeSA9IDA7IHkgPCBtYXBIZWlnaHQ7IHkgKz0gMSkge1xuICAgICAgbm9pc2VNYXBbeV0gPSBbXTtcblxuICAgICAgZm9yIChsZXQgeCA9IDA7IHggPCBtYXBXaWR0aDsgeCArPSAxKSB7XG4gICAgICAgIC8vIC5zaW1wbGV4MmQgaXMgYmV0d2VlbiAtMSBhbmQgMSBwZXIgZGVmYXVsdCwgd2UgbmVlZCBpdCBiZXR3ZWVuIDAgYW5kIDFcbiAgICAgICAgbm9pc2VNYXBbeV1beF0gPSAobm9pc2Uuc2ltcGxleDIoeSAqIDAuMSwgeCAqIDAuMSkgKyAxKSAqIDAuNTtcbiAgICAgICAgLy8gY2xhbXAgdGhlIG5vaXNlTWFwIGJldHdlZW4gMC41IGFuZCAxLCB0byBtYWtlIHJvb20gZm9yIHBvc3NpYmxlIHJpdmVycyAoMCB0byAwLjUpXG4gICAgICAgIG5vaXNlTWFwW3ldW3hdID0gKG5vaXNlTWFwW3ldW3hdICsgMSkgKiAwLjU7XG4gICAgICB9XG4gICAgfVxuXG4gICAgaWYgKE1hdGgucmFuZG9tKCkgPD0gdGhpcy5hdHRyaWJ1dGVzLnJpdmVyUHJvYmFiaWxpdHkpIHtcbiAgICAgIGNvbnN0IGVkZ2VzID0ge1xuICAgICAgICB4OiBbMCwgbWFwSGVpZ2h0IC0gMV0sXG4gICAgICAgIHk6IFswLCBtYXBXaWR0aCAtIDFdLFxuICAgICAgfTtcblxuICAgICAgZm9yIChsZXQgaSA9IDA7IGkgPCAyOyBpICs9IDEpIHtcbiAgICAgICAgY29uc3Qga2V5ID0gT2JqZWN0LmtleXMoZWRnZXMpW3JhbmQoKV07XG4gICAgICAgIGVkZ2VzW2tleV0uc3BsaWNlKHJhbmQoZWRnZXNba2V5XS5sZW5ndGgpLCAxKTtcbiAgICAgIH1cblxuICAgICAgY29uc3QgYWN0dWFsRWRnZXMgPSBbXTtcbiAgICAgIE9iamVjdC5rZXlzKGVkZ2VzKS5mb3JFYWNoKChrZXkpID0+IHtcbiAgICAgICAgZWRnZXNba2V5XS5mb3JFYWNoKCh2YWwpID0+IHtcbiAgICAgICAgICBsZXQgeENvb3JkO1xuICAgICAgICAgIGxldCB5Q29vcmQ7XG4gICAgICAgICAgaWYgKGtleSA9PT0gJ3gnKSB7XG4gICAgICAgICAgICB4Q29vcmQgPSB2YWw7XG4gICAgICAgICAgICB5Q29vcmQgPSByYW5kKG1hcFdpZHRoKTtcbiAgICAgICAgICB9IGVsc2UgaWYgKGtleSA9PT0gJ3knKSB7XG4gICAgICAgICAgICB5Q29vcmQgPSB2YWw7XG4gICAgICAgICAgICB4Q29vcmQgPSByYW5kKG1hcEhlaWdodCk7XG4gICAgICAgICAgfVxuICAgICAgICAgIGFjdHVhbEVkZ2VzLnB1c2goW3hDb29yZCwgeUNvb3JkXSk7XG4gICAgICAgIH0pO1xuICAgICAgfSk7XG5cbiAgICAgIC8vIDEgbWVhbnMgd2Fsa2FibGUgZm9yIGFzdGFyLCAwIG1lYW5zIG9ic3RhY2xlXG4gICAgICBsZXQgbm9pc2VNYXNrID0gbm9pc2VNYXAubWFwKHJvdyA9PiByb3cubWFwKHBvaW50ID0+IE51bWJlcihwb2ludCA8PSAxKSkpO1xuICAgICAgY29uc3QgZ3JhcGggPSBuZXcgR3JhcGgobm9pc2VNYXNrLCB7XG4gICAgICAgIGRpYWdvbmFsOiB0cnVlLFxuICAgICAgfSk7XG5cbiAgICAgIGNvbnN0IHN0YXJ0ID0gZ3JhcGguZ3JpZFthY3R1YWxFZGdlc1swXVswXV1bYWN0dWFsRWRnZXNbMF1bMV1dO1xuICAgICAgY29uc3QgZW5kID0gZ3JhcGguZ3JpZFthY3R1YWxFZGdlc1sxXVswXV1bYWN0dWFsRWRnZXNbMV1bMV1dO1xuICAgICAgY29uc3QgcmVzdWx0ID0gYXN0YXIuc2VhcmNoKGdyYXBoLCBzdGFydCwgZW5kKTtcblxuXG4gICAgICBjb25zdCBmbGF0dGVuZWQgPSBub2lzZU1hcC5yZWR1Y2UoKGEsIGIpID0+IGEuY29uY2F0KGIpKTtcbiAgICAgIGNvbnN0IGRpZmZUb01heCA9IDEgLSBNYXRoLm1heCguLi5mbGF0dGVuZWQpO1xuICAgICAgbm9pc2VNYXAubWFwKHJvdyA9PiByb3cubWFwKHBvaW50ID0+IHBvaW50ICsgZGlmZlRvTWF4KSk7XG5cbiAgICAgIG5vaXNlTWFzayA9IG5vaXNlTWFwLm1hcChyb3cgPT4gcm93Lm1hcChwb2ludCA9PiBwb2ludCArIGRpZmZUb01heCkpO1xuXG4gICAgICBjb25zdCB0cnlTZXQgPSAoeCwgeSkgPT4ge1xuICAgICAgICBpZiAoeCA8IG5vaXNlTWFwLmxlbmd0aCAmJiB5IDwgbm9pc2VNYXBbMF0ubGVuZ3RoKSB7XG4gICAgICAgICAgbm9pc2VNYXBbeF1beV0gPSAwLjUgLSAodGhpcy5hdHRyaWJ1dGVzLnJpdmVyRGVwdGggLyAyKTtcbiAgICAgICAgfVxuICAgICAgfTtcbiAgICAgIHJlc3VsdC5mb3JFYWNoKChwb2ludCkgPT4ge1xuICAgICAgICBjb25zdCB4ID0gcG9pbnQueCArIHJhbmQoKTtcbiAgICAgICAgY29uc3QgeSA9IHBvaW50LnkgKyByYW5kKCk7XG4gICAgICAgIHRyeVNldCh4LCB5KTtcbiAgICAgICAgdHJ5U2V0KHggKyAxLCB5KTtcbiAgICAgICAgdHJ5U2V0KHgsIHkgKyAxKTtcbiAgICAgICAgdHJ5U2V0KHggKyAxLCB5ICsgMSk7XG4gICAgICB9KTtcbiAgICB9XG5cbiAgICBpZiAob3B0aW9ucy5leHRlbmQpIHtcbiAgICAgIC8vIGN1dCBhd2F5IHplcm9zXG4gICAgICBjb25zdCB0b0V4dGVuZCA9IG9wdGlvbnMuZXh0ZW5kLnNsaWNlKDEsIDE0KTtcblxuICAgICAgbm9pc2VNYXAudW5zaGlmdCh0b0V4dGVuZCk7XG4gICAgICBjb25zdCBkZWx0YSA9IG5vaXNlTWFwWzNdLm1hcCgocG9pbnQsIGkpID0+IChwb2ludCAtIG5vaXNlTWFwWzBdW2ldKSAvIDMuMCk7XG4gICAgICBmb3IgKGxldCBpID0gMTsgaSA8IDM7IGkgKz0gMSkge1xuICAgICAgICBub2lzZU1hcFtpXSA9IG5vaXNlTWFwW2kgLSAxXS5tYXAoKHBvaW50LCBqKSA9PiBwb2ludCArIGRlbHRhW2pdKTtcbiAgICAgIH1cbiAgICB9IGVsc2Uge1xuICAgICAgbm9pc2VNYXAudW5zaGlmdChuZXcgQXJyYXkobWFwV2lkdGgpLmZpbGwoMCkpO1xuICAgIH1cbiAgICBub2lzZU1hcC5wdXNoKG5ldyBBcnJheShtYXBXaWR0aCkuZmlsbCgwKSk7XG4gICAgbm9pc2VNYXAgPSBub2lzZU1hcC5tYXAocm93ID0+IFswXS5jb25jYXQocm93LCBbMF0pKTtcblxuICAgIHRoaXMuaGVpZ2h0TWFwID0gbm9pc2VNYXA7XG4gIH1cbiAgX2NyZWF0ZUdyb3VuZCgpIHtcbiAgICBjb25zdCBncm91bmQgPSBuZXcgcGMuRW50aXR5KCdHcm91bmQnKTtcbiAgICBncm91bmQuYWRkQ29tcG9uZW50KCdtb2RlbCcsIHtcbiAgICAgIHR5cGU6ICdib3gnLFxuICAgIH0pO1xuICAgIGdyb3VuZC5tb2RlbC5tYXRlcmlhbCA9IHRoaXMuYXR0cmlidXRlcy50ZXJyYWluTWF0ZXJpYWw7XG5cbiAgICBncm91bmQuc2V0TG9jYWxQb3NpdGlvbih0aGlzLmF0dHJpYnV0ZXMub2Zmc2V0LngsIDAsIHRoaXMuYXR0cmlidXRlcy5vZmZzZXQueSk7XG4gICAgZ3JvdW5kLnNldExvY2FsU2NhbGUodGhpcy5hdHRyaWJ1dGVzLnNpemUueCAtIDEsXG4gICAgICB0aGlzLmF0dHJpYnV0ZXMuZ3JvdW5kVGhpY2tuZXNzLCB0aGlzLmF0dHJpYnV0ZXMuc2l6ZS55IC0gMSk7XG4gICAgdGhpcy5lbnRpdHkuYWRkQ2hpbGQoZ3JvdW5kKTtcbiAgfVxuICBfY3JlYXRlV2F0ZXIoKSB7XG4gICAgY29uc3Qgd2F0ZXIgPSBuZXcgcGMuRW50aXR5KCdXYXRlcicpO1xuICAgIHdhdGVyLmFkZENvbXBvbmVudCgnbW9kZWwnLCB7XG4gICAgICB0eXBlOiAnYm94JyxcbiAgICB9KTtcbiAgICB3YXRlci5tb2RlbC5tYXRlcmlhbCA9IHRoaXMuYXR0cmlidXRlcy53YXRlck1hdGVyaWFsO1xuICAgIHdhdGVyLnNldExvY2FsU2NhbGUodGhpcy5hdHRyaWJ1dGVzLnNpemUueCAtIDQsXG4gICAgICB0aGlzLmF0dHJpYnV0ZXMud2F0ZXJMZXZlbCwgdGhpcy5hdHRyaWJ1dGVzLnNpemUueSAtIDQpO1xuICAgIHdhdGVyLnNldExvY2FsUG9zaXRpb24odGhpcy5hdHRyaWJ1dGVzLm9mZnNldC54LFxuICAgICAgdGhpcy5hdHRyaWJ1dGVzLndhdGVyTGV2ZWwgLyAyLCB0aGlzLmF0dHJpYnV0ZXMub2Zmc2V0LnkpO1xuICAgIHRoaXMuZW50aXR5LmFkZENoaWxkKHdhdGVyKTtcbiAgfVxuICBfY3JlYXRlTWVzaCgpIHtcbiAgICBjb25zdCB3aWR0aCA9IHRoaXMuYXR0cmlidXRlcy5zaXplLng7XG4gICAgY29uc3QgaGVpZ2h0ID0gdGhpcy5hdHRyaWJ1dGVzLnNpemUueTtcblxuICAgIC8vIEEgb25lIGRpbWVuc2lvbmFsIGFycmF5IG9mIG51bWJlcnMsIGhvbGRpbmcgd2hlcmUgdGhlIHZlcnRpY2VzIHNob3VsZCBsb2NhdGVkIGJlIG9uIHRoZSBtZXNoLlxuICAgIGNvbnN0IHBvc2l0aW9ucyA9IFtdO1xuICAgIC8vIEEgb25lIGRpbWVuc2lvbmFsIGFycmF5IG9mIG51bWJlcnMsIGhvbGRpbmcgd2hlcmUgdGhlIHRyaWFuZ2xlcyBhcmUgbG9jYXRlZCBvbiB0aGUgbWVzaC5cbiAgICBjb25zdCBpbmRpY2VzID0gW107XG4gICAgLy8gQSBvbmUgZGltZW5zaW9uYWwgYXJyYXkgb2YgbnVtYmVycywgaG9sZGluZyB3aGVyZSB0aGUgdGV4dHVyZSBzaG91bGQgYmUgcGxhY2VkIG9uIHRoZSBtZXNoLlxuICAgIGNvbnN0IHV2cyA9IFtdO1xuICAgIC8vIEEgbm9ybWFsIG1hcCB0byBjb3JyZWN0bHkgZGlzcGxheSBsaWdodC5cbiAgICBsZXQgdmVydGV4SW5kZXggPSAwO1xuXG4gICAgZm9yIChsZXQgeSA9IDA7IHkgPCBoZWlnaHQ7IHkgKz0gMSkge1xuICAgICAgZm9yIChsZXQgeCA9IDA7IHggPCB3aWR0aDsgeCArPSAxKSB7XG4gICAgICAgIHBvc2l0aW9ucy5wdXNoKC4uLnRoaXMuY29vcmQycG9zKHgsIHkpKTtcbiAgICAgICAgdXZzLnB1c2goeCAvIGhlaWdodCwgMS4wIC0gKHkgLyB3aWR0aCkpO1xuXG4gICAgICAgIGlmICh4IDwgd2lkdGggLSAxICYmIHkgPCBoZWlnaHQgLSAxKSB7XG4gICAgICAgICAgLy8gQ3JlYXRlcyBmaXJzdCB0cmlhbmdsZSBvZiBhIHNxdWFyZS5cbiAgICAgICAgICBpbmRpY2VzLnB1c2godmVydGV4SW5kZXgsIHZlcnRleEluZGV4ICsgd2lkdGggKyAxLCB2ZXJ0ZXhJbmRleCArIHdpZHRoKTtcbiAgICAgICAgICAvLyBDcmVhdGVzIHNlY29uZCB0cmlhbmdsZSBvZiBhIHNxdWFyZS5cbiAgICAgICAgICBpbmRpY2VzLnB1c2godmVydGV4SW5kZXggKyB3aWR0aCArIDEsIHZlcnRleEluZGV4LCB2ZXJ0ZXhJbmRleCArIDEpO1xuICAgICAgICB9XG5cbiAgICAgICAgdmVydGV4SW5kZXggKz0gMTtcbiAgICAgIH1cbiAgICB9XG5cbiAgICBjb25zdCBub3JtYWxzID0gcGMuY2FsY3VsYXRlTm9ybWFscyhwb3NpdGlvbnMsIGluZGljZXMpO1xuICAgIHRoaXMubm9ybWFscyA9IG5vcm1hbHM7XG5cbiAgICBjb25zdCBwbGFuZSA9IHBjLmNyZWF0ZU1lc2goR2FtZU9iamVjdC5nZXRBcHAoKS5ncmFwaGljc0RldmljZSwgcG9zaXRpb25zLCB7XG4gICAgICBpbmRpY2VzLFxuICAgICAgbm9ybWFscyxcbiAgICAgIHV2cyxcbiAgICB9KTtcblxuICAgIGNvbnN0IG5vZGUgPSBuZXcgcGMuR3JhcGhOb2RlKCdUZXJyYWluTm9kZScpO1xuICAgIGNvbnN0IG1lc2hJbnN0YW5jZSA9IG5ldyBwYy5NZXNoSW5zdGFuY2Uobm9kZSwgcGxhbmUsIHRoaXMuYXR0cmlidXRlcy50ZXJyYWluTWF0ZXJpYWwpO1xuICAgIGNvbnN0IG1vZGVsID0gbmV3IHBjLk1vZGVsKCk7XG5cbiAgICBtb2RlbC5ncmFwaCA9IG5vZGU7XG4gICAgbW9kZWwubWVzaEluc3RhbmNlcyA9IFttZXNoSW5zdGFuY2VdO1xuXG4gICAgaWYgKCF0aGlzLmVudGl0eS5yaWdpZGJvZHkpIHtcbiAgICAgIHRoaXMuZW50aXR5LmFkZENvbXBvbmVudCgncmlnaWRib2R5Jywge1xuICAgICAgICB0eXBlOiAnc3RhdGljJyxcbiAgICAgIH0pO1xuICAgIH1cbiAgICBpZiAoIXRoaXMuZW50aXR5LmNvbGxpc2lvbikge1xuICAgICAgdGhpcy5lbnRpdHkuYWRkQ29tcG9uZW50KCdjb2xsaXNpb24nLCB7XG4gICAgICAgIHR5cGU6ICdtZXNoJyxcbiAgICAgIH0pO1xuICAgIH1cblxuICAgIHRoaXMuZW50aXR5LmNvbGxpc2lvbi5tb2RlbCA9IG1vZGVsO1xuICAgIEdhbWVPYmplY3QuZ2V0QXBwKCkuc2NlbmUuYWRkTW9kZWwobW9kZWwpO1xuXG4gICAgY29uc3QgcHJldmlvdXNUZXJyYWluTm9kZSA9IHRoaXMuZW50aXR5LmZpbmRCeU5hbWUoJ1RlcnJhaW5Ob2RlJyk7XG4gICAgaWYgKHByZXZpb3VzVGVycmFpbk5vZGUpIHtcbiAgICAgIHRoaXMuZW50aXR5LnJlbW92ZUNoaWxkKHByZXZpb3VzVGVycmFpbk5vZGUpO1xuICAgIH1cbiAgICB0aGlzLmVudGl0eS5hZGRDaGlsZChub2RlKTtcblxuICAgIGlmICh0aGlzLm1vZGVsKSB7XG4gICAgICBHYW1lT2JqZWN0LmdldEFwcCgpLnNjZW5lLnJlbW92ZU1vZGVsKHRoaXMubW9kZWwpO1xuICAgIH1cbiAgICB0aGlzLm1vZGVsID0gbW9kZWw7XG4gIH1cbiAgX2NyZWF0ZVJvY2tzKCkge1xuICAgIGNvbnN0IHdpZHRoID0gdGhpcy5hdHRyaWJ1dGVzLnNpemUueDtcbiAgICBjb25zdCBoZWlnaHQgPSB0aGlzLmF0dHJpYnV0ZXMuc2l6ZS55O1xuXG4gICAgZm9yIChsZXQgaSA9IDA7IGkgPCByYW5kKHRoaXMuYXR0cmlidXRlcy5zdG9uZVJhbmdlLngsIHRoaXMuYXR0cmlidXRlcy5zdG9uZVJhbmdlLnkpOyBpICs9IDEpIHtcbiAgICAgIGNvbnN0IHJvY2sgPSBHYW1lT2JqZWN0LmdldEVudGl0eSgnUHJlZmFicycsICdSb2NrJykuY2xvbmUoKTtcbiAgICAgIHJvY2suZW5hYmxlZCA9IHRydWU7XG4gICAgICBjb25zdCB5ID0gcmFuZChoZWlnaHQgKiB0aGlzLmF0dHJpYnV0ZXMubWluU3RvbmVPZmZzZXQsXG4gICAgICAgIGhlaWdodCAqICgxIC0gdGhpcy5hdHRyaWJ1dGVzLm1pblN0b25lT2Zmc2V0KSk7XG4gICAgICBjb25zdCB4ID0gcmFuZCh3aWR0aCAqIHRoaXMuYXR0cmlidXRlcy5taW5TdG9uZU9mZnNldCxcbiAgICAgICAgd2lkdGggKiAoMSAtIHRoaXMuYXR0cmlidXRlcy5taW5TdG9uZU9mZnNldCkpO1xuICAgICAgcm9jay5zZXRQb3NpdGlvbiguLi50aGlzLmNvb3JkMnBvcyh4LCB5KSk7XG4gICAgfVxuICB9XG5cbiAgY29vcmQycG9zKHgsIHkpIHtcbiAgICByZXR1cm4gWyh0aGlzLnRvcExlZnQueCArIHgpLFxuICAgICAgKHRoaXMuaGVpZ2h0TWFwW3ldW3hdICoqIDMpICogdGhpcy5hdHRyaWJ1dGVzLm1lc2hIZWlnaHRNdWx0aXBsaWVyLFxuICAgICAgKHRoaXMudG9wTGVmdC55IC0geSksXG4gICAgXTtcbiAgfVxuXG4gIGdyYXlPdXQoKSB7XG4gICAgR2FtZU9iamVjdC5nZXRBcHAoKS5zY2VuZS5yZW1vdmVNb2RlbCh0aGlzLm1vZGVsKTtcbiAgICB0aGlzLm1vZGVsLm1lc2hJbnN0YW5jZXNbMF0ubWF0ZXJpYWwgPSB0aGlzLmF0dHJpYnV0ZXMuZ3JheVRlcnJhaW5NYXRlcmlhbDtcbiAgICBHYW1lT2JqZWN0LmdldEFwcCgpLnNjZW5lLmFkZE1vZGVsKHRoaXMubW9kZWwpO1xuXG4gICAgdGhpcy5lbnRpdHkuZmluZEJ5TmFtZSgnV2F0ZXInKS5lbmFibGVkID0gZmFsc2U7XG4gICAgdGhpcy5lbnRpdHkuZmluZEJ5TmFtZSgnR3JvdW5kJykubW9kZWwubWF0ZXJpYWwgPSB0aGlzLmF0dHJpYnV0ZXMuZ3JheVRlcnJhaW5NYXRlcmlhbDtcbiAgfVxuXG4gIGNvbnN0cnVjdG9yKHBhcmVudCwgYXR0cmlidXRlcyA9IHt9KSB7XG4gICAgc3VwZXIoKTtcbiAgICBQcm9taXNlLmFsbChbXG4gICAgICBHYW1lT2JqZWN0LmdldEFzc2V0KCdhc3NldHMvbWF0ZXJpYWxzL2dyYXNzLmpzb24nLCAnbWF0ZXJpYWwnKSxcbiAgICAgIEdhbWVPYmplY3QuZ2V0QXNzZXQoJ2Fzc2V0cy9tYXRlcmlhbHMvd2F0ZXIuanNvbicsICdtYXRlcmlhbCcpLFxuICAgICAgR2FtZU9iamVjdC5nZXRBc3NldCgnYXNzZXRzL21hdGVyaWFscy9ncmF5Lmpzb24nLCAnbWF0ZXJpYWwnKSxcbiAgICBdKS50aGVuKChhcnIpID0+IHtcbiAgICAgIGNvbnN0IFt0ZXJyYWluTWF0ZXJpYWwsIHdhdGVyTWF0ZXJpYWwsIGdyYXlUZXJyYWluTWF0ZXJpYWxdID1cbiAgICAgIGFyci5tYXAoYXNzZXQgPT4gYXNzZXQucmVzb3VyY2UpO1xuICAgICAgY29uc3QgZGVmYXVsdEF0dHJpYnV0ZXMgPSB7XG4gICAgICAgIG9mZnNldDogbmV3IHBjLlZlYzIoMCwgMCksXG4gICAgICAgIHNpemU6IG5ldyBwYy5WZWMyKDE1LCA0NSksXG4gICAgICAgIHRlcnJhaW5NYXRlcmlhbCxcbiAgICAgICAgd2F0ZXJNYXRlcmlhbCxcbiAgICAgICAgZ3JheVRlcnJhaW5NYXRlcmlhbCxcbiAgICAgICAgd2F0ZXJMZXZlbDogMSxcbiAgICAgICAgbWVzaEhlaWdodE11bHRpcGxpZXI6IDUsXG4gICAgICAgIHJpdmVyUHJvYmFiaWxpdHk6IDEsXG4gICAgICAgIHJpdmVyRGVwdGg6IDAsXG4gICAgICAgIHN0b25lUmFuZ2U6IFsyLCA3XSxcbiAgICAgICAgbWluU3RvbmVPZmZzZXQ6IDAuMSxcbiAgICAgICAgZ3JvdW5kVGhpY2tuZXNzOiAwLjEsXG4gICAgICB9O1xuXG4gICAgICBzdXBlci5zZXRBdHRyaWJ1dGVzKGRlZmF1bHRBdHRyaWJ1dGVzLCBhdHRyaWJ1dGVzKTtcbiAgICAgIHRoaXMuZW50aXR5ID0gcGFyZW50O1xuICAgICAgdGhpcy50b3BMZWZ0ID0gbmV3IHBjLlZlYzIoLSh0aGlzLmF0dHJpYnV0ZXMub2Zmc2V0LnggKyAoKHRoaXMuYXR0cmlidXRlcy5zaXplLnggLSAxKSAvIDIuMCkpLFxuICAgICAgICB0aGlzLmF0dHJpYnV0ZXMub2Zmc2V0LnkgKyAoKHRoaXMuYXR0cmlidXRlcy5zaXplLnkgLSAxKSAvIDIuMCkpO1xuXG4gICAgICAvLyB0aGlzIGhhcyB0byBiZSBjYWxsZWQgZmlyc3QgaW4gb3JkZXIgZm9yIHRoaXMuaGVpZ2h0TWFwIHRvIGV4aXN0XG4gICAgICBjb25zdCBub2lzZU9wdGlvbnMgPSB7fTtcbiAgICAgIGlmICh0aGlzLmF0dHJpYnV0ZXMuZXh0ZW5kKSB7XG4gICAgICAgIG5vaXNlT3B0aW9ucy5leHRlbmQgPSB0aGlzLmF0dHJpYnV0ZXMuZXh0ZW5kO1xuICAgICAgfVxuICAgICAgdGhpcy5fY3JlYXRlTm9pc2VNYXAobm9pc2VPcHRpb25zKTtcblxuICAgICAgLy8gdGhlc2UgbmVlZCB0aGlzLmhlaWdodE1hcFxuICAgICAgdGhpcy5fY3JlYXRlTWVzaCgpO1xuICAgICAgdGhpcy5fY3JlYXRlR3JvdW5kKCk7XG4gICAgICB0aGlzLl9jcmVhdGVXYXRlcigpO1xuICAgICAgdGhpcy5fY3JlYXRlUm9ja3MoKTtcbiAgICB9KTtcbiAgfVxufVxuXG5leHBvcnQgY2xhc3MgTGV2ZWwgZXh0ZW5kcyBHYW1lT2JqZWN0IHtcbiAgX2NyZWF0ZUVuZFpvbmUoKSB7XG4gICAgdGhpcy5lbmRab25lID0gbmV3IHBjLkVudGl0eSgpO1xuICAgIHRoaXMuZW5kWm9uZS5hZGRDb21wb25lbnQoJ21vZGVsJywge1xuICAgICAgdHlwZTogJ2JveCcsXG4gICAgfSk7XG4gICAgdGhpcy5lbmRab25lLm1vZGVsLm1hdGVyaWFsID0gdGhpcy5hdHRyaWJ1dGVzLmVuZHpvbmVNYXRlcmlhbDtcblxuICAgIHRoaXMuZW5kWm9uZS5zZXRMb2NhbFNjYWxlKHRoaXMuYXR0cmlidXRlcy5zaXplLnggLSAxLCAxMCwgNSk7XG4gICAgdGhpcy5lbmRab25lLnNldExvY2FsUG9zaXRpb24oMCwgNSwgKHRoaXMuYXR0cmlidXRlcy5zaXplLnkgLyAtMi4wKSArIDMpO1xuICAgIC8vXG4gICAgLy8gc3VwZXIuYWRkVGltZWRVcGRhdGUoKCkgPT4ge1xuICAgIC8vICAgaWYgKHRoaXMuaXNDb21wbGV0ZWQoKSAmJiAhdGhpcy5ncmF5ZWRPdXQpIHtcbiAgICAvLyAgICAgdGhpcy5ncmF5ZWRPdXQgPSB0cnVlO1xuICAgIC8vICAgICB0aGlzLnRlcnJhaW4uZ3JheU91dCgpO1xuICAgIC8vICAgICB0aGlzLmVuZFpvbmUuZGVzdHJveSgpO1xuICAgIC8vXG4gICAgLy8gICAgIHRoaXMub25Db21wbGV0ZSgpO1xuICAgIC8vICAgfVxuICAgIC8vIH0sIDEpO1xuICAgIHRoaXMuZW50aXR5LmFkZENoaWxkKHRoaXMuZW5kWm9uZSk7XG4gIH1cbiAgaXNDb21wbGV0ZWQoKSB7XG4gICAgLy8gVE9ETzogY2hlY2sgaWYgYWxsIHBsYXllcnMgYXJlIGluIHRoZSBlbmR6b25lXG4gICAgcmV0dXJuIHRydWU7XG4gIH1cbiAgb25Db21wbGV0ZSgpIHtcbiAgICAvLyB0aGlzIGlzIHVzdWFsbHkgb3ZlcnJpZGRlbiBmcm9tIGFuIGV4dGVybmFsIGZ1bmN0aW9uXG4gIH1cbiAgY29uc3RydWN0b3IocGFyZW50LCBhdHRyaWJ1dGVzID0ge30pIHtcbiAgICBzdXBlcigpO1xuICAgIHN1cGVyLnNldEF0dHJpYnV0ZXMoe1xuICAgICAgc2l6ZTogbmV3IHBjLlZlYzIoMTUsIDQ1KSxcbiAgICAgIG9mZnNldDogbmV3IHBjLlZlYzIoMCwgMCksXG4gICAgfSwgYXR0cmlidXRlcyk7XG5cbiAgICBHYW1lT2JqZWN0LmdldEFzc2V0KCdhc3NldHMvbWF0ZXJpYWxzL2VuZHpvbmUuanNvbicsICdtYXRlcmlhbCcpLnRoZW4oKGFzc2V0KSA9PiB7XG4gICAgICBzdXBlci5zZXRBdHRyaWJ1dGVzKHtcbiAgICAgICAgZW5kem9uZU1hdGVyaWFsOiBhc3NldC5yZXNvdXJjZSxcbiAgICAgIH0pO1xuXG4gICAgICB0aGlzLl9jcmVhdGVFbmRab25lKCk7XG4gICAgfSk7XG5cbiAgICB0aGlzLmVudGl0eSA9IG5ldyBwYy5FbnRpdHkoKTtcbiAgICB0aGlzLmVudGl0eS5zZXRQb3NpdGlvbih0aGlzLmF0dHJpYnV0ZXMub2Zmc2V0LngsIDAsIHRoaXMuYXR0cmlidXRlcy5vZmZzZXQueSk7XG4gICAgcGFyZW50LmFkZENoaWxkKHRoaXMuZW50aXR5KTtcblxuICAgIGNvbnN0IHRlcnJhaW5FbnRpdHkgPSBuZXcgcGMuRW50aXR5KCk7XG4gICAgdGhpcy5lbnRpdHkuYWRkQ2hpbGQodGVycmFpbkVudGl0eSk7XG5cbiAgICB0aGlzLnRlcnJhaW4gPSBuZXcgVGVycmFpbih0ZXJyYWluRW50aXR5LCB7XG4gICAgICBzaXplOiB0aGlzLmF0dHJpYnV0ZXMuc2l6ZSxcbiAgICB9KTtcbiAgfVxufVxuXG5leHBvcnQgY2xhc3MgU3RhZ2UgZXh0ZW5kcyBHYW1lT2JqZWN0IHtcbiAgY29uc3RydWN0b3IoZW50aXR5LCBvcmJpdENhbWVyYSwgYXR0cmlidXRlcyA9IHt9KSB7XG4gICAgc3VwZXIoKTtcbiAgICBzdXBlci5zZXRBdHRyaWJ1dGVzKHtcbiAgICAgIGxldmVsQ291bnQ6IDMsXG4gICAgfSwgYXR0cmlidXRlcyk7XG5cbiAgICB0aGlzLm9yYml0Q2FtID0gb3JiaXRDYW1lcmE7XG4gICAgdGhpcy5jdXJyZW50T2Zmc2V0ID0gbmV3IHBjLlZlYzIoMCwgMCk7XG4gICAgdGhpcy5sZXZlbHMgPSBbXTtcblxuICAgIHRoaXMubGV2ZWxQYXJlbnQgPSBuZXcgcGMuRW50aXR5KCk7XG4gICAgZW50aXR5LmFkZENoaWxkKHRoaXMubGV2ZWxQYXJlbnQpO1xuXG4gICAgdGhpcy5jcmVhdGVOZXh0TGV2ZWwoKTtcbiAgfVxuXG4gIGNyZWF0ZU5leHRMZXZlbCgpIHtcbiAgICBjb25zdCBhdHRyaWJ1dGVzID0ge1xuICAgICAgb2Zmc2V0OiB0aGlzLmN1cnJlbnRPZmZzZXQsXG4gICAgfTtcblxuICAgIGlmICh0aGlzLmxldmVscy5sZW5ndGggPiAwKSB7XG4gICAgICBhdHRyaWJ1dGVzLmV4dGVuZCA9IHRoaXMubGV2ZWxzW3RoaXMubGV2ZWxzLmxlbmd0aCAtIDFdLnRlcnJhaW4uaGVpZ2h0TWFwWzBdO1xuICAgIH1cblxuICAgIGNvbnN0IGxldmVsID0gbmV3IExldmVsKHRoaXMubGV2ZWxQYXJlbnQsIGF0dHJpYnV0ZXMpO1xuXG4gICAgc2V0VGltZW91dCgoKSA9PiB0aGlzLm9yYml0Q2FtLmZvY3VzKGxldmVsLmVudGl0eSwgdHJ1ZSksIDUwMCk7XG5cbiAgICB0aGlzLmxldmVscy5wdXNoKGxldmVsKTtcbiAgICB0aGlzLmN1cnJlbnRPZmZzZXQueSAtPSA0MztcbiAgICBpZiAodGhpcy5sZXZlbHMubGVuZ3RoIDwgdGhpcy5hdHRyaWJ1dGVzLmxldmVsQ291bnQpIHtcbiAgICAgIGxldmVsLm9uQ29tcGxldGUgPSAoKSA9PiB0aGlzLmNyZWF0ZU5leHRMZXZlbCgpO1xuICAgIH1cbiAgfVxufVxuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9zcmMvZW52aXJvbm1lbnQvc3RhZ2VzLmpzXG4vLyBtb2R1bGUgaWQgPSA1XG4vLyBtb2R1bGUgY2h1bmtzID0gMCJdLCJtYXBwaW5ncyI6IkFBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFBQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQUE7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFBQTtBQUFBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///5\n");
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const app_1 = __webpack_require__(1);
+const Player_1 = __webpack_require__(2);
+const GameObject_1 = __webpack_require__(0);
+class MouseInput {
+    constructor(orbitCamera) {
+        this.orbitCamera = orbitCamera;
+        this.distanceSensitivity = 0.3;
+        this.orbitSensitivity = 0.5;
+        this.fromWorldPoint = new pc.Vec3();
+        this.toWorldPoint = new pc.Vec3();
+        this.worldDiff = new pc.Vec3();
+        this.lookButtonDown = false;
+        this.panButtonDown = false;
+        this.lastPoint = new pc.Vec2();
+        this.mouse = GameObject_1.default.getMouse();
+        this.entity = orbitCamera.entity;
+        if (this.orbitCamera) {
+            const onMouseOut = () => this.onMouseOut();
+            this.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
+            this.mouse.on(pc.EVENT_MOUSEUP, this.onMouseUp, this);
+            this.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
+            this.mouse.on(pc.EVENT_MOUSEWHEEL, this.onMouseWheel, this);
+            window.addEventListener('mouseout', onMouseOut, false);
+        }
+        this.mouse.disableContextMenu();
+    }
+    pan(screenPoint) {
+        const fromWorldPoint = this.fromWorldPoint;
+        const toWorldPoint = this.toWorldPoint;
+        const worldDiff = this.worldDiff;
+        const camera = this.entity.camera;
+        const distance = this.orbitCamera.distance;
+        camera.screenToWorld(screenPoint.x, screenPoint.y, distance, fromWorldPoint);
+        camera.screenToWorld(this.lastPoint.x, this.lastPoint.y, distance, toWorldPoint);
+        worldDiff.sub2(toWorldPoint, fromWorldPoint);
+        this.orbitCamera.pivotPoint.add(worldDiff);
+    }
+    onMouseDown(event) {
+        const camera = this.entity.camera;
+        const source = camera.screenToWorld(event.x, event.y, camera.nearClip);
+        const target = camera.screenToWorld(event.x, event.y, camera.farClip);
+        const result = GameObject_1.default.getApp().systems.rigidbody.raycastFirst(source, target);
+        if (result) {
+            const player = Player_1.default.getByEntity(result.entity);
+            if (player) {
+                player.select();
+            }
+        }
+        switch (event.button) {
+            case pc.MOUSEBUTTON_LEFT:
+                break;
+            case pc.MOUSEBUTTON_MIDDLE:
+            case pc.MOUSEBUTTON_RIGHT:
+                this.lookButtonDown = true;
+                break;
+            default: break;
+        }
+    }
+    onMouseUp(event) {
+        switch (event.button) {
+            case pc.MOUSEBUTTON_LEFT:
+                this.lookButtonDown = false;
+                break;
+            case pc.MOUSEBUTTON_MIDDLE:
+            case pc.MOUSEBUTTON_RIGHT:
+                this.panButtonDown = false;
+                break;
+            default: break;
+        }
+    }
+    onMouseMove(event) {
+        if (this.lookButtonDown) {
+            this.orbitCamera.pitch -= event.dy * this.orbitSensitivity;
+            this.orbitCamera.yaw -= event.dx * this.orbitSensitivity;
+        }
+        else if (this.panButtonDown) {
+            this.pan(event);
+        }
+        this.lastPoint.set(event.x, event.y);
+    }
+    onMouseWheel(event) {
+        this.orbitCamera.distance -=
+            event.wheel * this.distanceSensitivity * this.orbitCamera.distance * 0.1;
+        event.event.preventDefault();
+    }
+    onMouseOut() {
+        this.lookButtonDown = false;
+        this.panButtonDown = false;
+    }
+}
+class OrbitCamera extends GameObject_1.default {
+    constructor(clearColor, position, eulerAngles) {
+        super();
+        this.distanceMax = 700;
+        this.distanceMin = 100;
+        this.pitchAngleMax = 90;
+        this.pitchAngleMin = -90;
+        this.inertiaFactor = 0;
+        this.distanceFactor = 0.4;
+        this.frameOnStart = true;
+        this.distanceBetween = pc.Vec3();
+        this.quatWithoutYaw = new pc.Quat();
+        this.yawOffset = new pc.Quat();
+        this._modelsAabb = new pc.BoundingBox();
+        this._pivotPoint = new pc.Vec3();
+        this.doesTransition = false;
+        this.entity = new pc.Entity('OrbitCamera');
+        this.entity.addComponent('camera', {
+            clearColor: clearColor
+        });
+        this.entity.setPosition(position);
+        this.entity.setEulerAngles(eulerAngles);
+        GameObject_1.default.getApp().root.addChild(this.entity);
+        this.mouseInput = new MouseInput(this);
+        super.addTimedUpdate((dt) => {
+            const t = this.inertiaFactor === 0 ? 1 : Math.min(dt / this.inertiaFactor, 1);
+            this._distance = pc.math.lerp(this._distance, this._targetDistance, t);
+            this._yaw = pc.math.lerp(this._yaw, this._targetYaw, t);
+            this._pitch = pc.math.lerp(this._pitch, this._targetPitch, t);
+            this._updatePosition();
+        }, 0);
+        window.addEventListener('resize', () => {
+            this._checkAspectRatio();
+        }, false);
+        this._checkAspectRatio();
+        this._buildAabb(this.entity || app_1.default.root, 0);
+        this.entity.lookAt(this._modelsAabb.center);
+        this._pivotPoint.copy(this._modelsAabb.center);
+        const cameraQuat = this.entity.getRotation();
+        this._yaw = OrbitCamera._calcYaw(cameraQuat);
+        this._pitch = this._clampPitchAngle(this._calcPitch(cameraQuat, this._yaw));
+        this.entity.setLocalEulerAngles(this._pitch, this._yaw, 0);
+        this._distance = 0;
+        this._targetYaw = this._yaw;
+        this._targetPitch = this._pitch;
+        if (this.frameOnStart) {
+            this.focus(this.entity || app_1.default.root);
+        }
+        else {
+            const distanceBetween = new pc.Vec3();
+            distanceBetween.sub2(this.entity.getPosition(), this._pivotPoint);
+            this._distance = this._clampDistance(distanceBetween.length());
+        }
+        this._targetDistance = this._distance;
+    }
+    static _calcYaw(quat) {
+        const transformedForward = new pc.Vec3();
+        quat.transformVector(pc.Vec3.FORWARD, transformedForward);
+        return Math.atan2(-transformedForward.x, -transformedForward.z) * pc.math.RAD_TO_DEG;
+    }
+    _clampPitchAngle(pitch) {
+        return pc.math.clamp(pitch, -this.pitchAngleMax, -this.pitchAngleMin);
+    }
+    _calcPitch(quat, yaw) {
+        const quatWithoutYaw = this.quatWithoutYaw;
+        const yawOffset = this.yawOffset;
+        yawOffset.setFromEulerAngles(0, -yaw, 0);
+        quatWithoutYaw.mul2(yawOffset, quat);
+        const transformedForward = new pc.Vec3();
+        quatWithoutYaw.transformVector(pc.Vec3.FORWARD, transformedForward);
+        return Math.atan2(transformedForward.y, -transformedForward.z) * pc.math.RAD_TO_DEG;
+    }
+    focus(focusEntity, transition = false) {
+        this._buildAabb(focusEntity, 0);
+        const halfExtents = this._modelsAabb.halfExtents;
+        let distance = Math.max(halfExtents.x, Math.max(halfExtents.y, halfExtents.z));
+        distance /= Math.tan(0.5 * this.entity.camera.fov * pc.math.DEG_TO_RAD);
+        distance *= 2;
+        this.distance = distance;
+        this._removeInertia();
+        this._pivotPoint.copy(focusEntity.getPosition());
+        this.doesTransition = transition;
+    }
+    _updatePosition() {
+        this.entity.setLocalEulerAngles(this._pitch, this._yaw, 0);
+        const position = this.entity.getPosition();
+        position.copy(this.entity.forward);
+        position.scale(-this._distance * this.distanceFactor);
+        position.add(this.pivotPoint);
+        const diff = position.clone().sub(this.entity.getPosition());
+        if (diff.length() <= 0.1) {
+            this.doesTransition = false;
+        }
+        diff.scale(this.doesTransition ? 0.1 : 1);
+        this.entity.setPosition(this.entity.getPosition().add(diff));
+    }
+    _removeInertia() {
+        this._yaw = this._targetYaw;
+        this._pitch = this._targetPitch;
+        this._distance = this._targetDistance;
+    }
+    _checkAspectRatio() {
+        const height = app_1.default ? app_1.default.graphicsDevice.height : 0;
+        const width = app_1.default ? app_1.default.graphicsDevice.width : 0;
+        this.entity.camera.horizontalFov = height > width;
+    }
+    _buildAabb(entity, _modelsAdded) {
+        let i = 0;
+        let modelsAdded = _modelsAdded;
+        if (entity.model) {
+            const mi = entity.model.meshInstances;
+            for (i = 0; i < mi.length; i += 1) {
+                if (modelsAdded === 0) {
+                    this._modelsAabb.copy(mi[i].aabb);
+                }
+                else {
+                    this._modelsAabb.add(mi[i].aabb);
+                }
+                modelsAdded += 1;
+            }
+        }
+        return modelsAdded;
+    }
+    _clampDistance(distance) {
+        if (this.distanceMax > 0) {
+            return pc.math.clamp(distance, this.distanceMin, this.distanceMax);
+        }
+        return Math.max(distance, this.distanceMin);
+    }
+    get distance() {
+        return this._targetDistance;
+    }
+    set distance(value) {
+        this._targetDistance = this._clampDistance(value);
+    }
+    get pitch() {
+        return this._targetPitch;
+    }
+    set pitch(value) {
+        this._targetPitch = this._clampPitchAngle(value);
+    }
+    get yaw() {
+        return this._targetYaw;
+    }
+    set yaw(value) {
+        this._targetYaw = value;
+        const diff = this._targetYaw - this._yaw;
+        const reminder = diff % 360;
+        if (reminder > 180) {
+            this._targetYaw = this._yaw - (360 - reminder);
+        }
+        else if (reminder < -180) {
+            this._targetYaw = this._yaw + (360 + reminder);
+        }
+        else {
+            this._targetYaw = this._yaw + reminder;
+        }
+    }
+    get pivotPoint() {
+        return this._pivotPoint;
+    }
+    set pivotPoint(value) {
+        this._pivotPoint.copy(value);
+    }
+}
+exports.default = OrbitCamera;
+
 
 /***/ }),
 /* 6 */
-/*!***************************************!*\
-  !*** ./node_modules/noisejs/index.js ***!
-  \***************************************/
-/*! no static exports found */
-/*! exports used: Noise */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("/*\n * A speed-improved perlin and simplex noise algorithms for 2D.\n *\n * Based on example code by Stefan Gustavson (stegu@itn.liu.se).\n * Optimisations by Peter Eastman (peastman@drizzle.stanford.edu).\n * Better rank ordering method by Stefan Gustavson in 2012.\n * Converted to Javascript by Joseph Gentle.\n *\n * Version 2012-03-09\n *\n * This code was placed in the public domain by its original author,\n * Stefan Gustavson. You may use it as you see fit, but\n * attribution is appreciated.\n *\n */\n\n(function(global){\n\n  // Passing in seed will seed this Noise instance\n  function Noise(seed) {\n    function Grad(x, y, z) {\n      this.x = x; this.y = y; this.z = z;\n    }\n\n    Grad.prototype.dot2 = function(x, y) {\n      return this.x*x + this.y*y;\n    };\n\n    Grad.prototype.dot3 = function(x, y, z) {\n      return this.x*x + this.y*y + this.z*z;\n    };\n\n    this.grad3 = [new Grad(1,1,0),new Grad(-1,1,0),new Grad(1,-1,0),new Grad(-1,-1,0),\n                 new Grad(1,0,1),new Grad(-1,0,1),new Grad(1,0,-1),new Grad(-1,0,-1),\n                 new Grad(0,1,1),new Grad(0,-1,1),new Grad(0,1,-1),new Grad(0,-1,-1)];\n\n    this.p = [151,160,137,91,90,15,\n    131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,\n    190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,\n    88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,\n    77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,\n    102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,169,200,196,\n    135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,250,124,123,\n    5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,\n    223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167, 43,172,9,\n    129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,97,228,\n    251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,\n    49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,\n    138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];\n    // To remove the need for index wrapping, double the permutation table length\n    this.perm = new Array(512);\n    this.gradP = new Array(512);\n\n    this.seed(seed || 0);\n  }\n\n  // This isn't a very good seeding function, but it works ok. It supports 2^16\n  // different seed values. Write something better if you need more seeds.\n  Noise.prototype.seed = function(seed) {\n    if(seed > 0 && seed < 1) {\n      // Scale the seed out\n      seed *= 65536;\n    }\n\n    seed = Math.floor(seed);\n    if(seed < 256) {\n      seed |= seed << 8;\n    }\n\n    var p = this.p;\n    for(var i = 0; i < 256; i++) {\n      var v;\n      if (i & 1) {\n        v = p[i] ^ (seed & 255);\n      } else {\n        v = p[i] ^ ((seed>>8) & 255);\n      }\n\n      var perm = this.perm;\n      var gradP = this.gradP;\n      perm[i] = perm[i + 256] = v;\n      gradP[i] = gradP[i + 256] = this.grad3[v % 12];\n    }\n  };\n\n  /*\n  for(var i=0; i<256; i++) {\n    perm[i] = perm[i + 256] = p[i];\n    gradP[i] = gradP[i + 256] = grad3[perm[i] % 12];\n  }*/\n\n  // Skewing and unskewing factors for 2, 3, and 4 dimensions\n  var F2 = 0.5*(Math.sqrt(3)-1);\n  var G2 = (3-Math.sqrt(3))/6;\n\n  var F3 = 1/3;\n  var G3 = 1/6;\n\n  // 2D simplex noise\n  Noise.prototype.simplex2 = function(xin, yin) {\n    var n0, n1, n2; // Noise contributions from the three corners\n    // Skew the input space to determine which simplex cell we're in\n    var s = (xin+yin)*F2; // Hairy factor for 2D\n    var i = Math.floor(xin+s);\n    var j = Math.floor(yin+s);\n    var t = (i+j)*G2;\n    var x0 = xin-i+t; // The x,y distances from the cell origin, unskewed.\n    var y0 = yin-j+t;\n    // For the 2D case, the simplex shape is an equilateral triangle.\n    // Determine which simplex we are in.\n    var i1, j1; // Offsets for second (middle) corner of simplex in (i,j) coords\n    if(x0>y0) { // lower triangle, XY order: (0,0)->(1,0)->(1,1)\n      i1=1; j1=0;\n    } else {    // upper triangle, YX order: (0,0)->(0,1)->(1,1)\n      i1=0; j1=1;\n    }\n    // A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and\n    // a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where\n    // c = (3-sqrt(3))/6\n    var x1 = x0 - i1 + G2; // Offsets for middle corner in (x,y) unskewed coords\n    var y1 = y0 - j1 + G2;\n    var x2 = x0 - 1 + 2 * G2; // Offsets for last corner in (x,y) unskewed coords\n    var y2 = y0 - 1 + 2 * G2;\n    // Work out the hashed gradient indices of the three simplex corners\n    i &= 255;\n    j &= 255;\n\n    var perm = this.perm;\n    var gradP = this.gradP;\n    var gi0 = gradP[i+perm[j]];\n    var gi1 = gradP[i+i1+perm[j+j1]];\n    var gi2 = gradP[i+1+perm[j+1]];\n    // Calculate the contribution from the three corners\n    var t0 = 0.5 - x0*x0-y0*y0;\n    if(t0<0) {\n      n0 = 0;\n    } else {\n      t0 *= t0;\n      n0 = t0 * t0 * gi0.dot2(x0, y0);  // (x,y) of grad3 used for 2D gradient\n    }\n    var t1 = 0.5 - x1*x1-y1*y1;\n    if(t1<0) {\n      n1 = 0;\n    } else {\n      t1 *= t1;\n      n1 = t1 * t1 * gi1.dot2(x1, y1);\n    }\n    var t2 = 0.5 - x2*x2-y2*y2;\n    if(t2<0) {\n      n2 = 0;\n    } else {\n      t2 *= t2;\n      n2 = t2 * t2 * gi2.dot2(x2, y2);\n    }\n    // Add contributions from each corner to get the final noise value.\n    // The result is scaled to return values in the interval [-1,1].\n    return 70 * (n0 + n1 + n2);\n  };\n\n  // 3D simplex noise\n  Noise.prototype.simplex3 = function(xin, yin, zin) {\n    var n0, n1, n2, n3; // Noise contributions from the four corners\n\n    // Skew the input space to determine which simplex cell we're in\n    var s = (xin+yin+zin)*F3; // Hairy factor for 2D\n    var i = Math.floor(xin+s);\n    var j = Math.floor(yin+s);\n    var k = Math.floor(zin+s);\n\n    var t = (i+j+k)*G3;\n    var x0 = xin-i+t; // The x,y distances from the cell origin, unskewed.\n    var y0 = yin-j+t;\n    var z0 = zin-k+t;\n\n    // For the 3D case, the simplex shape is a slightly irregular tetrahedron.\n    // Determine which simplex we are in.\n    var i1, j1, k1; // Offsets for second corner of simplex in (i,j,k) coords\n    var i2, j2, k2; // Offsets for third corner of simplex in (i,j,k) coords\n    if(x0 >= y0) {\n      if(y0 >= z0)      { i1=1; j1=0; k1=0; i2=1; j2=1; k2=0; }\n      else if(x0 >= z0) { i1=1; j1=0; k1=0; i2=1; j2=0; k2=1; }\n      else              { i1=0; j1=0; k1=1; i2=1; j2=0; k2=1; }\n    } else {\n      if(y0 < z0)      { i1=0; j1=0; k1=1; i2=0; j2=1; k2=1; }\n      else if(x0 < z0) { i1=0; j1=1; k1=0; i2=0; j2=1; k2=1; }\n      else             { i1=0; j1=1; k1=0; i2=1; j2=1; k2=0; }\n    }\n    // A step of (1,0,0) in (i,j,k) means a step of (1-c,-c,-c) in (x,y,z),\n    // a step of (0,1,0) in (i,j,k) means a step of (-c,1-c,-c) in (x,y,z), and\n    // a step of (0,0,1) in (i,j,k) means a step of (-c,-c,1-c) in (x,y,z), where\n    // c = 1/6.\n    var x1 = x0 - i1 + G3; // Offsets for second corner\n    var y1 = y0 - j1 + G3;\n    var z1 = z0 - k1 + G3;\n\n    var x2 = x0 - i2 + 2 * G3; // Offsets for third corner\n    var y2 = y0 - j2 + 2 * G3;\n    var z2 = z0 - k2 + 2 * G3;\n\n    var x3 = x0 - 1 + 3 * G3; // Offsets for fourth corner\n    var y3 = y0 - 1 + 3 * G3;\n    var z3 = z0 - 1 + 3 * G3;\n\n    // Work out the hashed gradient indices of the four simplex corners\n    i &= 255;\n    j &= 255;\n    k &= 255;\n\n    var perm = this.perm;\n    var gradP = this.gradP;\n    var gi0 = gradP[i+   perm[j+   perm[k   ]]];\n    var gi1 = gradP[i+i1+perm[j+j1+perm[k+k1]]];\n    var gi2 = gradP[i+i2+perm[j+j2+perm[k+k2]]];\n    var gi3 = gradP[i+ 1+perm[j+ 1+perm[k+ 1]]];\n\n    // Calculate the contribution from the four corners\n    var t0 = 0.5 - x0*x0-y0*y0-z0*z0;\n    if(t0<0) {\n      n0 = 0;\n    } else {\n      t0 *= t0;\n      n0 = t0 * t0 * gi0.dot3(x0, y0, z0);  // (x,y) of grad3 used for 2D gradient\n    }\n    var t1 = 0.5 - x1*x1-y1*y1-z1*z1;\n    if(t1<0) {\n      n1 = 0;\n    } else {\n      t1 *= t1;\n      n1 = t1 * t1 * gi1.dot3(x1, y1, z1);\n    }\n    var t2 = 0.5 - x2*x2-y2*y2-z2*z2;\n    if(t2<0) {\n      n2 = 0;\n    } else {\n      t2 *= t2;\n      n2 = t2 * t2 * gi2.dot3(x2, y2, z2);\n    }\n    var t3 = 0.5 - x3*x3-y3*y3-z3*z3;\n    if(t3<0) {\n      n3 = 0;\n    } else {\n      t3 *= t3;\n      n3 = t3 * t3 * gi3.dot3(x3, y3, z3);\n    }\n    // Add contributions from each corner to get the final noise value.\n    // The result is scaled to return values in the interval [-1,1].\n    return 32 * (n0 + n1 + n2 + n3);\n\n  };\n\n  // ##### Perlin noise stuff\n\n  function fade(t) {\n    return t*t*t*(t*(t*6-15)+10);\n  }\n\n  function lerp(a, b, t) {\n    return (1-t)*a + t*b;\n  }\n\n  // 2D Perlin Noise\n  Noise.prototype.perlin2 = function(x, y) {\n    // Find unit grid cell containing point\n    var X = Math.floor(x), Y = Math.floor(y);\n    // Get relative xy coordinates of point within that cell\n    x = x - X; y = y - Y;\n    // Wrap the integer cells at 255 (smaller integer period can be introduced here)\n    X = X & 255; Y = Y & 255;\n\n    // Calculate noise contributions from each of the four corners\n    var perm = this.perm;\n    var gradP = this.gradP;\n    var n00 = gradP[X+perm[Y]].dot2(x, y);\n    var n01 = gradP[X+perm[Y+1]].dot2(x, y-1);\n    var n10 = gradP[X+1+perm[Y]].dot2(x-1, y);\n    var n11 = gradP[X+1+perm[Y+1]].dot2(x-1, y-1);\n\n    // Compute the fade curve value for x\n    var u = fade(x);\n\n    // Interpolate the four results\n    return lerp(\n        lerp(n00, n10, u),\n        lerp(n01, n11, u),\n       fade(y));\n  };\n\n  // 3D Perlin Noise\n  Noise.prototype.perlin3 = function(x, y, z) {\n    // Find unit grid cell containing point\n    var X = Math.floor(x), Y = Math.floor(y), Z = Math.floor(z);\n    // Get relative xyz coordinates of point within that cell\n    x = x - X; y = y - Y; z = z - Z;\n    // Wrap the integer cells at 255 (smaller integer period can be introduced here)\n    X = X & 255; Y = Y & 255; Z = Z & 255;\n\n    // Calculate noise contributions from each of the eight corners\n    var perm = this.perm;\n    var gradP = this.gradP;\n    var n000 = gradP[X+  perm[Y+  perm[Z  ]]].dot3(x,   y,     z);\n    var n001 = gradP[X+  perm[Y+  perm[Z+1]]].dot3(x,   y,   z-1);\n    var n010 = gradP[X+  perm[Y+1+perm[Z  ]]].dot3(x,   y-1,   z);\n    var n011 = gradP[X+  perm[Y+1+perm[Z+1]]].dot3(x,   y-1, z-1);\n    var n100 = gradP[X+1+perm[Y+  perm[Z  ]]].dot3(x-1,   y,   z);\n    var n101 = gradP[X+1+perm[Y+  perm[Z+1]]].dot3(x-1,   y, z-1);\n    var n110 = gradP[X+1+perm[Y+1+perm[Z  ]]].dot3(x-1, y-1,   z);\n    var n111 = gradP[X+1+perm[Y+1+perm[Z+1]]].dot3(x-1, y-1, z-1);\n\n    // Compute the fade curve value for x, y, z\n    var u = fade(x);\n    var v = fade(y);\n    var w = fade(z);\n\n    // Interpolate\n    return lerp(\n        lerp(\n          lerp(n000, n100, u),\n          lerp(n001, n101, u), w),\n        lerp(\n          lerp(n010, n110, u),\n          lerp(n011, n111, u), w),\n       v);\n  };\n\n  global.Noise = Noise;\n\n})( false ? this : module.exports);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiNi5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL25vZGVfbW9kdWxlcy9ub2lzZWpzL2luZGV4LmpzPzFkOGQiXSwic291cmNlc0NvbnRlbnQiOlsiLypcbiAqIEEgc3BlZWQtaW1wcm92ZWQgcGVybGluIGFuZCBzaW1wbGV4IG5vaXNlIGFsZ29yaXRobXMgZm9yIDJELlxuICpcbiAqIEJhc2VkIG9uIGV4YW1wbGUgY29kZSBieSBTdGVmYW4gR3VzdGF2c29uIChzdGVndUBpdG4ubGl1LnNlKS5cbiAqIE9wdGltaXNhdGlvbnMgYnkgUGV0ZXIgRWFzdG1hbiAocGVhc3RtYW5AZHJpenpsZS5zdGFuZm9yZC5lZHUpLlxuICogQmV0dGVyIHJhbmsgb3JkZXJpbmcgbWV0aG9kIGJ5IFN0ZWZhbiBHdXN0YXZzb24gaW4gMjAxMi5cbiAqIENvbnZlcnRlZCB0byBKYXZhc2NyaXB0IGJ5IEpvc2VwaCBHZW50bGUuXG4gKlxuICogVmVyc2lvbiAyMDEyLTAzLTA5XG4gKlxuICogVGhpcyBjb2RlIHdhcyBwbGFjZWQgaW4gdGhlIHB1YmxpYyBkb21haW4gYnkgaXRzIG9yaWdpbmFsIGF1dGhvcixcbiAqIFN0ZWZhbiBHdXN0YXZzb24uIFlvdSBtYXkgdXNlIGl0IGFzIHlvdSBzZWUgZml0LCBidXRcbiAqIGF0dHJpYnV0aW9uIGlzIGFwcHJlY2lhdGVkLlxuICpcbiAqL1xuXG4oZnVuY3Rpb24oZ2xvYmFsKXtcblxuICAvLyBQYXNzaW5nIGluIHNlZWQgd2lsbCBzZWVkIHRoaXMgTm9pc2UgaW5zdGFuY2VcbiAgZnVuY3Rpb24gTm9pc2Uoc2VlZCkge1xuICAgIGZ1bmN0aW9uIEdyYWQoeCwgeSwgeikge1xuICAgICAgdGhpcy54ID0geDsgdGhpcy55ID0geTsgdGhpcy56ID0gejtcbiAgICB9XG5cbiAgICBHcmFkLnByb3RvdHlwZS5kb3QyID0gZnVuY3Rpb24oeCwgeSkge1xuICAgICAgcmV0dXJuIHRoaXMueCp4ICsgdGhpcy55Knk7XG4gICAgfTtcblxuICAgIEdyYWQucHJvdG90eXBlLmRvdDMgPSBmdW5jdGlvbih4LCB5LCB6KSB7XG4gICAgICByZXR1cm4gdGhpcy54KnggKyB0aGlzLnkqeSArIHRoaXMueip6O1xuICAgIH07XG5cbiAgICB0aGlzLmdyYWQzID0gW25ldyBHcmFkKDEsMSwwKSxuZXcgR3JhZCgtMSwxLDApLG5ldyBHcmFkKDEsLTEsMCksbmV3IEdyYWQoLTEsLTEsMCksXG4gICAgICAgICAgICAgICAgIG5ldyBHcmFkKDEsMCwxKSxuZXcgR3JhZCgtMSwwLDEpLG5ldyBHcmFkKDEsMCwtMSksbmV3IEdyYWQoLTEsMCwtMSksXG4gICAgICAgICAgICAgICAgIG5ldyBHcmFkKDAsMSwxKSxuZXcgR3JhZCgwLC0xLDEpLG5ldyBHcmFkKDAsMSwtMSksbmV3IEdyYWQoMCwtMSwtMSldO1xuXG4gICAgdGhpcy5wID0gWzE1MSwxNjAsMTM3LDkxLDkwLDE1LFxuICAgIDEzMSwxMywyMDEsOTUsOTYsNTMsMTk0LDIzMyw3LDIyNSwxNDAsMzYsMTAzLDMwLDY5LDE0Miw4LDk5LDM3LDI0MCwyMSwxMCwyMyxcbiAgICAxOTAsIDYsMTQ4LDI0NywxMjAsMjM0LDc1LDAsMjYsMTk3LDYyLDk0LDI1MiwyMTksMjAzLDExNywzNSwxMSwzMiw1NywxNzcsMzMsXG4gICAgODgsMjM3LDE0OSw1Niw4NywxNzQsMjAsMTI1LDEzNiwxNzEsMTY4LCA2OCwxNzUsNzQsMTY1LDcxLDEzNCwxMzksNDgsMjcsMTY2LFxuICAgIDc3LDE0NiwxNTgsMjMxLDgzLDExMSwyMjksMTIyLDYwLDIxMSwxMzMsMjMwLDIyMCwxMDUsOTIsNDEsNTUsNDYsMjQ1LDQwLDI0NCxcbiAgICAxMDIsMTQzLDU0LCA2NSwyNSw2MywxNjEsIDEsMjE2LDgwLDczLDIwOSw3NiwxMzIsMTg3LDIwOCwgODksMTgsMTY5LDIwMCwxOTYsXG4gICAgMTM1LDEzMCwxMTYsMTg4LDE1OSw4NiwxNjQsMTAwLDEwOSwxOTgsMTczLDE4NiwgMyw2NCw1MiwyMTcsMjI2LDI1MCwxMjQsMTIzLFxuICAgIDUsMjAyLDM4LDE0NywxMTgsMTI2LDI1NSw4Miw4NSwyMTIsMjA3LDIwNiw1OSwyMjcsNDcsMTYsNTgsMTcsMTgyLDE4OSwyOCw0MixcbiAgICAyMjMsMTgzLDE3MCwyMTMsMTE5LDI0OCwxNTIsIDIsNDQsMTU0LDE2MywgNzAsMjIxLDE1MywxMDEsMTU1LDE2NywgNDMsMTcyLDksXG4gICAgMTI5LDIyLDM5LDI1MywgMTksOTgsMTA4LDExMCw3OSwxMTMsMjI0LDIzMiwxNzgsMTg1LCAxMTIsMTA0LDIxOCwyNDYsOTcsMjI4LFxuICAgIDI1MSwzNCwyNDIsMTkzLDIzOCwyMTAsMTQ0LDEyLDE5MSwxNzksMTYyLDI0MSwgODEsNTEsMTQ1LDIzNSwyNDksMTQsMjM5LDEwNyxcbiAgICA0OSwxOTIsMjE0LCAzMSwxODEsMTk5LDEwNiwxNTcsMTg0LCA4NCwyMDQsMTc2LDExNSwxMjEsNTAsNDUsMTI3LCA0LDE1MCwyNTQsXG4gICAgMTM4LDIzNiwyMDUsOTMsMjIyLDExNCw2NywyOSwyNCw3MiwyNDMsMTQxLDEyOCwxOTUsNzgsNjYsMjE1LDYxLDE1NiwxODBdO1xuICAgIC8vIFRvIHJlbW92ZSB0aGUgbmVlZCBmb3IgaW5kZXggd3JhcHBpbmcsIGRvdWJsZSB0aGUgcGVybXV0YXRpb24gdGFibGUgbGVuZ3RoXG4gICAgdGhpcy5wZXJtID0gbmV3IEFycmF5KDUxMik7XG4gICAgdGhpcy5ncmFkUCA9IG5ldyBBcnJheSg1MTIpO1xuXG4gICAgdGhpcy5zZWVkKHNlZWQgfHwgMCk7XG4gIH1cblxuICAvLyBUaGlzIGlzbid0IGEgdmVyeSBnb29kIHNlZWRpbmcgZnVuY3Rpb24sIGJ1dCBpdCB3b3JrcyBvay4gSXQgc3VwcG9ydHMgMl4xNlxuICAvLyBkaWZmZXJlbnQgc2VlZCB2YWx1ZXMuIFdyaXRlIHNvbWV0aGluZyBiZXR0ZXIgaWYgeW91IG5lZWQgbW9yZSBzZWVkcy5cbiAgTm9pc2UucHJvdG90eXBlLnNlZWQgPSBmdW5jdGlvbihzZWVkKSB7XG4gICAgaWYoc2VlZCA+IDAgJiYgc2VlZCA8IDEpIHtcbiAgICAgIC8vIFNjYWxlIHRoZSBzZWVkIG91dFxuICAgICAgc2VlZCAqPSA2NTUzNjtcbiAgICB9XG5cbiAgICBzZWVkID0gTWF0aC5mbG9vcihzZWVkKTtcbiAgICBpZihzZWVkIDwgMjU2KSB7XG4gICAgICBzZWVkIHw9IHNlZWQgPDwgODtcbiAgICB9XG5cbiAgICB2YXIgcCA9IHRoaXMucDtcbiAgICBmb3IodmFyIGkgPSAwOyBpIDwgMjU2OyBpKyspIHtcbiAgICAgIHZhciB2O1xuICAgICAgaWYgKGkgJiAxKSB7XG4gICAgICAgIHYgPSBwW2ldIF4gKHNlZWQgJiAyNTUpO1xuICAgICAgfSBlbHNlIHtcbiAgICAgICAgdiA9IHBbaV0gXiAoKHNlZWQ+PjgpICYgMjU1KTtcbiAgICAgIH1cblxuICAgICAgdmFyIHBlcm0gPSB0aGlzLnBlcm07XG4gICAgICB2YXIgZ3JhZFAgPSB0aGlzLmdyYWRQO1xuICAgICAgcGVybVtpXSA9IHBlcm1baSArIDI1Nl0gPSB2O1xuICAgICAgZ3JhZFBbaV0gPSBncmFkUFtpICsgMjU2XSA9IHRoaXMuZ3JhZDNbdiAlIDEyXTtcbiAgICB9XG4gIH07XG5cbiAgLypcbiAgZm9yKHZhciBpPTA7IGk8MjU2OyBpKyspIHtcbiAgICBwZXJtW2ldID0gcGVybVtpICsgMjU2XSA9IHBbaV07XG4gICAgZ3JhZFBbaV0gPSBncmFkUFtpICsgMjU2XSA9IGdyYWQzW3Blcm1baV0gJSAxMl07XG4gIH0qL1xuXG4gIC8vIFNrZXdpbmcgYW5kIHVuc2tld2luZyBmYWN0b3JzIGZvciAyLCAzLCBhbmQgNCBkaW1lbnNpb25zXG4gIHZhciBGMiA9IDAuNSooTWF0aC5zcXJ0KDMpLTEpO1xuICB2YXIgRzIgPSAoMy1NYXRoLnNxcnQoMykpLzY7XG5cbiAgdmFyIEYzID0gMS8zO1xuICB2YXIgRzMgPSAxLzY7XG5cbiAgLy8gMkQgc2ltcGxleCBub2lzZVxuICBOb2lzZS5wcm90b3R5cGUuc2ltcGxleDIgPSBmdW5jdGlvbih4aW4sIHlpbikge1xuICAgIHZhciBuMCwgbjEsIG4yOyAvLyBOb2lzZSBjb250cmlidXRpb25zIGZyb20gdGhlIHRocmVlIGNvcm5lcnNcbiAgICAvLyBTa2V3IHRoZSBpbnB1dCBzcGFjZSB0byBkZXRlcm1pbmUgd2hpY2ggc2ltcGxleCBjZWxsIHdlJ3JlIGluXG4gICAgdmFyIHMgPSAoeGluK3lpbikqRjI7IC8vIEhhaXJ5IGZhY3RvciBmb3IgMkRcbiAgICB2YXIgaSA9IE1hdGguZmxvb3IoeGluK3MpO1xuICAgIHZhciBqID0gTWF0aC5mbG9vcih5aW4rcyk7XG4gICAgdmFyIHQgPSAoaStqKSpHMjtcbiAgICB2YXIgeDAgPSB4aW4taSt0OyAvLyBUaGUgeCx5IGRpc3RhbmNlcyBmcm9tIHRoZSBjZWxsIG9yaWdpbiwgdW5za2V3ZWQuXG4gICAgdmFyIHkwID0geWluLWordDtcbiAgICAvLyBGb3IgdGhlIDJEIGNhc2UsIHRoZSBzaW1wbGV4IHNoYXBlIGlzIGFuIGVxdWlsYXRlcmFsIHRyaWFuZ2xlLlxuICAgIC8vIERldGVybWluZSB3aGljaCBzaW1wbGV4IHdlIGFyZSBpbi5cbiAgICB2YXIgaTEsIGoxOyAvLyBPZmZzZXRzIGZvciBzZWNvbmQgKG1pZGRsZSkgY29ybmVyIG9mIHNpbXBsZXggaW4gKGksaikgY29vcmRzXG4gICAgaWYoeDA+eTApIHsgLy8gbG93ZXIgdHJpYW5nbGUsIFhZIG9yZGVyOiAoMCwwKS0+KDEsMCktPigxLDEpXG4gICAgICBpMT0xOyBqMT0wO1xuICAgIH0gZWxzZSB7ICAgIC8vIHVwcGVyIHRyaWFuZ2xlLCBZWCBvcmRlcjogKDAsMCktPigwLDEpLT4oMSwxKVxuICAgICAgaTE9MDsgajE9MTtcbiAgICB9XG4gICAgLy8gQSBzdGVwIG9mICgxLDApIGluIChpLGopIG1lYW5zIGEgc3RlcCBvZiAoMS1jLC1jKSBpbiAoeCx5KSwgYW5kXG4gICAgLy8gYSBzdGVwIG9mICgwLDEpIGluIChpLGopIG1lYW5zIGEgc3RlcCBvZiAoLWMsMS1jKSBpbiAoeCx5KSwgd2hlcmVcbiAgICAvLyBjID0gKDMtc3FydCgzKSkvNlxuICAgIHZhciB4MSA9IHgwIC0gaTEgKyBHMjsgLy8gT2Zmc2V0cyBmb3IgbWlkZGxlIGNvcm5lciBpbiAoeCx5KSB1bnNrZXdlZCBjb29yZHNcbiAgICB2YXIgeTEgPSB5MCAtIGoxICsgRzI7XG4gICAgdmFyIHgyID0geDAgLSAxICsgMiAqIEcyOyAvLyBPZmZzZXRzIGZvciBsYXN0IGNvcm5lciBpbiAoeCx5KSB1bnNrZXdlZCBjb29yZHNcbiAgICB2YXIgeTIgPSB5MCAtIDEgKyAyICogRzI7XG4gICAgLy8gV29yayBvdXQgdGhlIGhhc2hlZCBncmFkaWVudCBpbmRpY2VzIG9mIHRoZSB0aHJlZSBzaW1wbGV4IGNvcm5lcnNcbiAgICBpICY9IDI1NTtcbiAgICBqICY9IDI1NTtcblxuICAgIHZhciBwZXJtID0gdGhpcy5wZXJtO1xuICAgIHZhciBncmFkUCA9IHRoaXMuZ3JhZFA7XG4gICAgdmFyIGdpMCA9IGdyYWRQW2krcGVybVtqXV07XG4gICAgdmFyIGdpMSA9IGdyYWRQW2kraTErcGVybVtqK2oxXV07XG4gICAgdmFyIGdpMiA9IGdyYWRQW2krMStwZXJtW2orMV1dO1xuICAgIC8vIENhbGN1bGF0ZSB0aGUgY29udHJpYnV0aW9uIGZyb20gdGhlIHRocmVlIGNvcm5lcnNcbiAgICB2YXIgdDAgPSAwLjUgLSB4MCp4MC15MCp5MDtcbiAgICBpZih0MDwwKSB7XG4gICAgICBuMCA9IDA7XG4gICAgfSBlbHNlIHtcbiAgICAgIHQwICo9IHQwO1xuICAgICAgbjAgPSB0MCAqIHQwICogZ2kwLmRvdDIoeDAsIHkwKTsgIC8vICh4LHkpIG9mIGdyYWQzIHVzZWQgZm9yIDJEIGdyYWRpZW50XG4gICAgfVxuICAgIHZhciB0MSA9IDAuNSAtIHgxKngxLXkxKnkxO1xuICAgIGlmKHQxPDApIHtcbiAgICAgIG4xID0gMDtcbiAgICB9IGVsc2Uge1xuICAgICAgdDEgKj0gdDE7XG4gICAgICBuMSA9IHQxICogdDEgKiBnaTEuZG90Mih4MSwgeTEpO1xuICAgIH1cbiAgICB2YXIgdDIgPSAwLjUgLSB4Mip4Mi15Mip5MjtcbiAgICBpZih0MjwwKSB7XG4gICAgICBuMiA9IDA7XG4gICAgfSBlbHNlIHtcbiAgICAgIHQyICo9IHQyO1xuICAgICAgbjIgPSB0MiAqIHQyICogZ2kyLmRvdDIoeDIsIHkyKTtcbiAgICB9XG4gICAgLy8gQWRkIGNvbnRyaWJ1dGlvbnMgZnJvbSBlYWNoIGNvcm5lciB0byBnZXQgdGhlIGZpbmFsIG5vaXNlIHZhbHVlLlxuICAgIC8vIFRoZSByZXN1bHQgaXMgc2NhbGVkIHRvIHJldHVybiB2YWx1ZXMgaW4gdGhlIGludGVydmFsIFstMSwxXS5cbiAgICByZXR1cm4gNzAgKiAobjAgKyBuMSArIG4yKTtcbiAgfTtcblxuICAvLyAzRCBzaW1wbGV4IG5vaXNlXG4gIE5vaXNlLnByb3RvdHlwZS5zaW1wbGV4MyA9IGZ1bmN0aW9uKHhpbiwgeWluLCB6aW4pIHtcbiAgICB2YXIgbjAsIG4xLCBuMiwgbjM7IC8vIE5vaXNlIGNvbnRyaWJ1dGlvbnMgZnJvbSB0aGUgZm91ciBjb3JuZXJzXG5cbiAgICAvLyBTa2V3IHRoZSBpbnB1dCBzcGFjZSB0byBkZXRlcm1pbmUgd2hpY2ggc2ltcGxleCBjZWxsIHdlJ3JlIGluXG4gICAgdmFyIHMgPSAoeGluK3lpbit6aW4pKkYzOyAvLyBIYWlyeSBmYWN0b3IgZm9yIDJEXG4gICAgdmFyIGkgPSBNYXRoLmZsb29yKHhpbitzKTtcbiAgICB2YXIgaiA9IE1hdGguZmxvb3IoeWluK3MpO1xuICAgIHZhciBrID0gTWF0aC5mbG9vcih6aW4rcyk7XG5cbiAgICB2YXIgdCA9IChpK2oraykqRzM7XG4gICAgdmFyIHgwID0geGluLWkrdDsgLy8gVGhlIHgseSBkaXN0YW5jZXMgZnJvbSB0aGUgY2VsbCBvcmlnaW4sIHVuc2tld2VkLlxuICAgIHZhciB5MCA9IHlpbi1qK3Q7XG4gICAgdmFyIHowID0gemluLWsrdDtcblxuICAgIC8vIEZvciB0aGUgM0QgY2FzZSwgdGhlIHNpbXBsZXggc2hhcGUgaXMgYSBzbGlnaHRseSBpcnJlZ3VsYXIgdGV0cmFoZWRyb24uXG4gICAgLy8gRGV0ZXJtaW5lIHdoaWNoIHNpbXBsZXggd2UgYXJlIGluLlxuICAgIHZhciBpMSwgajEsIGsxOyAvLyBPZmZzZXRzIGZvciBzZWNvbmQgY29ybmVyIG9mIHNpbXBsZXggaW4gKGksaixrKSBjb29yZHNcbiAgICB2YXIgaTIsIGoyLCBrMjsgLy8gT2Zmc2V0cyBmb3IgdGhpcmQgY29ybmVyIG9mIHNpbXBsZXggaW4gKGksaixrKSBjb29yZHNcbiAgICBpZih4MCA+PSB5MCkge1xuICAgICAgaWYoeTAgPj0gejApICAgICAgeyBpMT0xOyBqMT0wOyBrMT0wOyBpMj0xOyBqMj0xOyBrMj0wOyB9XG4gICAgICBlbHNlIGlmKHgwID49IHowKSB7IGkxPTE7IGoxPTA7IGsxPTA7IGkyPTE7IGoyPTA7IGsyPTE7IH1cbiAgICAgIGVsc2UgICAgICAgICAgICAgIHsgaTE9MDsgajE9MDsgazE9MTsgaTI9MTsgajI9MDsgazI9MTsgfVxuICAgIH0gZWxzZSB7XG4gICAgICBpZih5MCA8IHowKSAgICAgIHsgaTE9MDsgajE9MDsgazE9MTsgaTI9MDsgajI9MTsgazI9MTsgfVxuICAgICAgZWxzZSBpZih4MCA8IHowKSB7IGkxPTA7IGoxPTE7IGsxPTA7IGkyPTA7IGoyPTE7IGsyPTE7IH1cbiAgICAgIGVsc2UgICAgICAgICAgICAgeyBpMT0wOyBqMT0xOyBrMT0wOyBpMj0xOyBqMj0xOyBrMj0wOyB9XG4gICAgfVxuICAgIC8vIEEgc3RlcCBvZiAoMSwwLDApIGluIChpLGosaykgbWVhbnMgYSBzdGVwIG9mICgxLWMsLWMsLWMpIGluICh4LHkseiksXG4gICAgLy8gYSBzdGVwIG9mICgwLDEsMCkgaW4gKGksaixrKSBtZWFucyBhIHN0ZXAgb2YgKC1jLDEtYywtYykgaW4gKHgseSx6KSwgYW5kXG4gICAgLy8gYSBzdGVwIG9mICgwLDAsMSkgaW4gKGksaixrKSBtZWFucyBhIHN0ZXAgb2YgKC1jLC1jLDEtYykgaW4gKHgseSx6KSwgd2hlcmVcbiAgICAvLyBjID0gMS82LlxuICAgIHZhciB4MSA9IHgwIC0gaTEgKyBHMzsgLy8gT2Zmc2V0cyBmb3Igc2Vjb25kIGNvcm5lclxuICAgIHZhciB5MSA9IHkwIC0gajEgKyBHMztcbiAgICB2YXIgejEgPSB6MCAtIGsxICsgRzM7XG5cbiAgICB2YXIgeDIgPSB4MCAtIGkyICsgMiAqIEczOyAvLyBPZmZzZXRzIGZvciB0aGlyZCBjb3JuZXJcbiAgICB2YXIgeTIgPSB5MCAtIGoyICsgMiAqIEczO1xuICAgIHZhciB6MiA9IHowIC0gazIgKyAyICogRzM7XG5cbiAgICB2YXIgeDMgPSB4MCAtIDEgKyAzICogRzM7IC8vIE9mZnNldHMgZm9yIGZvdXJ0aCBjb3JuZXJcbiAgICB2YXIgeTMgPSB5MCAtIDEgKyAzICogRzM7XG4gICAgdmFyIHozID0gejAgLSAxICsgMyAqIEczO1xuXG4gICAgLy8gV29yayBvdXQgdGhlIGhhc2hlZCBncmFkaWVudCBpbmRpY2VzIG9mIHRoZSBmb3VyIHNpbXBsZXggY29ybmVyc1xuICAgIGkgJj0gMjU1O1xuICAgIGogJj0gMjU1O1xuICAgIGsgJj0gMjU1O1xuXG4gICAgdmFyIHBlcm0gPSB0aGlzLnBlcm07XG4gICAgdmFyIGdyYWRQID0gdGhpcy5ncmFkUDtcbiAgICB2YXIgZ2kwID0gZ3JhZFBbaSsgICBwZXJtW2orICAgcGVybVtrICAgXV1dO1xuICAgIHZhciBnaTEgPSBncmFkUFtpK2kxK3Blcm1baitqMStwZXJtW2srazFdXV07XG4gICAgdmFyIGdpMiA9IGdyYWRQW2kraTIrcGVybVtqK2oyK3Blcm1baytrMl1dXTtcbiAgICB2YXIgZ2kzID0gZ3JhZFBbaSsgMStwZXJtW2orIDErcGVybVtrKyAxXV1dO1xuXG4gICAgLy8gQ2FsY3VsYXRlIHRoZSBjb250cmlidXRpb24gZnJvbSB0aGUgZm91ciBjb3JuZXJzXG4gICAgdmFyIHQwID0gMC41IC0geDAqeDAteTAqeTAtejAqejA7XG4gICAgaWYodDA8MCkge1xuICAgICAgbjAgPSAwO1xuICAgIH0gZWxzZSB7XG4gICAgICB0MCAqPSB0MDtcbiAgICAgIG4wID0gdDAgKiB0MCAqIGdpMC5kb3QzKHgwLCB5MCwgejApOyAgLy8gKHgseSkgb2YgZ3JhZDMgdXNlZCBmb3IgMkQgZ3JhZGllbnRcbiAgICB9XG4gICAgdmFyIHQxID0gMC41IC0geDEqeDEteTEqeTEtejEqejE7XG4gICAgaWYodDE8MCkge1xuICAgICAgbjEgPSAwO1xuICAgIH0gZWxzZSB7XG4gICAgICB0MSAqPSB0MTtcbiAgICAgIG4xID0gdDEgKiB0MSAqIGdpMS5kb3QzKHgxLCB5MSwgejEpO1xuICAgIH1cbiAgICB2YXIgdDIgPSAwLjUgLSB4Mip4Mi15Mip5Mi16Mip6MjtcbiAgICBpZih0MjwwKSB7XG4gICAgICBuMiA9IDA7XG4gICAgfSBlbHNlIHtcbiAgICAgIHQyICo9IHQyO1xuICAgICAgbjIgPSB0MiAqIHQyICogZ2kyLmRvdDMoeDIsIHkyLCB6Mik7XG4gICAgfVxuICAgIHZhciB0MyA9IDAuNSAtIHgzKngzLXkzKnkzLXozKnozO1xuICAgIGlmKHQzPDApIHtcbiAgICAgIG4zID0gMDtcbiAgICB9IGVsc2Uge1xuICAgICAgdDMgKj0gdDM7XG4gICAgICBuMyA9IHQzICogdDMgKiBnaTMuZG90Myh4MywgeTMsIHozKTtcbiAgICB9XG4gICAgLy8gQWRkIGNvbnRyaWJ1dGlvbnMgZnJvbSBlYWNoIGNvcm5lciB0byBnZXQgdGhlIGZpbmFsIG5vaXNlIHZhbHVlLlxuICAgIC8vIFRoZSByZXN1bHQgaXMgc2NhbGVkIHRvIHJldHVybiB2YWx1ZXMgaW4gdGhlIGludGVydmFsIFstMSwxXS5cbiAgICByZXR1cm4gMzIgKiAobjAgKyBuMSArIG4yICsgbjMpO1xuXG4gIH07XG5cbiAgLy8gIyMjIyMgUGVybGluIG5vaXNlIHN0dWZmXG5cbiAgZnVuY3Rpb24gZmFkZSh0KSB7XG4gICAgcmV0dXJuIHQqdCp0Kih0Kih0KjYtMTUpKzEwKTtcbiAgfVxuXG4gIGZ1bmN0aW9uIGxlcnAoYSwgYiwgdCkge1xuICAgIHJldHVybiAoMS10KSphICsgdCpiO1xuICB9XG5cbiAgLy8gMkQgUGVybGluIE5vaXNlXG4gIE5vaXNlLnByb3RvdHlwZS5wZXJsaW4yID0gZnVuY3Rpb24oeCwgeSkge1xuICAgIC8vIEZpbmQgdW5pdCBncmlkIGNlbGwgY29udGFpbmluZyBwb2ludFxuICAgIHZhciBYID0gTWF0aC5mbG9vcih4KSwgWSA9IE1hdGguZmxvb3IoeSk7XG4gICAgLy8gR2V0IHJlbGF0aXZlIHh5IGNvb3JkaW5hdGVzIG9mIHBvaW50IHdpdGhpbiB0aGF0IGNlbGxcbiAgICB4ID0geCAtIFg7IHkgPSB5IC0gWTtcbiAgICAvLyBXcmFwIHRoZSBpbnRlZ2VyIGNlbGxzIGF0IDI1NSAoc21hbGxlciBpbnRlZ2VyIHBlcmlvZCBjYW4gYmUgaW50cm9kdWNlZCBoZXJlKVxuICAgIFggPSBYICYgMjU1OyBZID0gWSAmIDI1NTtcblxuICAgIC8vIENhbGN1bGF0ZSBub2lzZSBjb250cmlidXRpb25zIGZyb20gZWFjaCBvZiB0aGUgZm91ciBjb3JuZXJzXG4gICAgdmFyIHBlcm0gPSB0aGlzLnBlcm07XG4gICAgdmFyIGdyYWRQID0gdGhpcy5ncmFkUDtcbiAgICB2YXIgbjAwID0gZ3JhZFBbWCtwZXJtW1ldXS5kb3QyKHgsIHkpO1xuICAgIHZhciBuMDEgPSBncmFkUFtYK3Blcm1bWSsxXV0uZG90Mih4LCB5LTEpO1xuICAgIHZhciBuMTAgPSBncmFkUFtYKzErcGVybVtZXV0uZG90Mih4LTEsIHkpO1xuICAgIHZhciBuMTEgPSBncmFkUFtYKzErcGVybVtZKzFdXS5kb3QyKHgtMSwgeS0xKTtcblxuICAgIC8vIENvbXB1dGUgdGhlIGZhZGUgY3VydmUgdmFsdWUgZm9yIHhcbiAgICB2YXIgdSA9IGZhZGUoeCk7XG5cbiAgICAvLyBJbnRlcnBvbGF0ZSB0aGUgZm91ciByZXN1bHRzXG4gICAgcmV0dXJuIGxlcnAoXG4gICAgICAgIGxlcnAobjAwLCBuMTAsIHUpLFxuICAgICAgICBsZXJwKG4wMSwgbjExLCB1KSxcbiAgICAgICBmYWRlKHkpKTtcbiAgfTtcblxuICAvLyAzRCBQZXJsaW4gTm9pc2VcbiAgTm9pc2UucHJvdG90eXBlLnBlcmxpbjMgPSBmdW5jdGlvbih4LCB5LCB6KSB7XG4gICAgLy8gRmluZCB1bml0IGdyaWQgY2VsbCBjb250YWluaW5nIHBvaW50XG4gICAgdmFyIFggPSBNYXRoLmZsb29yKHgpLCBZID0gTWF0aC5mbG9vcih5KSwgWiA9IE1hdGguZmxvb3Ioeik7XG4gICAgLy8gR2V0IHJlbGF0aXZlIHh5eiBjb29yZGluYXRlcyBvZiBwb2ludCB3aXRoaW4gdGhhdCBjZWxsXG4gICAgeCA9IHggLSBYOyB5ID0geSAtIFk7IHogPSB6IC0gWjtcbiAgICAvLyBXcmFwIHRoZSBpbnRlZ2VyIGNlbGxzIGF0IDI1NSAoc21hbGxlciBpbnRlZ2VyIHBlcmlvZCBjYW4gYmUgaW50cm9kdWNlZCBoZXJlKVxuICAgIFggPSBYICYgMjU1OyBZID0gWSAmIDI1NTsgWiA9IFogJiAyNTU7XG5cbiAgICAvLyBDYWxjdWxhdGUgbm9pc2UgY29udHJpYnV0aW9ucyBmcm9tIGVhY2ggb2YgdGhlIGVpZ2h0IGNvcm5lcnNcbiAgICB2YXIgcGVybSA9IHRoaXMucGVybTtcbiAgICB2YXIgZ3JhZFAgPSB0aGlzLmdyYWRQO1xuICAgIHZhciBuMDAwID0gZ3JhZFBbWCsgIHBlcm1bWSsgIHBlcm1bWiAgXV1dLmRvdDMoeCwgICB5LCAgICAgeik7XG4gICAgdmFyIG4wMDEgPSBncmFkUFtYKyAgcGVybVtZKyAgcGVybVtaKzFdXV0uZG90Myh4LCAgIHksICAgei0xKTtcbiAgICB2YXIgbjAxMCA9IGdyYWRQW1grICBwZXJtW1krMStwZXJtW1ogIF1dXS5kb3QzKHgsICAgeS0xLCAgIHopO1xuICAgIHZhciBuMDExID0gZ3JhZFBbWCsgIHBlcm1bWSsxK3Blcm1bWisxXV1dLmRvdDMoeCwgICB5LTEsIHotMSk7XG4gICAgdmFyIG4xMDAgPSBncmFkUFtYKzErcGVybVtZKyAgcGVybVtaICBdXV0uZG90Myh4LTEsICAgeSwgICB6KTtcbiAgICB2YXIgbjEwMSA9IGdyYWRQW1grMStwZXJtW1krICBwZXJtW1orMV1dXS5kb3QzKHgtMSwgICB5LCB6LTEpO1xuICAgIHZhciBuMTEwID0gZ3JhZFBbWCsxK3Blcm1bWSsxK3Blcm1bWiAgXV1dLmRvdDMoeC0xLCB5LTEsICAgeik7XG4gICAgdmFyIG4xMTEgPSBncmFkUFtYKzErcGVybVtZKzErcGVybVtaKzFdXV0uZG90Myh4LTEsIHktMSwgei0xKTtcblxuICAgIC8vIENvbXB1dGUgdGhlIGZhZGUgY3VydmUgdmFsdWUgZm9yIHgsIHksIHpcbiAgICB2YXIgdSA9IGZhZGUoeCk7XG4gICAgdmFyIHYgPSBmYWRlKHkpO1xuICAgIHZhciB3ID0gZmFkZSh6KTtcblxuICAgIC8vIEludGVycG9sYXRlXG4gICAgcmV0dXJuIGxlcnAoXG4gICAgICAgIGxlcnAoXG4gICAgICAgICAgbGVycChuMDAwLCBuMTAwLCB1KSxcbiAgICAgICAgICBsZXJwKG4wMDEsIG4xMDEsIHUpLCB3KSxcbiAgICAgICAgbGVycChcbiAgICAgICAgICBsZXJwKG4wMTAsIG4xMTAsIHUpLFxuICAgICAgICAgIGxlcnAobjAxMSwgbjExMSwgdSksIHcpLFxuICAgICAgIHYpO1xuICB9O1xuXG4gIGdsb2JhbC5Ob2lzZSA9IE5vaXNlO1xuXG59KSh0eXBlb2YgbW9kdWxlID09PSBcInVuZGVmaW5lZFwiID8gdGhpcyA6IG1vZHVsZS5leHBvcnRzKTtcblxuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIC4vbm9kZV9tb2R1bGVzL25vaXNlanMvaW5kZXguanNcbi8vIG1vZHVsZSBpZCA9IDZcbi8vIG1vZHVsZSBjaHVua3MgPSAwIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7Iiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///6\n");
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const noisejs_1 = __webpack_require__(7);
+const javascript_astar_1 = __webpack_require__(8);
+const GameObject_1 = __webpack_require__(0);
+const rand = (...arr) => {
+    let args = arr;
+    if (args.length === 0) {
+        args = [2];
+    }
+    if (args.length === 1) {
+        return Math.floor(Math.random() * args[0]);
+    }
+    return Math.floor((Math.random() * (args[1] - args[0])) + args[0]);
+};
+class Terrain extends GameObject_1.default {
+    constructor(parent, attributes = {}) {
+        super();
+        Promise.all([
+            GameObject_1.default.getAsset('assets/materials/grass.json', 'material'),
+            GameObject_1.default.getAsset('assets/materials/water.json', 'material'),
+            GameObject_1.default.getAsset('assets/materials/gray.json', 'material'),
+        ]).then((arr) => {
+            const [terrainMaterial, waterMaterial, grayTerrainMaterial] = arr.map(asset => asset.resource);
+            const defaultAttributes = {
+                offset: new pc.Vec2(0, 0),
+                size: new pc.Vec2(15, 45),
+                terrainMaterial,
+                waterMaterial,
+                grayTerrainMaterial,
+                waterLevel: 1,
+                meshHeightMultiplier: 5,
+                riverProbability: 1,
+                riverDepth: 0,
+                stoneRange: [2, 7],
+                minStoneOffset: 0.1,
+                groundThickness: 0.1,
+            };
+            super.setAttributes(defaultAttributes, attributes);
+            this.entity = parent;
+            this.topLeft = new pc.Vec2(-(this.attributes.offset.x + ((this.attributes.size.x - 1) / 2.0)), this.attributes.offset.y + ((this.attributes.size.y - 1) / 2.0));
+            const noiseOptions = {};
+            if (this.attributes.extend) {
+                noiseOptions.extend = this.attributes.extend;
+            }
+            this._createNoiseMap(noiseOptions);
+            this._createMesh();
+            this._createGround();
+            this._createWater();
+            this._createRocks();
+        });
+    }
+    _createNoiseMap(options) {
+        const mapWidth = this.attributes.size.x - 2;
+        const mapHeight = this.attributes.size.y - 2;
+        let noiseMap = [];
+        const noise = new noisejs_1.default(Math.random());
+        for (let y = 0; y < mapHeight; y += 1) {
+            noiseMap[y] = [];
+            for (let x = 0; x < mapWidth; x += 1) {
+                noiseMap[y][x] = (noise.simplex2(y * 0.1, x * 0.1) + 1) * 0.5;
+                noiseMap[y][x] = (noiseMap[y][x] + 1) * 0.5;
+            }
+        }
+        if (Math.random() <= this.attributes.riverProbability) {
+            const edges = {
+                x: [0, mapHeight - 1],
+                y: [0, mapWidth - 1],
+            };
+            for (let i = 0; i < 2; i += 1) {
+                const key = Object.keys(edges)[rand()];
+                edges[key].splice(rand(edges[key].length), 1);
+            }
+            const actualEdges = [];
+            Object.keys(edges).forEach((key) => {
+                edges[key].forEach((val) => {
+                    let xCoord;
+                    let yCoord;
+                    if (key === 'x') {
+                        xCoord = val;
+                        yCoord = rand(mapWidth);
+                    }
+                    else if (key === 'y') {
+                        yCoord = val;
+                        xCoord = rand(mapHeight);
+                    }
+                    actualEdges.push([xCoord, yCoord]);
+                });
+            });
+            let noiseMask = noiseMap.map(row => row.map(point => Number(point <= 1)));
+            const graph = new javascript_astar_1.Graph(noiseMask, {
+                diagonal: true,
+            });
+            const start = graph.grid[actualEdges[0][0]][actualEdges[0][1]];
+            const end = graph.grid[actualEdges[1][0]][actualEdges[1][1]];
+            const result = javascript_astar_1.astar.search(graph, start, end);
+            const flattened = noiseMap.reduce((a, b) => a.concat(b));
+            const diffToMax = 1 - Math.max(...flattened);
+            noiseMap.map(row => row.map(point => point + diffToMax));
+            noiseMask = noiseMap.map(row => row.map(point => point + diffToMax));
+            const trySet = (x, y) => {
+                if (x < noiseMap.length && y < noiseMap[0].length) {
+                    noiseMap[x][y] = 0.5 - (this.attributes.riverDepth / 2);
+                }
+            };
+            result.forEach((point) => {
+                const x = point.x + rand();
+                const y = point.y + rand();
+                trySet(x, y);
+                trySet(x + 1, y);
+                trySet(x, y + 1);
+                trySet(x + 1, y + 1);
+            });
+        }
+        if (options.extend) {
+            const toExtend = options.extend.slice(1, 14);
+            noiseMap.unshift(toExtend);
+            const delta = noiseMap[3].map((point, i) => (point - noiseMap[0][i]) / 3.0);
+            for (let i = 1; i < 3; i += 1) {
+                noiseMap[i] = noiseMap[i - 1].map((point, j) => point + delta[j]);
+            }
+        }
+        else {
+            noiseMap.unshift(new Array(mapWidth).fill(0));
+        }
+        noiseMap.push(new Array(mapWidth).fill(0));
+        noiseMap = noiseMap.map(row => [0].concat(row, [0]));
+        this.heightMap = noiseMap;
+    }
+    _createGround() {
+        const ground = new pc.Entity('Ground');
+        ground.addComponent('model', {
+            type: 'box',
+        });
+        ground.model.material = this.attributes.terrainMaterial;
+        ground.setLocalPosition(this.attributes.offset.x, 0, this.attributes.offset.y);
+        ground.setLocalScale(this.attributes.size.x - 1, this.attributes.groundThickness, this.attributes.size.y - 1);
+        this.entity.addChild(ground);
+    }
+    _createWater() {
+        const water = new pc.Entity('Water');
+        water.addComponent('model', {
+            type: 'box',
+        });
+        water.model.material = this.attributes.waterMaterial;
+        water.setLocalScale(this.attributes.size.x - 4, this.attributes.waterLevel, this.attributes.size.y - 4);
+        water.setLocalPosition(this.attributes.offset.x, this.attributes.waterLevel / 2, this.attributes.offset.y);
+        this.entity.addChild(water);
+    }
+    _createMesh() {
+        const width = this.attributes.size.x;
+        const height = this.attributes.size.y;
+        const positions = [];
+        const indices = [];
+        const uvs = [];
+        let vertexIndex = 0;
+        for (let y = 0; y < height; y += 1) {
+            for (let x = 0; x < width; x += 1) {
+                positions.push(...this.coord2pos(x, y));
+                uvs.push(x / height, 1.0 - (y / width));
+                if (x < width - 1 && y < height - 1) {
+                    indices.push(vertexIndex, vertexIndex + width + 1, vertexIndex + width);
+                    indices.push(vertexIndex + width + 1, vertexIndex, vertexIndex + 1);
+                }
+                vertexIndex += 1;
+            }
+        }
+        const normals = pc.calculateNormals(positions, indices);
+        this.normals = normals;
+        const plane = pc.createMesh(GameObject_1.default.getApp().graphicsDevice, positions, {
+            indices,
+            normals,
+            uvs,
+        });
+        const node = new pc.GraphNode('TerrainNode');
+        const meshInstance = new pc.MeshInstance(node, plane, this.attributes.terrainMaterial);
+        const model = new pc.Model();
+        model.graph = node;
+        model.meshInstances = [meshInstance];
+        if (!this.entity.rigidbody) {
+            this.entity.addComponent('rigidbody', {
+                type: 'static',
+            });
+        }
+        if (!this.entity.collision) {
+            this.entity.addComponent('collision', {
+                type: 'mesh',
+            });
+        }
+        this.entity.collision.model = model;
+        GameObject_1.default.getApp().scene.addModel(model);
+        const previousTerrainNode = this.entity.findByName('TerrainNode');
+        if (previousTerrainNode) {
+            this.entity.removeChild(previousTerrainNode);
+        }
+        this.entity.addChild(node);
+        if (this.model) {
+            GameObject_1.default.getApp().scene.removeModel(this.model);
+        }
+        this.model = model;
+    }
+    _createRocks() {
+        const width = this.attributes.size.x;
+        const height = this.attributes.size.y;
+        for (let i = 0; i < rand(this.attributes.stoneRange.x, this.attributes.stoneRange.y); i += 1) {
+            const rock = GameObject_1.default.getEntity('Prefabs', 'Rock').clone();
+            rock.enabled = true;
+            const y = rand(height * this.attributes.minStoneOffset, height * (1 - this.attributes.minStoneOffset));
+            const x = rand(width * this.attributes.minStoneOffset, width * (1 - this.attributes.minStoneOffset));
+            rock.setPosition(...this.coord2pos(x, y));
+        }
+    }
+    coord2pos(x, y) {
+        return [(this.topLeft.x + x),
+            (Math.pow(this.heightMap[y][x], 3)) * this.attributes.meshHeightMultiplier,
+            (this.topLeft.y - y),
+        ];
+    }
+    grayOut() {
+        GameObject_1.default.getApp().scene.removeModel(this.model);
+        this.model.meshInstances[0].material = this.attributes.grayTerrainMaterial;
+        GameObject_1.default.getApp().scene.addModel(this.model);
+        this.entity.findByName('Water').enabled = false;
+        this.entity.findByName('Ground').model.material = this.attributes.grayTerrainMaterial;
+    }
+}
+exports.Terrain = Terrain;
+class Level extends GameObject_1.default {
+    constructor(parent, attributes = {}) {
+        super();
+        this.endZone = new pc.Entity();
+        this.entity = new pc.Entity();
+        super.setAttributes({
+            size: new pc.Vec2(15, 45),
+            offset: new pc.Vec2(0, 0),
+        }, attributes);
+        GameObject_1.default.getAsset('assets/materials/endzone.json', 'material').then((asset) => {
+            super.setAttributes({
+                endzoneMaterial: asset.resource,
+            });
+            this._createEndZone();
+        });
+        this.entity.setPosition(this.attributes.offset.x, 0, this.attributes.offset.y);
+        parent.addChild(this.entity);
+        const terrainEntity = new pc.Entity();
+        this.entity.addChild(terrainEntity);
+        this.terrain = new Terrain(terrainEntity, {
+            size: this.attributes.size,
+        });
+    }
+    _createEndZone() {
+        this.endZone.addComponent('model', {
+            type: 'box',
+        });
+        this.endZone.model.material = this.attributes.endzoneMaterial;
+        this.endZone.setLocalScale(this.attributes.size.x - 1, 10, 5);
+        this.endZone.setLocalPosition(0, 5, (this.attributes.size.y / -2.0) + 3);
+        this.entity.addChild(this.endZone);
+    }
+    isCompleted() {
+        return true;
+    }
+    onComplete() {
+    }
+}
+exports.Level = Level;
+class Stage extends GameObject_1.default {
+    constructor(entity, orbitCamera, attributes = {}) {
+        super();
+        this.levels = [];
+        this.currentOffset = new pc.Vec2(0, 0);
+        this.levelParent = new pc.Entity();
+        super.setAttributes({
+            levelCount: 3,
+        }, attributes);
+        entity.addChild(this.levelParent);
+        this.createNextLevel();
+    }
+    createNextLevel() {
+        const attributes = {
+            offset: this.currentOffset,
+        };
+        if (this.levels.length > 0) {
+        }
+        const level = new Level(this.levelParent, attributes);
+        setTimeout(() => this.orbitCam.focus(level.entity, true), 500);
+        this.levels.push(level);
+        this.currentOffset.y -= 43;
+        if (this.levels.length < this.attributes.levelCount) {
+            level.onComplete = () => this.createNextLevel();
+        }
+    }
+}
+exports.Stage = Stage;
+
 
 /***/ }),
 /* 7 */
-/*!************************************************!*\
-  !*** ./node_modules/javascript-astar/astar.js ***!
-  \************************************************/
-/*! no static exports found */
-/*! exports used: Graph, astar */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// javascript-astar 0.4.1\n// http://github.com/bgrins/javascript-astar\n// Freely distributable under the MIT License.\n// Implements the astar search algorithm in javascript using a Binary Heap.\n// Includes Binary Heap (with modifications) from Marijn Haverbeke.\n// http://eloquentjavascript.net/appendix2.html\n\n(function(definition) {\n    /* global module, define */\n    if(typeof module === 'object' && typeof module.exports === 'object') {\n        module.exports = definition();\n    } else if(true) {\n        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (definition),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?\n\t\t\t\t(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\n    } else {\n        var exports = definition();\n        window.astar = exports.astar;\n        window.Graph = exports.Graph;\n    }\n})(function() {\n\nfunction pathTo(node){\n    var curr = node,\n        path = [];\n    while(curr.parent) {\n        path.unshift(curr);\n        curr = curr.parent;\n    }\n    return path;\n}\n\nfunction getHeap() {\n    return new BinaryHeap(function(node) {\n        return node.f;\n    });\n}\n\nvar astar = {\n    /**\n    * Perform an A* Search on a graph given a start and end node.\n    * @param {Graph} graph\n    * @param {GridNode} start\n    * @param {GridNode} end\n    * @param {Object} [options]\n    * @param {bool} [options.closest] Specifies whether to return the\n               path to the closest node if the target is unreachable.\n    * @param {Function} [options.heuristic] Heuristic function (see\n    *          astar.heuristics).\n    */\n    search: function(graph, start, end, options) {\n        graph.cleanDirty();\n        options = options || {};\n        var heuristic = options.heuristic || astar.heuristics.manhattan,\n            closest = options.closest || false;\n\n        var openHeap = getHeap(),\n            closestNode = start; // set the start node to be the closest if required\n\n        start.h = heuristic(start, end);\n\n        openHeap.push(start);\n\n        while(openHeap.size() > 0) {\n\n            // Grab the lowest f(x) to process next.  Heap keeps this sorted for us.\n            var currentNode = openHeap.pop();\n\n            // End case -- result has been found, return the traced path.\n            if(currentNode === end) {\n                return pathTo(currentNode);\n            }\n\n            // Normal case -- move currentNode from open to closed, process each of its neighbors.\n            currentNode.closed = true;\n\n            // Find all neighbors for the current node.\n            var neighbors = graph.neighbors(currentNode);\n\n            for (var i = 0, il = neighbors.length; i < il; ++i) {\n                var neighbor = neighbors[i];\n\n                if (neighbor.closed || neighbor.isWall()) {\n                    // Not a valid node to process, skip to next neighbor.\n                    continue;\n                }\n\n                // The g score is the shortest distance from start to current node.\n                // We need to check if the path we have arrived at this neighbor is the shortest one we have seen yet.\n                var gScore = currentNode.g + neighbor.getCost(currentNode),\n                    beenVisited = neighbor.visited;\n\n                if (!beenVisited || gScore < neighbor.g) {\n\n                    // Found an optimal (so far) path to this node.  Take score for node to see how good it is.\n                    neighbor.visited = true;\n                    neighbor.parent = currentNode;\n                    neighbor.h = neighbor.h || heuristic(neighbor, end);\n                    neighbor.g = gScore;\n                    neighbor.f = neighbor.g + neighbor.h;\n                    graph.markDirty(neighbor);\n                    if (closest) {\n                        // If the neighbour is closer than the current closestNode or if it's equally close but has\n                        // a cheaper path than the current closest node then it becomes the closest node\n                        if (neighbor.h < closestNode.h || (neighbor.h === closestNode.h && neighbor.g < closestNode.g)) {\n                            closestNode = neighbor;\n                        }\n                    }\n\n                    if (!beenVisited) {\n                        // Pushing to heap will put it in proper place based on the 'f' value.\n                        openHeap.push(neighbor);\n                    }\n                    else {\n                        // Already seen the node, but since it has been rescored we need to reorder it in the heap\n                        openHeap.rescoreElement(neighbor);\n                    }\n                }\n            }\n        }\n\n        if (closest) {\n            return pathTo(closestNode);\n        }\n\n        // No result was found - empty array signifies failure to find path.\n        return [];\n    },\n    // See list of heuristics: http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html\n    heuristics: {\n        manhattan: function(pos0, pos1) {\n            var d1 = Math.abs(pos1.x - pos0.x);\n            var d2 = Math.abs(pos1.y - pos0.y);\n            return d1 + d2;\n        },\n        diagonal: function(pos0, pos1) {\n            var D = 1;\n            var D2 = Math.sqrt(2);\n            var d1 = Math.abs(pos1.x - pos0.x);\n            var d2 = Math.abs(pos1.y - pos0.y);\n            return (D * (d1 + d2)) + ((D2 - (2 * D)) * Math.min(d1, d2));\n        }\n    },\n    cleanNode:function(node){\n        node.f = 0;\n        node.g = 0;\n        node.h = 0;\n        node.visited = false;\n        node.closed = false;\n        node.parent = null;\n    }\n};\n\n/**\n* A graph memory structure\n* @param {Array} gridIn 2D array of input weights\n* @param {Object} [options]\n* @param {bool} [options.diagonal] Specifies whether diagonal moves are allowed\n*/\nfunction Graph(gridIn, options) {\n    options = options || {};\n    this.nodes = [];\n    this.diagonal = !!options.diagonal;\n    this.grid = [];\n    for (var x = 0; x < gridIn.length; x++) {\n        this.grid[x] = [];\n\n        for (var y = 0, row = gridIn[x]; y < row.length; y++) {\n            var node = new GridNode(x, y, row[y]);\n            this.grid[x][y] = node;\n            this.nodes.push(node);\n        }\n    }\n    this.init();\n}\n\nGraph.prototype.init = function() {\n    this.dirtyNodes = [];\n    for (var i = 0; i < this.nodes.length; i++) {\n        astar.cleanNode(this.nodes[i]);\n    }\n};\n\nGraph.prototype.cleanDirty = function() {\n    for (var i = 0; i < this.dirtyNodes.length; i++) {\n        astar.cleanNode(this.dirtyNodes[i]);\n    }\n    this.dirtyNodes = [];\n};\n\nGraph.prototype.markDirty = function(node) {\n    this.dirtyNodes.push(node);\n};\n\nGraph.prototype.neighbors = function(node) {\n    var ret = [],\n        x = node.x,\n        y = node.y,\n        grid = this.grid;\n\n    // West\n    if(grid[x-1] && grid[x-1][y]) {\n        ret.push(grid[x-1][y]);\n    }\n\n    // East\n    if(grid[x+1] && grid[x+1][y]) {\n        ret.push(grid[x+1][y]);\n    }\n\n    // South\n    if(grid[x] && grid[x][y-1]) {\n        ret.push(grid[x][y-1]);\n    }\n\n    // North\n    if(grid[x] && grid[x][y+1]) {\n        ret.push(grid[x][y+1]);\n    }\n\n    if (this.diagonal) {\n        // Southwest\n        if(grid[x-1] && grid[x-1][y-1]) {\n            ret.push(grid[x-1][y-1]);\n        }\n\n        // Southeast\n        if(grid[x+1] && grid[x+1][y-1]) {\n            ret.push(grid[x+1][y-1]);\n        }\n\n        // Northwest\n        if(grid[x-1] && grid[x-1][y+1]) {\n            ret.push(grid[x-1][y+1]);\n        }\n\n        // Northeast\n        if(grid[x+1] && grid[x+1][y+1]) {\n            ret.push(grid[x+1][y+1]);\n        }\n    }\n\n    return ret;\n};\n\nGraph.prototype.toString = function() {\n    var graphString = [],\n        nodes = this.grid, // when using grid\n        rowDebug, row, y, l;\n    for (var x = 0, len = nodes.length; x < len; x++) {\n        rowDebug = [];\n        row = nodes[x];\n        for (y = 0, l = row.length; y < l; y++) {\n            rowDebug.push(row[y].weight);\n        }\n        graphString.push(rowDebug.join(\" \"));\n    }\n    return graphString.join(\"\\n\");\n};\n\nfunction GridNode(x, y, weight) {\n    this.x = x;\n    this.y = y;\n    this.weight = weight;\n}\n\nGridNode.prototype.toString = function() {\n    return \"[\" + this.x + \" \" + this.y + \"]\";\n};\n\nGridNode.prototype.getCost = function(fromNeighbor) {\n    // Take diagonal weight into consideration.\n    if (fromNeighbor && fromNeighbor.x != this.x && fromNeighbor.y != this.y) {\n        return this.weight * 1.41421;\n    }\n    return this.weight;\n};\n\nGridNode.prototype.isWall = function() {\n    return this.weight === 0;\n};\n\nfunction BinaryHeap(scoreFunction){\n    this.content = [];\n    this.scoreFunction = scoreFunction;\n}\n\nBinaryHeap.prototype = {\n    push: function(element) {\n        // Add the new element to the end of the array.\n        this.content.push(element);\n\n        // Allow it to sink down.\n        this.sinkDown(this.content.length - 1);\n    },\n    pop: function() {\n        // Store the first element so we can return it later.\n        var result = this.content[0];\n        // Get the element at the end of the array.\n        var end = this.content.pop();\n        // If there are any elements left, put the end element at the\n        // start, and let it bubble up.\n        if (this.content.length > 0) {\n            this.content[0] = end;\n            this.bubbleUp(0);\n        }\n        return result;\n    },\n    remove: function(node) {\n        var i = this.content.indexOf(node);\n\n        // When it is found, the process seen in 'pop' is repeated\n        // to fill up the hole.\n        var end = this.content.pop();\n\n        if (i !== this.content.length - 1) {\n            this.content[i] = end;\n\n            if (this.scoreFunction(end) < this.scoreFunction(node)) {\n                this.sinkDown(i);\n            }\n            else {\n                this.bubbleUp(i);\n            }\n        }\n    },\n    size: function() {\n        return this.content.length;\n    },\n    rescoreElement: function(node) {\n        this.sinkDown(this.content.indexOf(node));\n    },\n    sinkDown: function(n) {\n        // Fetch the element that has to be sunk.\n        var element = this.content[n];\n\n        // When at 0, an element can not sink any further.\n        while (n > 0) {\n\n            // Compute the parent element's index, and fetch it.\n            var parentN = ((n + 1) >> 1) - 1,\n                parent = this.content[parentN];\n            // Swap the elements if the parent is greater.\n            if (this.scoreFunction(element) < this.scoreFunction(parent)) {\n                this.content[parentN] = element;\n                this.content[n] = parent;\n                // Update 'n' to continue at the new position.\n                n = parentN;\n            }\n            // Found a parent that is less, no need to sink any further.\n            else {\n                break;\n            }\n        }\n    },\n    bubbleUp: function(n) {\n        // Look up the target element and its score.\n        var length = this.content.length,\n            element = this.content[n],\n            elemScore = this.scoreFunction(element);\n\n        while(true) {\n            // Compute the indices of the child elements.\n            var child2N = (n + 1) << 1,\n                child1N = child2N - 1;\n            // This is used to store the new position of the element, if any.\n            var swap = null,\n                child1Score;\n            // If the first child exists (is inside the array)...\n            if (child1N < length) {\n                // Look it up and compute its score.\n                var child1 = this.content[child1N];\n                child1Score = this.scoreFunction(child1);\n\n                // If the score is less than our element's, we need to swap.\n                if (child1Score < elemScore){\n                    swap = child1N;\n                }\n            }\n\n            // Do the same checks for the other child.\n            if (child2N < length) {\n                var child2 = this.content[child2N],\n                    child2Score = this.scoreFunction(child2);\n                if (child2Score < (swap === null ? elemScore : child1Score)) {\n                    swap = child2N;\n                }\n            }\n\n            // If the element needs to be moved, swap it, and continue.\n            if (swap !== null) {\n                this.content[n] = this.content[swap];\n                this.content[swap] = element;\n                n = swap;\n            }\n            // Otherwise, we are done.\n            else {\n                break;\n            }\n        }\n    }\n};\n\nreturn {\n    astar: astar,\n    Graph: Graph\n};\n\n});\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiNy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL25vZGVfbW9kdWxlcy9qYXZhc2NyaXB0LWFzdGFyL2FzdGFyLmpzP2QyY2IiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gamF2YXNjcmlwdC1hc3RhciAwLjQuMVxuLy8gaHR0cDovL2dpdGh1Yi5jb20vYmdyaW5zL2phdmFzY3JpcHQtYXN0YXJcbi8vIEZyZWVseSBkaXN0cmlidXRhYmxlIHVuZGVyIHRoZSBNSVQgTGljZW5zZS5cbi8vIEltcGxlbWVudHMgdGhlIGFzdGFyIHNlYXJjaCBhbGdvcml0aG0gaW4gamF2YXNjcmlwdCB1c2luZyBhIEJpbmFyeSBIZWFwLlxuLy8gSW5jbHVkZXMgQmluYXJ5IEhlYXAgKHdpdGggbW9kaWZpY2F0aW9ucykgZnJvbSBNYXJpam4gSGF2ZXJiZWtlLlxuLy8gaHR0cDovL2Vsb3F1ZW50amF2YXNjcmlwdC5uZXQvYXBwZW5kaXgyLmh0bWxcblxuKGZ1bmN0aW9uKGRlZmluaXRpb24pIHtcbiAgICAvKiBnbG9iYWwgbW9kdWxlLCBkZWZpbmUgKi9cbiAgICBpZih0eXBlb2YgbW9kdWxlID09PSAnb2JqZWN0JyAmJiB0eXBlb2YgbW9kdWxlLmV4cG9ydHMgPT09ICdvYmplY3QnKSB7XG4gICAgICAgIG1vZHVsZS5leHBvcnRzID0gZGVmaW5pdGlvbigpO1xuICAgIH0gZWxzZSBpZih0eXBlb2YgZGVmaW5lID09PSAnZnVuY3Rpb24nICYmIGRlZmluZS5hbWQpIHtcbiAgICAgICAgZGVmaW5lKFtdLCBkZWZpbml0aW9uKTtcbiAgICB9IGVsc2Uge1xuICAgICAgICB2YXIgZXhwb3J0cyA9IGRlZmluaXRpb24oKTtcbiAgICAgICAgd2luZG93LmFzdGFyID0gZXhwb3J0cy5hc3RhcjtcbiAgICAgICAgd2luZG93LkdyYXBoID0gZXhwb3J0cy5HcmFwaDtcbiAgICB9XG59KShmdW5jdGlvbigpIHtcblxuZnVuY3Rpb24gcGF0aFRvKG5vZGUpe1xuICAgIHZhciBjdXJyID0gbm9kZSxcbiAgICAgICAgcGF0aCA9IFtdO1xuICAgIHdoaWxlKGN1cnIucGFyZW50KSB7XG4gICAgICAgIHBhdGgudW5zaGlmdChjdXJyKTtcbiAgICAgICAgY3VyciA9IGN1cnIucGFyZW50O1xuICAgIH1cbiAgICByZXR1cm4gcGF0aDtcbn1cblxuZnVuY3Rpb24gZ2V0SGVhcCgpIHtcbiAgICByZXR1cm4gbmV3IEJpbmFyeUhlYXAoZnVuY3Rpb24obm9kZSkge1xuICAgICAgICByZXR1cm4gbm9kZS5mO1xuICAgIH0pO1xufVxuXG52YXIgYXN0YXIgPSB7XG4gICAgLyoqXG4gICAgKiBQZXJmb3JtIGFuIEEqIFNlYXJjaCBvbiBhIGdyYXBoIGdpdmVuIGEgc3RhcnQgYW5kIGVuZCBub2RlLlxuICAgICogQHBhcmFtIHtHcmFwaH0gZ3JhcGhcbiAgICAqIEBwYXJhbSB7R3JpZE5vZGV9IHN0YXJ0XG4gICAgKiBAcGFyYW0ge0dyaWROb2RlfSBlbmRcbiAgICAqIEBwYXJhbSB7T2JqZWN0fSBbb3B0aW9uc11cbiAgICAqIEBwYXJhbSB7Ym9vbH0gW29wdGlvbnMuY2xvc2VzdF0gU3BlY2lmaWVzIHdoZXRoZXIgdG8gcmV0dXJuIHRoZVxuICAgICAgICAgICAgICAgcGF0aCB0byB0aGUgY2xvc2VzdCBub2RlIGlmIHRoZSB0YXJnZXQgaXMgdW5yZWFjaGFibGUuXG4gICAgKiBAcGFyYW0ge0Z1bmN0aW9ufSBbb3B0aW9ucy5oZXVyaXN0aWNdIEhldXJpc3RpYyBmdW5jdGlvbiAoc2VlXG4gICAgKiAgICAgICAgICBhc3Rhci5oZXVyaXN0aWNzKS5cbiAgICAqL1xuICAgIHNlYXJjaDogZnVuY3Rpb24oZ3JhcGgsIHN0YXJ0LCBlbmQsIG9wdGlvbnMpIHtcbiAgICAgICAgZ3JhcGguY2xlYW5EaXJ0eSgpO1xuICAgICAgICBvcHRpb25zID0gb3B0aW9ucyB8fCB7fTtcbiAgICAgICAgdmFyIGhldXJpc3RpYyA9IG9wdGlvbnMuaGV1cmlzdGljIHx8IGFzdGFyLmhldXJpc3RpY3MubWFuaGF0dGFuLFxuICAgICAgICAgICAgY2xvc2VzdCA9IG9wdGlvbnMuY2xvc2VzdCB8fCBmYWxzZTtcblxuICAgICAgICB2YXIgb3BlbkhlYXAgPSBnZXRIZWFwKCksXG4gICAgICAgICAgICBjbG9zZXN0Tm9kZSA9IHN0YXJ0OyAvLyBzZXQgdGhlIHN0YXJ0IG5vZGUgdG8gYmUgdGhlIGNsb3Nlc3QgaWYgcmVxdWlyZWRcblxuICAgICAgICBzdGFydC5oID0gaGV1cmlzdGljKHN0YXJ0LCBlbmQpO1xuXG4gICAgICAgIG9wZW5IZWFwLnB1c2goc3RhcnQpO1xuXG4gICAgICAgIHdoaWxlKG9wZW5IZWFwLnNpemUoKSA+IDApIHtcblxuICAgICAgICAgICAgLy8gR3JhYiB0aGUgbG93ZXN0IGYoeCkgdG8gcHJvY2VzcyBuZXh0LiAgSGVhcCBrZWVwcyB0aGlzIHNvcnRlZCBmb3IgdXMuXG4gICAgICAgICAgICB2YXIgY3VycmVudE5vZGUgPSBvcGVuSGVhcC5wb3AoKTtcblxuICAgICAgICAgICAgLy8gRW5kIGNhc2UgLS0gcmVzdWx0IGhhcyBiZWVuIGZvdW5kLCByZXR1cm4gdGhlIHRyYWNlZCBwYXRoLlxuICAgICAgICAgICAgaWYoY3VycmVudE5vZGUgPT09IGVuZCkge1xuICAgICAgICAgICAgICAgIHJldHVybiBwYXRoVG8oY3VycmVudE5vZGUpO1xuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAvLyBOb3JtYWwgY2FzZSAtLSBtb3ZlIGN1cnJlbnROb2RlIGZyb20gb3BlbiB0byBjbG9zZWQsIHByb2Nlc3MgZWFjaCBvZiBpdHMgbmVpZ2hib3JzLlxuICAgICAgICAgICAgY3VycmVudE5vZGUuY2xvc2VkID0gdHJ1ZTtcblxuICAgICAgICAgICAgLy8gRmluZCBhbGwgbmVpZ2hib3JzIGZvciB0aGUgY3VycmVudCBub2RlLlxuICAgICAgICAgICAgdmFyIG5laWdoYm9ycyA9IGdyYXBoLm5laWdoYm9ycyhjdXJyZW50Tm9kZSk7XG5cbiAgICAgICAgICAgIGZvciAodmFyIGkgPSAwLCBpbCA9IG5laWdoYm9ycy5sZW5ndGg7IGkgPCBpbDsgKytpKSB7XG4gICAgICAgICAgICAgICAgdmFyIG5laWdoYm9yID0gbmVpZ2hib3JzW2ldO1xuXG4gICAgICAgICAgICAgICAgaWYgKG5laWdoYm9yLmNsb3NlZCB8fCBuZWlnaGJvci5pc1dhbGwoKSkge1xuICAgICAgICAgICAgICAgICAgICAvLyBOb3QgYSB2YWxpZCBub2RlIHRvIHByb2Nlc3MsIHNraXAgdG8gbmV4dCBuZWlnaGJvci5cbiAgICAgICAgICAgICAgICAgICAgY29udGludWU7XG4gICAgICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAgICAgLy8gVGhlIGcgc2NvcmUgaXMgdGhlIHNob3J0ZXN0IGRpc3RhbmNlIGZyb20gc3RhcnQgdG8gY3VycmVudCBub2RlLlxuICAgICAgICAgICAgICAgIC8vIFdlIG5lZWQgdG8gY2hlY2sgaWYgdGhlIHBhdGggd2UgaGF2ZSBhcnJpdmVkIGF0IHRoaXMgbmVpZ2hib3IgaXMgdGhlIHNob3J0ZXN0IG9uZSB3ZSBoYXZlIHNlZW4geWV0LlxuICAgICAgICAgICAgICAgIHZhciBnU2NvcmUgPSBjdXJyZW50Tm9kZS5nICsgbmVpZ2hib3IuZ2V0Q29zdChjdXJyZW50Tm9kZSksXG4gICAgICAgICAgICAgICAgICAgIGJlZW5WaXNpdGVkID0gbmVpZ2hib3IudmlzaXRlZDtcblxuICAgICAgICAgICAgICAgIGlmICghYmVlblZpc2l0ZWQgfHwgZ1Njb3JlIDwgbmVpZ2hib3IuZykge1xuXG4gICAgICAgICAgICAgICAgICAgIC8vIEZvdW5kIGFuIG9wdGltYWwgKHNvIGZhcikgcGF0aCB0byB0aGlzIG5vZGUuICBUYWtlIHNjb3JlIGZvciBub2RlIHRvIHNlZSBob3cgZ29vZCBpdCBpcy5cbiAgICAgICAgICAgICAgICAgICAgbmVpZ2hib3IudmlzaXRlZCA9IHRydWU7XG4gICAgICAgICAgICAgICAgICAgIG5laWdoYm9yLnBhcmVudCA9IGN1cnJlbnROb2RlO1xuICAgICAgICAgICAgICAgICAgICBuZWlnaGJvci5oID0gbmVpZ2hib3IuaCB8fCBoZXVyaXN0aWMobmVpZ2hib3IsIGVuZCk7XG4gICAgICAgICAgICAgICAgICAgIG5laWdoYm9yLmcgPSBnU2NvcmU7XG4gICAgICAgICAgICAgICAgICAgIG5laWdoYm9yLmYgPSBuZWlnaGJvci5nICsgbmVpZ2hib3IuaDtcbiAgICAgICAgICAgICAgICAgICAgZ3JhcGgubWFya0RpcnR5KG5laWdoYm9yKTtcbiAgICAgICAgICAgICAgICAgICAgaWYgKGNsb3Nlc3QpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIC8vIElmIHRoZSBuZWlnaGJvdXIgaXMgY2xvc2VyIHRoYW4gdGhlIGN1cnJlbnQgY2xvc2VzdE5vZGUgb3IgaWYgaXQncyBlcXVhbGx5IGNsb3NlIGJ1dCBoYXNcbiAgICAgICAgICAgICAgICAgICAgICAgIC8vIGEgY2hlYXBlciBwYXRoIHRoYW4gdGhlIGN1cnJlbnQgY2xvc2VzdCBub2RlIHRoZW4gaXQgYmVjb21lcyB0aGUgY2xvc2VzdCBub2RlXG4gICAgICAgICAgICAgICAgICAgICAgICBpZiAobmVpZ2hib3IuaCA8IGNsb3Nlc3ROb2RlLmggfHwgKG5laWdoYm9yLmggPT09IGNsb3Nlc3ROb2RlLmggJiYgbmVpZ2hib3IuZyA8IGNsb3Nlc3ROb2RlLmcpKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvc2VzdE5vZGUgPSBuZWlnaGJvcjtcbiAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAgICAgICAgIGlmICghYmVlblZpc2l0ZWQpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIC8vIFB1c2hpbmcgdG8gaGVhcCB3aWxsIHB1dCBpdCBpbiBwcm9wZXIgcGxhY2UgYmFzZWQgb24gdGhlICdmJyB2YWx1ZS5cbiAgICAgICAgICAgICAgICAgICAgICAgIG9wZW5IZWFwLnB1c2gobmVpZ2hib3IpO1xuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgIGVsc2Uge1xuICAgICAgICAgICAgICAgICAgICAgICAgLy8gQWxyZWFkeSBzZWVuIHRoZSBub2RlLCBidXQgc2luY2UgaXQgaGFzIGJlZW4gcmVzY29yZWQgd2UgbmVlZCB0byByZW9yZGVyIGl0IGluIHRoZSBoZWFwXG4gICAgICAgICAgICAgICAgICAgICAgICBvcGVuSGVhcC5yZXNjb3JlRWxlbWVudChuZWlnaGJvcik7XG4gICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9XG4gICAgICAgIH1cblxuICAgICAgICBpZiAoY2xvc2VzdCkge1xuICAgICAgICAgICAgcmV0dXJuIHBhdGhUbyhjbG9zZXN0Tm9kZSk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBObyByZXN1bHQgd2FzIGZvdW5kIC0gZW1wdHkgYXJyYXkgc2lnbmlmaWVzIGZhaWx1cmUgdG8gZmluZCBwYXRoLlxuICAgICAgICByZXR1cm4gW107XG4gICAgfSxcbiAgICAvLyBTZWUgbGlzdCBvZiBoZXVyaXN0aWNzOiBodHRwOi8vdGhlb3J5LnN0YW5mb3JkLmVkdS9+YW1pdHAvR2FtZVByb2dyYW1taW5nL0hldXJpc3RpY3MuaHRtbFxuICAgIGhldXJpc3RpY3M6IHtcbiAgICAgICAgbWFuaGF0dGFuOiBmdW5jdGlvbihwb3MwLCBwb3MxKSB7XG4gICAgICAgICAgICB2YXIgZDEgPSBNYXRoLmFicyhwb3MxLnggLSBwb3MwLngpO1xuICAgICAgICAgICAgdmFyIGQyID0gTWF0aC5hYnMocG9zMS55IC0gcG9zMC55KTtcbiAgICAgICAgICAgIHJldHVybiBkMSArIGQyO1xuICAgICAgICB9LFxuICAgICAgICBkaWFnb25hbDogZnVuY3Rpb24ocG9zMCwgcG9zMSkge1xuICAgICAgICAgICAgdmFyIEQgPSAxO1xuICAgICAgICAgICAgdmFyIEQyID0gTWF0aC5zcXJ0KDIpO1xuICAgICAgICAgICAgdmFyIGQxID0gTWF0aC5hYnMocG9zMS54IC0gcG9zMC54KTtcbiAgICAgICAgICAgIHZhciBkMiA9IE1hdGguYWJzKHBvczEueSAtIHBvczAueSk7XG4gICAgICAgICAgICByZXR1cm4gKEQgKiAoZDEgKyBkMikpICsgKChEMiAtICgyICogRCkpICogTWF0aC5taW4oZDEsIGQyKSk7XG4gICAgICAgIH1cbiAgICB9LFxuICAgIGNsZWFuTm9kZTpmdW5jdGlvbihub2RlKXtcbiAgICAgICAgbm9kZS5mID0gMDtcbiAgICAgICAgbm9kZS5nID0gMDtcbiAgICAgICAgbm9kZS5oID0gMDtcbiAgICAgICAgbm9kZS52aXNpdGVkID0gZmFsc2U7XG4gICAgICAgIG5vZGUuY2xvc2VkID0gZmFsc2U7XG4gICAgICAgIG5vZGUucGFyZW50ID0gbnVsbDtcbiAgICB9XG59O1xuXG4vKipcbiogQSBncmFwaCBtZW1vcnkgc3RydWN0dXJlXG4qIEBwYXJhbSB7QXJyYXl9IGdyaWRJbiAyRCBhcnJheSBvZiBpbnB1dCB3ZWlnaHRzXG4qIEBwYXJhbSB7T2JqZWN0fSBbb3B0aW9uc11cbiogQHBhcmFtIHtib29sfSBbb3B0aW9ucy5kaWFnb25hbF0gU3BlY2lmaWVzIHdoZXRoZXIgZGlhZ29uYWwgbW92ZXMgYXJlIGFsbG93ZWRcbiovXG5mdW5jdGlvbiBHcmFwaChncmlkSW4sIG9wdGlvbnMpIHtcbiAgICBvcHRpb25zID0gb3B0aW9ucyB8fCB7fTtcbiAgICB0aGlzLm5vZGVzID0gW107XG4gICAgdGhpcy5kaWFnb25hbCA9ICEhb3B0aW9ucy5kaWFnb25hbDtcbiAgICB0aGlzLmdyaWQgPSBbXTtcbiAgICBmb3IgKHZhciB4ID0gMDsgeCA8IGdyaWRJbi5sZW5ndGg7IHgrKykge1xuICAgICAgICB0aGlzLmdyaWRbeF0gPSBbXTtcblxuICAgICAgICBmb3IgKHZhciB5ID0gMCwgcm93ID0gZ3JpZEluW3hdOyB5IDwgcm93Lmxlbmd0aDsgeSsrKSB7XG4gICAgICAgICAgICB2YXIgbm9kZSA9IG5ldyBHcmlkTm9kZSh4LCB5LCByb3dbeV0pO1xuICAgICAgICAgICAgdGhpcy5ncmlkW3hdW3ldID0gbm9kZTtcbiAgICAgICAgICAgIHRoaXMubm9kZXMucHVzaChub2RlKTtcbiAgICAgICAgfVxuICAgIH1cbiAgICB0aGlzLmluaXQoKTtcbn1cblxuR3JhcGgucHJvdG90eXBlLmluaXQgPSBmdW5jdGlvbigpIHtcbiAgICB0aGlzLmRpcnR5Tm9kZXMgPSBbXTtcbiAgICBmb3IgKHZhciBpID0gMDsgaSA8IHRoaXMubm9kZXMubGVuZ3RoOyBpKyspIHtcbiAgICAgICAgYXN0YXIuY2xlYW5Ob2RlKHRoaXMubm9kZXNbaV0pO1xuICAgIH1cbn07XG5cbkdyYXBoLnByb3RvdHlwZS5jbGVhbkRpcnR5ID0gZnVuY3Rpb24oKSB7XG4gICAgZm9yICh2YXIgaSA9IDA7IGkgPCB0aGlzLmRpcnR5Tm9kZXMubGVuZ3RoOyBpKyspIHtcbiAgICAgICAgYXN0YXIuY2xlYW5Ob2RlKHRoaXMuZGlydHlOb2Rlc1tpXSk7XG4gICAgfVxuICAgIHRoaXMuZGlydHlOb2RlcyA9IFtdO1xufTtcblxuR3JhcGgucHJvdG90eXBlLm1hcmtEaXJ0eSA9IGZ1bmN0aW9uKG5vZGUpIHtcbiAgICB0aGlzLmRpcnR5Tm9kZXMucHVzaChub2RlKTtcbn07XG5cbkdyYXBoLnByb3RvdHlwZS5uZWlnaGJvcnMgPSBmdW5jdGlvbihub2RlKSB7XG4gICAgdmFyIHJldCA9IFtdLFxuICAgICAgICB4ID0gbm9kZS54LFxuICAgICAgICB5ID0gbm9kZS55LFxuICAgICAgICBncmlkID0gdGhpcy5ncmlkO1xuXG4gICAgLy8gV2VzdFxuICAgIGlmKGdyaWRbeC0xXSAmJiBncmlkW3gtMV1beV0pIHtcbiAgICAgICAgcmV0LnB1c2goZ3JpZFt4LTFdW3ldKTtcbiAgICB9XG5cbiAgICAvLyBFYXN0XG4gICAgaWYoZ3JpZFt4KzFdICYmIGdyaWRbeCsxXVt5XSkge1xuICAgICAgICByZXQucHVzaChncmlkW3grMV1beV0pO1xuICAgIH1cblxuICAgIC8vIFNvdXRoXG4gICAgaWYoZ3JpZFt4XSAmJiBncmlkW3hdW3ktMV0pIHtcbiAgICAgICAgcmV0LnB1c2goZ3JpZFt4XVt5LTFdKTtcbiAgICB9XG5cbiAgICAvLyBOb3J0aFxuICAgIGlmKGdyaWRbeF0gJiYgZ3JpZFt4XVt5KzFdKSB7XG4gICAgICAgIHJldC5wdXNoKGdyaWRbeF1beSsxXSk7XG4gICAgfVxuXG4gICAgaWYgKHRoaXMuZGlhZ29uYWwpIHtcbiAgICAgICAgLy8gU291dGh3ZXN0XG4gICAgICAgIGlmKGdyaWRbeC0xXSAmJiBncmlkW3gtMV1beS0xXSkge1xuICAgICAgICAgICAgcmV0LnB1c2goZ3JpZFt4LTFdW3ktMV0pO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU291dGhlYXN0XG4gICAgICAgIGlmKGdyaWRbeCsxXSAmJiBncmlkW3grMV1beS0xXSkge1xuICAgICAgICAgICAgcmV0LnB1c2goZ3JpZFt4KzFdW3ktMV0pO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gTm9ydGh3ZXN0XG4gICAgICAgIGlmKGdyaWRbeC0xXSAmJiBncmlkW3gtMV1beSsxXSkge1xuICAgICAgICAgICAgcmV0LnB1c2goZ3JpZFt4LTFdW3krMV0pO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gTm9ydGhlYXN0XG4gICAgICAgIGlmKGdyaWRbeCsxXSAmJiBncmlkW3grMV1beSsxXSkge1xuICAgICAgICAgICAgcmV0LnB1c2goZ3JpZFt4KzFdW3krMV0pO1xuICAgICAgICB9XG4gICAgfVxuXG4gICAgcmV0dXJuIHJldDtcbn07XG5cbkdyYXBoLnByb3RvdHlwZS50b1N0cmluZyA9IGZ1bmN0aW9uKCkge1xuICAgIHZhciBncmFwaFN0cmluZyA9IFtdLFxuICAgICAgICBub2RlcyA9IHRoaXMuZ3JpZCwgLy8gd2hlbiB1c2luZyBncmlkXG4gICAgICAgIHJvd0RlYnVnLCByb3csIHksIGw7XG4gICAgZm9yICh2YXIgeCA9IDAsIGxlbiA9IG5vZGVzLmxlbmd0aDsgeCA8IGxlbjsgeCsrKSB7XG4gICAgICAgIHJvd0RlYnVnID0gW107XG4gICAgICAgIHJvdyA9IG5vZGVzW3hdO1xuICAgICAgICBmb3IgKHkgPSAwLCBsID0gcm93Lmxlbmd0aDsgeSA8IGw7IHkrKykge1xuICAgICAgICAgICAgcm93RGVidWcucHVzaChyb3dbeV0ud2VpZ2h0KTtcbiAgICAgICAgfVxuICAgICAgICBncmFwaFN0cmluZy5wdXNoKHJvd0RlYnVnLmpvaW4oXCIgXCIpKTtcbiAgICB9XG4gICAgcmV0dXJuIGdyYXBoU3RyaW5nLmpvaW4oXCJcXG5cIik7XG59O1xuXG5mdW5jdGlvbiBHcmlkTm9kZSh4LCB5LCB3ZWlnaHQpIHtcbiAgICB0aGlzLnggPSB4O1xuICAgIHRoaXMueSA9IHk7XG4gICAgdGhpcy53ZWlnaHQgPSB3ZWlnaHQ7XG59XG5cbkdyaWROb2RlLnByb3RvdHlwZS50b1N0cmluZyA9IGZ1bmN0aW9uKCkge1xuICAgIHJldHVybiBcIltcIiArIHRoaXMueCArIFwiIFwiICsgdGhpcy55ICsgXCJdXCI7XG59O1xuXG5HcmlkTm9kZS5wcm90b3R5cGUuZ2V0Q29zdCA9IGZ1bmN0aW9uKGZyb21OZWlnaGJvcikge1xuICAgIC8vIFRha2UgZGlhZ29uYWwgd2VpZ2h0IGludG8gY29uc2lkZXJhdGlvbi5cbiAgICBpZiAoZnJvbU5laWdoYm9yICYmIGZyb21OZWlnaGJvci54ICE9IHRoaXMueCAmJiBmcm9tTmVpZ2hib3IueSAhPSB0aGlzLnkpIHtcbiAgICAgICAgcmV0dXJuIHRoaXMud2VpZ2h0ICogMS40MTQyMTtcbiAgICB9XG4gICAgcmV0dXJuIHRoaXMud2VpZ2h0O1xufTtcblxuR3JpZE5vZGUucHJvdG90eXBlLmlzV2FsbCA9IGZ1bmN0aW9uKCkge1xuICAgIHJldHVybiB0aGlzLndlaWdodCA9PT0gMDtcbn07XG5cbmZ1bmN0aW9uIEJpbmFyeUhlYXAoc2NvcmVGdW5jdGlvbil7XG4gICAgdGhpcy5jb250ZW50ID0gW107XG4gICAgdGhpcy5zY29yZUZ1bmN0aW9uID0gc2NvcmVGdW5jdGlvbjtcbn1cblxuQmluYXJ5SGVhcC5wcm90b3R5cGUgPSB7XG4gICAgcHVzaDogZnVuY3Rpb24oZWxlbWVudCkge1xuICAgICAgICAvLyBBZGQgdGhlIG5ldyBlbGVtZW50IHRvIHRoZSBlbmQgb2YgdGhlIGFycmF5LlxuICAgICAgICB0aGlzLmNvbnRlbnQucHVzaChlbGVtZW50KTtcblxuICAgICAgICAvLyBBbGxvdyBpdCB0byBzaW5rIGRvd24uXG4gICAgICAgIHRoaXMuc2lua0Rvd24odGhpcy5jb250ZW50Lmxlbmd0aCAtIDEpO1xuICAgIH0sXG4gICAgcG9wOiBmdW5jdGlvbigpIHtcbiAgICAgICAgLy8gU3RvcmUgdGhlIGZpcnN0IGVsZW1lbnQgc28gd2UgY2FuIHJldHVybiBpdCBsYXRlci5cbiAgICAgICAgdmFyIHJlc3VsdCA9IHRoaXMuY29udGVudFswXTtcbiAgICAgICAgLy8gR2V0IHRoZSBlbGVtZW50IGF0IHRoZSBlbmQgb2YgdGhlIGFycmF5LlxuICAgICAgICB2YXIgZW5kID0gdGhpcy5jb250ZW50LnBvcCgpO1xuICAgICAgICAvLyBJZiB0aGVyZSBhcmUgYW55IGVsZW1lbnRzIGxlZnQsIHB1dCB0aGUgZW5kIGVsZW1lbnQgYXQgdGhlXG4gICAgICAgIC8vIHN0YXJ0LCBhbmQgbGV0IGl0IGJ1YmJsZSB1cC5cbiAgICAgICAgaWYgKHRoaXMuY29udGVudC5sZW5ndGggPiAwKSB7XG4gICAgICAgICAgICB0aGlzLmNvbnRlbnRbMF0gPSBlbmQ7XG4gICAgICAgICAgICB0aGlzLmJ1YmJsZVVwKDApO1xuICAgICAgICB9XG4gICAgICAgIHJldHVybiByZXN1bHQ7XG4gICAgfSxcbiAgICByZW1vdmU6IGZ1bmN0aW9uKG5vZGUpIHtcbiAgICAgICAgdmFyIGkgPSB0aGlzLmNvbnRlbnQuaW5kZXhPZihub2RlKTtcblxuICAgICAgICAvLyBXaGVuIGl0IGlzIGZvdW5kLCB0aGUgcHJvY2VzcyBzZWVuIGluICdwb3AnIGlzIHJlcGVhdGVkXG4gICAgICAgIC8vIHRvIGZpbGwgdXAgdGhlIGhvbGUuXG4gICAgICAgIHZhciBlbmQgPSB0aGlzLmNvbnRlbnQucG9wKCk7XG5cbiAgICAgICAgaWYgKGkgIT09IHRoaXMuY29udGVudC5sZW5ndGggLSAxKSB7XG4gICAgICAgICAgICB0aGlzLmNvbnRlbnRbaV0gPSBlbmQ7XG5cbiAgICAgICAgICAgIGlmICh0aGlzLnNjb3JlRnVuY3Rpb24oZW5kKSA8IHRoaXMuc2NvcmVGdW5jdGlvbihub2RlKSkge1xuICAgICAgICAgICAgICAgIHRoaXMuc2lua0Rvd24oaSk7XG4gICAgICAgICAgICB9XG4gICAgICAgICAgICBlbHNlIHtcbiAgICAgICAgICAgICAgICB0aGlzLmJ1YmJsZVVwKGkpO1xuICAgICAgICAgICAgfVxuICAgICAgICB9XG4gICAgfSxcbiAgICBzaXplOiBmdW5jdGlvbigpIHtcbiAgICAgICAgcmV0dXJuIHRoaXMuY29udGVudC5sZW5ndGg7XG4gICAgfSxcbiAgICByZXNjb3JlRWxlbWVudDogZnVuY3Rpb24obm9kZSkge1xuICAgICAgICB0aGlzLnNpbmtEb3duKHRoaXMuY29udGVudC5pbmRleE9mKG5vZGUpKTtcbiAgICB9LFxuICAgIHNpbmtEb3duOiBmdW5jdGlvbihuKSB7XG4gICAgICAgIC8vIEZldGNoIHRoZSBlbGVtZW50IHRoYXQgaGFzIHRvIGJlIHN1bmsuXG4gICAgICAgIHZhciBlbGVtZW50ID0gdGhpcy5jb250ZW50W25dO1xuXG4gICAgICAgIC8vIFdoZW4gYXQgMCwgYW4gZWxlbWVudCBjYW4gbm90IHNpbmsgYW55IGZ1cnRoZXIuXG4gICAgICAgIHdoaWxlIChuID4gMCkge1xuXG4gICAgICAgICAgICAvLyBDb21wdXRlIHRoZSBwYXJlbnQgZWxlbWVudCdzIGluZGV4LCBhbmQgZmV0Y2ggaXQuXG4gICAgICAgICAgICB2YXIgcGFyZW50TiA9ICgobiArIDEpID4+IDEpIC0gMSxcbiAgICAgICAgICAgICAgICBwYXJlbnQgPSB0aGlzLmNvbnRlbnRbcGFyZW50Tl07XG4gICAgICAgICAgICAvLyBTd2FwIHRoZSBlbGVtZW50cyBpZiB0aGUgcGFyZW50IGlzIGdyZWF0ZXIuXG4gICAgICAgICAgICBpZiAodGhpcy5zY29yZUZ1bmN0aW9uKGVsZW1lbnQpIDwgdGhpcy5zY29yZUZ1bmN0aW9uKHBhcmVudCkpIHtcbiAgICAgICAgICAgICAgICB0aGlzLmNvbnRlbnRbcGFyZW50Tl0gPSBlbGVtZW50O1xuICAgICAgICAgICAgICAgIHRoaXMuY29udGVudFtuXSA9IHBhcmVudDtcbiAgICAgICAgICAgICAgICAvLyBVcGRhdGUgJ24nIHRvIGNvbnRpbnVlIGF0IHRoZSBuZXcgcG9zaXRpb24uXG4gICAgICAgICAgICAgICAgbiA9IHBhcmVudE47XG4gICAgICAgICAgICB9XG4gICAgICAgICAgICAvLyBGb3VuZCBhIHBhcmVudCB0aGF0IGlzIGxlc3MsIG5vIG5lZWQgdG8gc2luayBhbnkgZnVydGhlci5cbiAgICAgICAgICAgIGVsc2Uge1xuICAgICAgICAgICAgICAgIGJyZWFrO1xuICAgICAgICAgICAgfVxuICAgICAgICB9XG4gICAgfSxcbiAgICBidWJibGVVcDogZnVuY3Rpb24obikge1xuICAgICAgICAvLyBMb29rIHVwIHRoZSB0YXJnZXQgZWxlbWVudCBhbmQgaXRzIHNjb3JlLlxuICAgICAgICB2YXIgbGVuZ3RoID0gdGhpcy5jb250ZW50Lmxlbmd0aCxcbiAgICAgICAgICAgIGVsZW1lbnQgPSB0aGlzLmNvbnRlbnRbbl0sXG4gICAgICAgICAgICBlbGVtU2NvcmUgPSB0aGlzLnNjb3JlRnVuY3Rpb24oZWxlbWVudCk7XG5cbiAgICAgICAgd2hpbGUodHJ1ZSkge1xuICAgICAgICAgICAgLy8gQ29tcHV0ZSB0aGUgaW5kaWNlcyBvZiB0aGUgY2hpbGQgZWxlbWVudHMuXG4gICAgICAgICAgICB2YXIgY2hpbGQyTiA9IChuICsgMSkgPDwgMSxcbiAgICAgICAgICAgICAgICBjaGlsZDFOID0gY2hpbGQyTiAtIDE7XG4gICAgICAgICAgICAvLyBUaGlzIGlzIHVzZWQgdG8gc3RvcmUgdGhlIG5ldyBwb3NpdGlvbiBvZiB0aGUgZWxlbWVudCwgaWYgYW55LlxuICAgICAgICAgICAgdmFyIHN3YXAgPSBudWxsLFxuICAgICAgICAgICAgICAgIGNoaWxkMVNjb3JlO1xuICAgICAgICAgICAgLy8gSWYgdGhlIGZpcnN0IGNoaWxkIGV4aXN0cyAoaXMgaW5zaWRlIHRoZSBhcnJheSkuLi5cbiAgICAgICAgICAgIGlmIChjaGlsZDFOIDwgbGVuZ3RoKSB7XG4gICAgICAgICAgICAgICAgLy8gTG9vayBpdCB1cCBhbmQgY29tcHV0ZSBpdHMgc2NvcmUuXG4gICAgICAgICAgICAgICAgdmFyIGNoaWxkMSA9IHRoaXMuY29udGVudFtjaGlsZDFOXTtcbiAgICAgICAgICAgICAgICBjaGlsZDFTY29yZSA9IHRoaXMuc2NvcmVGdW5jdGlvbihjaGlsZDEpO1xuXG4gICAgICAgICAgICAgICAgLy8gSWYgdGhlIHNjb3JlIGlzIGxlc3MgdGhhbiBvdXIgZWxlbWVudCdzLCB3ZSBuZWVkIHRvIHN3YXAuXG4gICAgICAgICAgICAgICAgaWYgKGNoaWxkMVNjb3JlIDwgZWxlbVNjb3JlKXtcbiAgICAgICAgICAgICAgICAgICAgc3dhcCA9IGNoaWxkMU47XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAvLyBEbyB0aGUgc2FtZSBjaGVja3MgZm9yIHRoZSBvdGhlciBjaGlsZC5cbiAgICAgICAgICAgIGlmIChjaGlsZDJOIDwgbGVuZ3RoKSB7XG4gICAgICAgICAgICAgICAgdmFyIGNoaWxkMiA9IHRoaXMuY29udGVudFtjaGlsZDJOXSxcbiAgICAgICAgICAgICAgICAgICAgY2hpbGQyU2NvcmUgPSB0aGlzLnNjb3JlRnVuY3Rpb24oY2hpbGQyKTtcbiAgICAgICAgICAgICAgICBpZiAoY2hpbGQyU2NvcmUgPCAoc3dhcCA9PT0gbnVsbCA/IGVsZW1TY29yZSA6IGNoaWxkMVNjb3JlKSkge1xuICAgICAgICAgICAgICAgICAgICBzd2FwID0gY2hpbGQyTjtcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIC8vIElmIHRoZSBlbGVtZW50IG5lZWRzIHRvIGJlIG1vdmVkLCBzd2FwIGl0LCBhbmQgY29udGludWUuXG4gICAgICAgICAgICBpZiAoc3dhcCAhPT0gbnVsbCkge1xuICAgICAgICAgICAgICAgIHRoaXMuY29udGVudFtuXSA9IHRoaXMuY29udGVudFtzd2FwXTtcbiAgICAgICAgICAgICAgICB0aGlzLmNvbnRlbnRbc3dhcF0gPSBlbGVtZW50O1xuICAgICAgICAgICAgICAgIG4gPSBzd2FwO1xuICAgICAgICAgICAgfVxuICAgICAgICAgICAgLy8gT3RoZXJ3aXNlLCB3ZSBhcmUgZG9uZS5cbiAgICAgICAgICAgIGVsc2Uge1xuICAgICAgICAgICAgICAgIGJyZWFrO1xuICAgICAgICAgICAgfVxuICAgICAgICB9XG4gICAgfVxufTtcblxucmV0dXJuIHtcbiAgICBhc3RhcjogYXN0YXIsXG4gICAgR3JhcGg6IEdyYXBoXG59O1xuXG59KTtcblxuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIC4vbm9kZV9tb2R1bGVzL2phdmFzY3JpcHQtYXN0YXIvYXN0YXIuanNcbi8vIG1vZHVsZSBpZCA9IDdcbi8vIG1vZHVsZSBjaHVua3MgPSAwIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUFBO0FBQUE7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///7\n");
+/*
+ * A speed-improved perlin and simplex noise algorithms for 2D.
+ *
+ * Based on example code by Stefan Gustavson (stegu@itn.liu.se).
+ * Optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
+ * Better rank ordering method by Stefan Gustavson in 2012.
+ * Converted to Javascript by Joseph Gentle.
+ *
+ * Version 2012-03-09
+ *
+ * This code was placed in the public domain by its original author,
+ * Stefan Gustavson. You may use it as you see fit, but
+ * attribution is appreciated.
+ *
+ */
+
+(function(global){
+
+  // Passing in seed will seed this Noise instance
+  function Noise(seed) {
+    function Grad(x, y, z) {
+      this.x = x; this.y = y; this.z = z;
+    }
+
+    Grad.prototype.dot2 = function(x, y) {
+      return this.x*x + this.y*y;
+    };
+
+    Grad.prototype.dot3 = function(x, y, z) {
+      return this.x*x + this.y*y + this.z*z;
+    };
+
+    this.grad3 = [new Grad(1,1,0),new Grad(-1,1,0),new Grad(1,-1,0),new Grad(-1,-1,0),
+                 new Grad(1,0,1),new Grad(-1,0,1),new Grad(1,0,-1),new Grad(-1,0,-1),
+                 new Grad(0,1,1),new Grad(0,-1,1),new Grad(0,1,-1),new Grad(0,-1,-1)];
+
+    this.p = [151,160,137,91,90,15,
+    131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
+    190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
+    88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
+    77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,
+    102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,169,200,196,
+    135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,250,124,123,
+    5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,
+    223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167, 43,172,9,
+    129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,97,228,
+    251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
+    49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
+    138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
+    // To remove the need for index wrapping, double the permutation table length
+    this.perm = new Array(512);
+    this.gradP = new Array(512);
+
+    this.seed(seed || 0);
+  }
+
+  // This isn't a very good seeding function, but it works ok. It supports 2^16
+  // different seed values. Write something better if you need more seeds.
+  Noise.prototype.seed = function(seed) {
+    if(seed > 0 && seed < 1) {
+      // Scale the seed out
+      seed *= 65536;
+    }
+
+    seed = Math.floor(seed);
+    if(seed < 256) {
+      seed |= seed << 8;
+    }
+
+    var p = this.p;
+    for(var i = 0; i < 256; i++) {
+      var v;
+      if (i & 1) {
+        v = p[i] ^ (seed & 255);
+      } else {
+        v = p[i] ^ ((seed>>8) & 255);
+      }
+
+      var perm = this.perm;
+      var gradP = this.gradP;
+      perm[i] = perm[i + 256] = v;
+      gradP[i] = gradP[i + 256] = this.grad3[v % 12];
+    }
+  };
+
+  /*
+  for(var i=0; i<256; i++) {
+    perm[i] = perm[i + 256] = p[i];
+    gradP[i] = gradP[i + 256] = grad3[perm[i] % 12];
+  }*/
+
+  // Skewing and unskewing factors for 2, 3, and 4 dimensions
+  var F2 = 0.5*(Math.sqrt(3)-1);
+  var G2 = (3-Math.sqrt(3))/6;
+
+  var F3 = 1/3;
+  var G3 = 1/6;
+
+  // 2D simplex noise
+  Noise.prototype.simplex2 = function(xin, yin) {
+    var n0, n1, n2; // Noise contributions from the three corners
+    // Skew the input space to determine which simplex cell we're in
+    var s = (xin+yin)*F2; // Hairy factor for 2D
+    var i = Math.floor(xin+s);
+    var j = Math.floor(yin+s);
+    var t = (i+j)*G2;
+    var x0 = xin-i+t; // The x,y distances from the cell origin, unskewed.
+    var y0 = yin-j+t;
+    // For the 2D case, the simplex shape is an equilateral triangle.
+    // Determine which simplex we are in.
+    var i1, j1; // Offsets for second (middle) corner of simplex in (i,j) coords
+    if(x0>y0) { // lower triangle, XY order: (0,0)->(1,0)->(1,1)
+      i1=1; j1=0;
+    } else {    // upper triangle, YX order: (0,0)->(0,1)->(1,1)
+      i1=0; j1=1;
+    }
+    // A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and
+    // a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where
+    // c = (3-sqrt(3))/6
+    var x1 = x0 - i1 + G2; // Offsets for middle corner in (x,y) unskewed coords
+    var y1 = y0 - j1 + G2;
+    var x2 = x0 - 1 + 2 * G2; // Offsets for last corner in (x,y) unskewed coords
+    var y2 = y0 - 1 + 2 * G2;
+    // Work out the hashed gradient indices of the three simplex corners
+    i &= 255;
+    j &= 255;
+
+    var perm = this.perm;
+    var gradP = this.gradP;
+    var gi0 = gradP[i+perm[j]];
+    var gi1 = gradP[i+i1+perm[j+j1]];
+    var gi2 = gradP[i+1+perm[j+1]];
+    // Calculate the contribution from the three corners
+    var t0 = 0.5 - x0*x0-y0*y0;
+    if(t0<0) {
+      n0 = 0;
+    } else {
+      t0 *= t0;
+      n0 = t0 * t0 * gi0.dot2(x0, y0);  // (x,y) of grad3 used for 2D gradient
+    }
+    var t1 = 0.5 - x1*x1-y1*y1;
+    if(t1<0) {
+      n1 = 0;
+    } else {
+      t1 *= t1;
+      n1 = t1 * t1 * gi1.dot2(x1, y1);
+    }
+    var t2 = 0.5 - x2*x2-y2*y2;
+    if(t2<0) {
+      n2 = 0;
+    } else {
+      t2 *= t2;
+      n2 = t2 * t2 * gi2.dot2(x2, y2);
+    }
+    // Add contributions from each corner to get the final noise value.
+    // The result is scaled to return values in the interval [-1,1].
+    return 70 * (n0 + n1 + n2);
+  };
+
+  // 3D simplex noise
+  Noise.prototype.simplex3 = function(xin, yin, zin) {
+    var n0, n1, n2, n3; // Noise contributions from the four corners
+
+    // Skew the input space to determine which simplex cell we're in
+    var s = (xin+yin+zin)*F3; // Hairy factor for 2D
+    var i = Math.floor(xin+s);
+    var j = Math.floor(yin+s);
+    var k = Math.floor(zin+s);
+
+    var t = (i+j+k)*G3;
+    var x0 = xin-i+t; // The x,y distances from the cell origin, unskewed.
+    var y0 = yin-j+t;
+    var z0 = zin-k+t;
+
+    // For the 3D case, the simplex shape is a slightly irregular tetrahedron.
+    // Determine which simplex we are in.
+    var i1, j1, k1; // Offsets for second corner of simplex in (i,j,k) coords
+    var i2, j2, k2; // Offsets for third corner of simplex in (i,j,k) coords
+    if(x0 >= y0) {
+      if(y0 >= z0)      { i1=1; j1=0; k1=0; i2=1; j2=1; k2=0; }
+      else if(x0 >= z0) { i1=1; j1=0; k1=0; i2=1; j2=0; k2=1; }
+      else              { i1=0; j1=0; k1=1; i2=1; j2=0; k2=1; }
+    } else {
+      if(y0 < z0)      { i1=0; j1=0; k1=1; i2=0; j2=1; k2=1; }
+      else if(x0 < z0) { i1=0; j1=1; k1=0; i2=0; j2=1; k2=1; }
+      else             { i1=0; j1=1; k1=0; i2=1; j2=1; k2=0; }
+    }
+    // A step of (1,0,0) in (i,j,k) means a step of (1-c,-c,-c) in (x,y,z),
+    // a step of (0,1,0) in (i,j,k) means a step of (-c,1-c,-c) in (x,y,z), and
+    // a step of (0,0,1) in (i,j,k) means a step of (-c,-c,1-c) in (x,y,z), where
+    // c = 1/6.
+    var x1 = x0 - i1 + G3; // Offsets for second corner
+    var y1 = y0 - j1 + G3;
+    var z1 = z0 - k1 + G3;
+
+    var x2 = x0 - i2 + 2 * G3; // Offsets for third corner
+    var y2 = y0 - j2 + 2 * G3;
+    var z2 = z0 - k2 + 2 * G3;
+
+    var x3 = x0 - 1 + 3 * G3; // Offsets for fourth corner
+    var y3 = y0 - 1 + 3 * G3;
+    var z3 = z0 - 1 + 3 * G3;
+
+    // Work out the hashed gradient indices of the four simplex corners
+    i &= 255;
+    j &= 255;
+    k &= 255;
+
+    var perm = this.perm;
+    var gradP = this.gradP;
+    var gi0 = gradP[i+   perm[j+   perm[k   ]]];
+    var gi1 = gradP[i+i1+perm[j+j1+perm[k+k1]]];
+    var gi2 = gradP[i+i2+perm[j+j2+perm[k+k2]]];
+    var gi3 = gradP[i+ 1+perm[j+ 1+perm[k+ 1]]];
+
+    // Calculate the contribution from the four corners
+    var t0 = 0.5 - x0*x0-y0*y0-z0*z0;
+    if(t0<0) {
+      n0 = 0;
+    } else {
+      t0 *= t0;
+      n0 = t0 * t0 * gi0.dot3(x0, y0, z0);  // (x,y) of grad3 used for 2D gradient
+    }
+    var t1 = 0.5 - x1*x1-y1*y1-z1*z1;
+    if(t1<0) {
+      n1 = 0;
+    } else {
+      t1 *= t1;
+      n1 = t1 * t1 * gi1.dot3(x1, y1, z1);
+    }
+    var t2 = 0.5 - x2*x2-y2*y2-z2*z2;
+    if(t2<0) {
+      n2 = 0;
+    } else {
+      t2 *= t2;
+      n2 = t2 * t2 * gi2.dot3(x2, y2, z2);
+    }
+    var t3 = 0.5 - x3*x3-y3*y3-z3*z3;
+    if(t3<0) {
+      n3 = 0;
+    } else {
+      t3 *= t3;
+      n3 = t3 * t3 * gi3.dot3(x3, y3, z3);
+    }
+    // Add contributions from each corner to get the final noise value.
+    // The result is scaled to return values in the interval [-1,1].
+    return 32 * (n0 + n1 + n2 + n3);
+
+  };
+
+  // ##### Perlin noise stuff
+
+  function fade(t) {
+    return t*t*t*(t*(t*6-15)+10);
+  }
+
+  function lerp(a, b, t) {
+    return (1-t)*a + t*b;
+  }
+
+  // 2D Perlin Noise
+  Noise.prototype.perlin2 = function(x, y) {
+    // Find unit grid cell containing point
+    var X = Math.floor(x), Y = Math.floor(y);
+    // Get relative xy coordinates of point within that cell
+    x = x - X; y = y - Y;
+    // Wrap the integer cells at 255 (smaller integer period can be introduced here)
+    X = X & 255; Y = Y & 255;
+
+    // Calculate noise contributions from each of the four corners
+    var perm = this.perm;
+    var gradP = this.gradP;
+    var n00 = gradP[X+perm[Y]].dot2(x, y);
+    var n01 = gradP[X+perm[Y+1]].dot2(x, y-1);
+    var n10 = gradP[X+1+perm[Y]].dot2(x-1, y);
+    var n11 = gradP[X+1+perm[Y+1]].dot2(x-1, y-1);
+
+    // Compute the fade curve value for x
+    var u = fade(x);
+
+    // Interpolate the four results
+    return lerp(
+        lerp(n00, n10, u),
+        lerp(n01, n11, u),
+       fade(y));
+  };
+
+  // 3D Perlin Noise
+  Noise.prototype.perlin3 = function(x, y, z) {
+    // Find unit grid cell containing point
+    var X = Math.floor(x), Y = Math.floor(y), Z = Math.floor(z);
+    // Get relative xyz coordinates of point within that cell
+    x = x - X; y = y - Y; z = z - Z;
+    // Wrap the integer cells at 255 (smaller integer period can be introduced here)
+    X = X & 255; Y = Y & 255; Z = Z & 255;
+
+    // Calculate noise contributions from each of the eight corners
+    var perm = this.perm;
+    var gradP = this.gradP;
+    var n000 = gradP[X+  perm[Y+  perm[Z  ]]].dot3(x,   y,     z);
+    var n001 = gradP[X+  perm[Y+  perm[Z+1]]].dot3(x,   y,   z-1);
+    var n010 = gradP[X+  perm[Y+1+perm[Z  ]]].dot3(x,   y-1,   z);
+    var n011 = gradP[X+  perm[Y+1+perm[Z+1]]].dot3(x,   y-1, z-1);
+    var n100 = gradP[X+1+perm[Y+  perm[Z  ]]].dot3(x-1,   y,   z);
+    var n101 = gradP[X+1+perm[Y+  perm[Z+1]]].dot3(x-1,   y, z-1);
+    var n110 = gradP[X+1+perm[Y+1+perm[Z  ]]].dot3(x-1, y-1,   z);
+    var n111 = gradP[X+1+perm[Y+1+perm[Z+1]]].dot3(x-1, y-1, z-1);
+
+    // Compute the fade curve value for x, y, z
+    var u = fade(x);
+    var v = fade(y);
+    var w = fade(z);
+
+    // Interpolate
+    return lerp(
+        lerp(
+          lerp(n000, n100, u),
+          lerp(n001, n101, u), w),
+        lerp(
+          lerp(n010, n110, u),
+          lerp(n011, n111, u), w),
+       v);
+  };
+
+  global.Noise = Noise;
+
+})( false ? this : module.exports);
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// javascript-astar 0.4.1
+// http://github.com/bgrins/javascript-astar
+// Freely distributable under the MIT License.
+// Implements the astar search algorithm in javascript using a Binary Heap.
+// Includes Binary Heap (with modifications) from Marijn Haverbeke.
+// http://eloquentjavascript.net/appendix2.html
+
+(function(definition) {
+    /* global module, define */
+    if(typeof module === 'object' && typeof module.exports === 'object') {
+        module.exports = definition();
+    } else if(true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (definition),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {
+        var exports = definition();
+        window.astar = exports.astar;
+        window.Graph = exports.Graph;
+    }
+})(function() {
+
+function pathTo(node){
+    var curr = node,
+        path = [];
+    while(curr.parent) {
+        path.unshift(curr);
+        curr = curr.parent;
+    }
+    return path;
+}
+
+function getHeap() {
+    return new BinaryHeap(function(node) {
+        return node.f;
+    });
+}
+
+var astar = {
+    /**
+    * Perform an A* Search on a graph given a start and end node.
+    * @param {Graph} graph
+    * @param {GridNode} start
+    * @param {GridNode} end
+    * @param {Object} [options]
+    * @param {bool} [options.closest] Specifies whether to return the
+               path to the closest node if the target is unreachable.
+    * @param {Function} [options.heuristic] Heuristic function (see
+    *          astar.heuristics).
+    */
+    search: function(graph, start, end, options) {
+        graph.cleanDirty();
+        options = options || {};
+        var heuristic = options.heuristic || astar.heuristics.manhattan,
+            closest = options.closest || false;
+
+        var openHeap = getHeap(),
+            closestNode = start; // set the start node to be the closest if required
+
+        start.h = heuristic(start, end);
+
+        openHeap.push(start);
+
+        while(openHeap.size() > 0) {
+
+            // Grab the lowest f(x) to process next.  Heap keeps this sorted for us.
+            var currentNode = openHeap.pop();
+
+            // End case -- result has been found, return the traced path.
+            if(currentNode === end) {
+                return pathTo(currentNode);
+            }
+
+            // Normal case -- move currentNode from open to closed, process each of its neighbors.
+            currentNode.closed = true;
+
+            // Find all neighbors for the current node.
+            var neighbors = graph.neighbors(currentNode);
+
+            for (var i = 0, il = neighbors.length; i < il; ++i) {
+                var neighbor = neighbors[i];
+
+                if (neighbor.closed || neighbor.isWall()) {
+                    // Not a valid node to process, skip to next neighbor.
+                    continue;
+                }
+
+                // The g score is the shortest distance from start to current node.
+                // We need to check if the path we have arrived at this neighbor is the shortest one we have seen yet.
+                var gScore = currentNode.g + neighbor.getCost(currentNode),
+                    beenVisited = neighbor.visited;
+
+                if (!beenVisited || gScore < neighbor.g) {
+
+                    // Found an optimal (so far) path to this node.  Take score for node to see how good it is.
+                    neighbor.visited = true;
+                    neighbor.parent = currentNode;
+                    neighbor.h = neighbor.h || heuristic(neighbor, end);
+                    neighbor.g = gScore;
+                    neighbor.f = neighbor.g + neighbor.h;
+                    graph.markDirty(neighbor);
+                    if (closest) {
+                        // If the neighbour is closer than the current closestNode or if it's equally close but has
+                        // a cheaper path than the current closest node then it becomes the closest node
+                        if (neighbor.h < closestNode.h || (neighbor.h === closestNode.h && neighbor.g < closestNode.g)) {
+                            closestNode = neighbor;
+                        }
+                    }
+
+                    if (!beenVisited) {
+                        // Pushing to heap will put it in proper place based on the 'f' value.
+                        openHeap.push(neighbor);
+                    }
+                    else {
+                        // Already seen the node, but since it has been rescored we need to reorder it in the heap
+                        openHeap.rescoreElement(neighbor);
+                    }
+                }
+            }
+        }
+
+        if (closest) {
+            return pathTo(closestNode);
+        }
+
+        // No result was found - empty array signifies failure to find path.
+        return [];
+    },
+    // See list of heuristics: http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
+    heuristics: {
+        manhattan: function(pos0, pos1) {
+            var d1 = Math.abs(pos1.x - pos0.x);
+            var d2 = Math.abs(pos1.y - pos0.y);
+            return d1 + d2;
+        },
+        diagonal: function(pos0, pos1) {
+            var D = 1;
+            var D2 = Math.sqrt(2);
+            var d1 = Math.abs(pos1.x - pos0.x);
+            var d2 = Math.abs(pos1.y - pos0.y);
+            return (D * (d1 + d2)) + ((D2 - (2 * D)) * Math.min(d1, d2));
+        }
+    },
+    cleanNode:function(node){
+        node.f = 0;
+        node.g = 0;
+        node.h = 0;
+        node.visited = false;
+        node.closed = false;
+        node.parent = null;
+    }
+};
+
+/**
+* A graph memory structure
+* @param {Array} gridIn 2D array of input weights
+* @param {Object} [options]
+* @param {bool} [options.diagonal] Specifies whether diagonal moves are allowed
+*/
+function Graph(gridIn, options) {
+    options = options || {};
+    this.nodes = [];
+    this.diagonal = !!options.diagonal;
+    this.grid = [];
+    for (var x = 0; x < gridIn.length; x++) {
+        this.grid[x] = [];
+
+        for (var y = 0, row = gridIn[x]; y < row.length; y++) {
+            var node = new GridNode(x, y, row[y]);
+            this.grid[x][y] = node;
+            this.nodes.push(node);
+        }
+    }
+    this.init();
+}
+
+Graph.prototype.init = function() {
+    this.dirtyNodes = [];
+    for (var i = 0; i < this.nodes.length; i++) {
+        astar.cleanNode(this.nodes[i]);
+    }
+};
+
+Graph.prototype.cleanDirty = function() {
+    for (var i = 0; i < this.dirtyNodes.length; i++) {
+        astar.cleanNode(this.dirtyNodes[i]);
+    }
+    this.dirtyNodes = [];
+};
+
+Graph.prototype.markDirty = function(node) {
+    this.dirtyNodes.push(node);
+};
+
+Graph.prototype.neighbors = function(node) {
+    var ret = [],
+        x = node.x,
+        y = node.y,
+        grid = this.grid;
+
+    // West
+    if(grid[x-1] && grid[x-1][y]) {
+        ret.push(grid[x-1][y]);
+    }
+
+    // East
+    if(grid[x+1] && grid[x+1][y]) {
+        ret.push(grid[x+1][y]);
+    }
+
+    // South
+    if(grid[x] && grid[x][y-1]) {
+        ret.push(grid[x][y-1]);
+    }
+
+    // North
+    if(grid[x] && grid[x][y+1]) {
+        ret.push(grid[x][y+1]);
+    }
+
+    if (this.diagonal) {
+        // Southwest
+        if(grid[x-1] && grid[x-1][y-1]) {
+            ret.push(grid[x-1][y-1]);
+        }
+
+        // Southeast
+        if(grid[x+1] && grid[x+1][y-1]) {
+            ret.push(grid[x+1][y-1]);
+        }
+
+        // Northwest
+        if(grid[x-1] && grid[x-1][y+1]) {
+            ret.push(grid[x-1][y+1]);
+        }
+
+        // Northeast
+        if(grid[x+1] && grid[x+1][y+1]) {
+            ret.push(grid[x+1][y+1]);
+        }
+    }
+
+    return ret;
+};
+
+Graph.prototype.toString = function() {
+    var graphString = [],
+        nodes = this.grid, // when using grid
+        rowDebug, row, y, l;
+    for (var x = 0, len = nodes.length; x < len; x++) {
+        rowDebug = [];
+        row = nodes[x];
+        for (y = 0, l = row.length; y < l; y++) {
+            rowDebug.push(row[y].weight);
+        }
+        graphString.push(rowDebug.join(" "));
+    }
+    return graphString.join("\n");
+};
+
+function GridNode(x, y, weight) {
+    this.x = x;
+    this.y = y;
+    this.weight = weight;
+}
+
+GridNode.prototype.toString = function() {
+    return "[" + this.x + " " + this.y + "]";
+};
+
+GridNode.prototype.getCost = function(fromNeighbor) {
+    // Take diagonal weight into consideration.
+    if (fromNeighbor && fromNeighbor.x != this.x && fromNeighbor.y != this.y) {
+        return this.weight * 1.41421;
+    }
+    return this.weight;
+};
+
+GridNode.prototype.isWall = function() {
+    return this.weight === 0;
+};
+
+function BinaryHeap(scoreFunction){
+    this.content = [];
+    this.scoreFunction = scoreFunction;
+}
+
+BinaryHeap.prototype = {
+    push: function(element) {
+        // Add the new element to the end of the array.
+        this.content.push(element);
+
+        // Allow it to sink down.
+        this.sinkDown(this.content.length - 1);
+    },
+    pop: function() {
+        // Store the first element so we can return it later.
+        var result = this.content[0];
+        // Get the element at the end of the array.
+        var end = this.content.pop();
+        // If there are any elements left, put the end element at the
+        // start, and let it bubble up.
+        if (this.content.length > 0) {
+            this.content[0] = end;
+            this.bubbleUp(0);
+        }
+        return result;
+    },
+    remove: function(node) {
+        var i = this.content.indexOf(node);
+
+        // When it is found, the process seen in 'pop' is repeated
+        // to fill up the hole.
+        var end = this.content.pop();
+
+        if (i !== this.content.length - 1) {
+            this.content[i] = end;
+
+            if (this.scoreFunction(end) < this.scoreFunction(node)) {
+                this.sinkDown(i);
+            }
+            else {
+                this.bubbleUp(i);
+            }
+        }
+    },
+    size: function() {
+        return this.content.length;
+    },
+    rescoreElement: function(node) {
+        this.sinkDown(this.content.indexOf(node));
+    },
+    sinkDown: function(n) {
+        // Fetch the element that has to be sunk.
+        var element = this.content[n];
+
+        // When at 0, an element can not sink any further.
+        while (n > 0) {
+
+            // Compute the parent element's index, and fetch it.
+            var parentN = ((n + 1) >> 1) - 1,
+                parent = this.content[parentN];
+            // Swap the elements if the parent is greater.
+            if (this.scoreFunction(element) < this.scoreFunction(parent)) {
+                this.content[parentN] = element;
+                this.content[n] = parent;
+                // Update 'n' to continue at the new position.
+                n = parentN;
+            }
+            // Found a parent that is less, no need to sink any further.
+            else {
+                break;
+            }
+        }
+    },
+    bubbleUp: function(n) {
+        // Look up the target element and its score.
+        var length = this.content.length,
+            element = this.content[n],
+            elemScore = this.scoreFunction(element);
+
+        while(true) {
+            // Compute the indices of the child elements.
+            var child2N = (n + 1) << 1,
+                child1N = child2N - 1;
+            // This is used to store the new position of the element, if any.
+            var swap = null,
+                child1Score;
+            // If the first child exists (is inside the array)...
+            if (child1N < length) {
+                // Look it up and compute its score.
+                var child1 = this.content[child1N];
+                child1Score = this.scoreFunction(child1);
+
+                // If the score is less than our element's, we need to swap.
+                if (child1Score < elemScore){
+                    swap = child1N;
+                }
+            }
+
+            // Do the same checks for the other child.
+            if (child2N < length) {
+                var child2 = this.content[child2N],
+                    child2Score = this.scoreFunction(child2);
+                if (child2Score < (swap === null ? elemScore : child1Score)) {
+                    swap = child2N;
+                }
+            }
+
+            // If the element needs to be moved, swap it, and continue.
+            if (swap !== null) {
+                this.content[n] = this.content[swap];
+                this.content[swap] = element;
+                n = swap;
+            }
+            // Otherwise, we are done.
+            else {
+                break;
+            }
+        }
+    }
+};
+
+return {
+    astar: astar,
+    Graph: Graph
+};
+
+});
+
 
 /***/ })
 /******/ ]);
