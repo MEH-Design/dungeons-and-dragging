@@ -118,6 +118,7 @@ class MouseInput {
   }
 }
 
+// TODO: make this inherit from pc.Camera
 export default class OrbitCamera extends GameObject {
   public readonly distanceMax: number = 700;
   public readonly distanceMin: number = 100;

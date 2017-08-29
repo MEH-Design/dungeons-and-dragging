@@ -3,11 +3,16 @@ import OrbitCamera from 'environment/OrbitCamera';
 import { Stage } from 'environment/stages';
 import GameObject from 'GameObject';
 
+interface IPositionMouse extends pc.Mouse {
+ x?: number;
+ y?: number;
+}
+
 // tslint:disable-next-line
 class App extends pc.Application {
   public camera: OrbitCamera;
   public lights: pc.Entity[] = [];
-  public mouse: pc.Mouse;
+  public mouse: IPositionMouse;
 
   private knownAssets: { [tag: string] : pc.Asset } = {};
 
@@ -21,7 +26,12 @@ class App extends pc.Application {
     window.addEventListener('resize', () => {
       super.resizeCanvas();
     });
+
     this.mouse = new pc.Mouse(canvas);
+    this.mouse.on(pc.EVENT_MOUSEMOVE, (event: pc.MouseEvent) => {
+      this.mouse.x = event.x;
+      this.mouse.y = event.y;
+    }, this);
   }
 
   public getEntity(...names: string[]): pc.Entity {
@@ -87,7 +97,9 @@ class App extends pc.Application {
   }
 }
 
-const appOptions: pc.ApplicationOptions = {};
+const appOptions: pc.ApplicationOptions = {
+  keyboard: new pc.Keyboard(window)
+};
 const app: App = new App(document.getElementById('canvas'), appOptions);
 app.onUpdate((dt: number) => {
   GameObject.objects.forEach((obj: GameObject) => obj.update(dt));

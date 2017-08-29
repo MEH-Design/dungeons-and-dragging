@@ -1,9 +1,10 @@
 import GameObject from 'GameObject';
 
 export default abstract class Character extends GameObject {
+  public entity: pc.Entity;
   private targets: pc.Entity[] = [];
 
-  constructor(public entity: pc.Entity, position: pc.Vec3, attributes: {} = {}) {
+  constructor(public parent: pc.Entity, position: pc.Vec3, attributes: {} = {}) {
     super();
     super.setAttributes({
       searchInterval: 0.1,
@@ -12,14 +13,24 @@ export default abstract class Character extends GameObject {
     }, attributes);
     super.addTimedUpdate(this.searchForTargets, this.attributes.searchInterval);
     this.targets = [];
-    this.entity = entity;
-    this.entity.model.material = this.attributes.material;
-    this.entity.setPosition(position);
-    this.entity.enabled = true;
 
+    this.entity = new pc.Entity();
+    this.entity.setPosition(position);
+    this.entity.addComponent('model', {
+      type: 'box'
+    });
+    this.entity.addComponent('collision', {
+      type: 'box'
+    });
+    //has to be done last because it interferes with .setPosition.
     this.entity.addComponent('rigidbody', {
       type: 'dynamic'
     });
+
+    this.entity.model.material = this.attributes.material;
+    this.entity.enabled = true;
+
+    parent.addChild(this.entity);
   }
 
   public addTarget(target: pc.Entity) {
