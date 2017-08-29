@@ -1,3 +1,5 @@
+/* tslint:disable:variable-name */
+
 import app from 'app';
 import Player from 'characters/player/Player';
 import GameObject from 'GameObject';
@@ -5,26 +7,25 @@ import GameObject from 'GameObject';
 class MouseInput {
   public distanceSensitivity: number = 0.3;
   public orbitSensitivity: number = 0.5;
-  public fromWorldPoint: any = new pc.Vec3();
-  public toWorldPoint: any = new pc.Vec3();
-  public worldDiff: any = new pc.Vec3();
-  public entity: any;
+  public fromWorldPoint: pc.Vec3 = new pc.Vec3();
+  public toWorldPoint: pc.Vec3 = new pc.Vec3();
+  public worldDiff: pc.Vec3 = new pc.Vec3();
+  public entity: pc.Entity;
 
-  private mouse: any;
+  private mouse: pc.Mouse;
   private lookButtonDown: boolean = false;
   private panButtonDown: boolean = false;
-  private lastPoint: any = new pc.Vec2();
+  private lastPoint: pc.Vec2 = new pc.Vec2();
 
   constructor(public orbitCamera: OrbitCamera) {
-    this.mouse = GameObject.getMouse();
     this.entity = orbitCamera.entity;
 
     if (this.orbitCamera) {
       const onMouseOut = () => this.onMouseOut();
-      this.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
-      this.mouse.on(pc.EVENT_MOUSEUP, this.onMouseUp, this);
-      this.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
-      this.mouse.on(pc.EVENT_MOUSEWHEEL, this.onMouseWheel, this);
+      app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
+      app.mouse.on(pc.EVENT_MOUSEUP, this.onMouseUp, this);
+      app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
+      app.mouse.on(pc.EVENT_MOUSEWHEEL, this.onMouseWheel, this);
 
       // Listen to when the mouse travels out of the window
       window.addEventListener('mouseout', onMouseOut, false);
@@ -32,10 +33,10 @@ class MouseInput {
 
     // Disabling the context menu stops the browser displaying a menu when
     // you right-click the page
-    this.mouse.disableContextMenu();
+    app.mouse.disableContextMenu();
   }
 
-  public pan(screenPoint: any) {
+  public pan(screenPoint: pc.Vec2) {
     const fromWorldPoint = this.fromWorldPoint;
     const toWorldPoint = this.toWorldPoint;
     const worldDiff = this.worldDiff;
@@ -53,15 +54,15 @@ class MouseInput {
     this.orbitCamera.pivotPoint.add(worldDiff);
   }
 
-  public onMouseDown(event: any) {
+  public onMouseDown(event: pc.MouseEvent) {
     // select players on click
     const camera = this.entity.camera;
     const source = camera.screenToWorld(event.x, event.y, camera.nearClip);
     const target = camera.screenToWorld(event.x, event.y, camera.farClip);
 
-    const result = GameObject.getApp().systems.rigidbody.raycastFirst(source, target);
+    const result = app.systems.rigidbody.raycastFirst(source, target);
     if (result) {
-        const player: any = Player.getByEntity(result.entity);
+        const player: Player = Player.getByEntity(result.entity);
         if (player) {
           player.select();
         }
@@ -80,7 +81,7 @@ class MouseInput {
     }
   }
 
-  public onMouseUp(event: any) {
+  public onMouseUp(event: pc.MouseEvent) {
     switch (event.button) {
       case pc.MOUSEBUTTON_LEFT:
         this.lookButtonDown = false;
@@ -94,18 +95,18 @@ class MouseInput {
     }
   }
 
-  public onMouseMove(event: any) {
+  public onMouseMove(event: pc.MouseEvent) {
     if (this.lookButtonDown) {
       this.orbitCamera.pitch -= event.dy * this.orbitSensitivity;
       this.orbitCamera.yaw -= event.dx * this.orbitSensitivity;
     } else if (this.panButtonDown) {
-      this.pan(event);
+      this.pan(new pc.Vec2(event.x, event.y));
     }
 
     this.lastPoint.set(event.x, event.y);
   }
 
-  public onMouseWheel(event: any) {
+  public onMouseWheel(event: pc.MouseEvent) {
     this.orbitCamera.distance -=
       event.wheel * this.distanceSensitivity * this.orbitCamera.distance * 0.1;
     event.event.preventDefault();
@@ -126,10 +127,10 @@ export default class OrbitCamera extends GameObject {
   public readonly distanceFactor: number = 0.4;
   public readonly frameOnStart: boolean = true;
 
-  public entity: any;
-  public distanceBetween: any = pc.Vec3();
-  public quatWithoutYaw: any = new pc.Quat();
-  public yawOffset: any = new pc.Quat();
+  public entity: pc.Entity;
+  public distanceBetween: pc.Vec3 = new pc.Vec3();
+  public quatWithoutYaw: pc.Quat = new pc.Quat();
+  public yawOffset: pc.Quat = new pc.Quat();
 
   private mouseInput: MouseInput;
   private _distance: number;
@@ -138,19 +139,19 @@ export default class OrbitCamera extends GameObject {
   private _targetDistance: number;
   private _targetYaw: number;
   private _targetPitch: number;
-  private _modelsAabb = new pc.BoundingBox();
-  private _pivotPoint = new pc.Vec3();
+  private _modelsAabb: pc.BoundingBox = new pc.BoundingBox();
+  private _pivotPoint: pc.Vec3 = new pc.Vec3();
   private doesTransition: boolean = false;
 
-  constructor(clearColor: {}, position: {}, eulerAngles: {}) {
+  constructor(clearColor: pc.Color, position: pc.Vec3, eulerAngles: pc.Vec3) {
     super();
-    this.entity = new pc.Entity('OrbitCamera');
+    this.entity = new pc.Entity();
     this.entity.addComponent('camera', {
       clearColor: clearColor
     });
     this.entity.setPosition(position);
     this.entity.setEulerAngles(eulerAngles);
-    GameObject.getApp().root.addChild(this.entity);
+    app.root.addChild(this.entity);
 
     this.mouseInput = new MouseInput(this);
     super.addTimedUpdate((dt: number) => {
@@ -171,6 +172,7 @@ export default class OrbitCamera extends GameObject {
     // Find all the models in the scene that are under the focused entity
     this._buildAabb(this.entity || app.root, 0);
     this.entity.lookAt(this._modelsAabb.center);
+    console.log(this._modelsAabb.center);
     this._pivotPoint.copy(this._modelsAabb.center);
 
     // Calculate the camera euler angle rotation around x and y axes
@@ -201,7 +203,7 @@ export default class OrbitCamera extends GameObject {
     this._targetDistance = this._distance;
   }
 
-  public static _calcYaw(quat: any) {
+  public static _calcYaw(quat: pc.Quat) {
     const transformedForward = new pc.Vec3();
     quat.transformVector(pc.Vec3.FORWARD, transformedForward);
 
@@ -213,7 +215,7 @@ export default class OrbitCamera extends GameObject {
     return pc.math.clamp(pitch, -this.pitchAngleMax, -this.pitchAngleMin);
   }
 
-  public _calcPitch(quat: any, yaw: number) {
+  public _calcPitch(quat: pc.Quat, yaw: number) {
     const quatWithoutYaw = this.quatWithoutYaw;
     const yawOffset = this.yawOffset;
 
@@ -228,7 +230,7 @@ export default class OrbitCamera extends GameObject {
   }
 
   // Moves the camera to look at an entity and all its children so they are all in the view
-  public focus(focusEntity: any, transition: boolean = false) {
+  public focus(focusEntity: pc.Entity, transition: boolean = false) {
     // Calculate an bounding box that encompasses all the models to frame in the camera view
     this._buildAabb(focusEntity, 0);
 
@@ -278,7 +280,7 @@ export default class OrbitCamera extends GameObject {
     this.entity.camera.horizontalFov = height > width;
   }
 
-  public _buildAabb(entity: any, _modelsAdded: number) {
+  public _buildAabb(entity: pc.Entity, _modelsAdded: number) {
     let i = 0;
     let modelsAdded = _modelsAdded;
 
@@ -351,7 +353,7 @@ export default class OrbitCamera extends GameObject {
     return this._pivotPoint;
   }
 
-  set pivotPoint(value: any) {
+  set pivotPoint(value: pc.Vec3) {
     this._pivotPoint.copy(value);
   }
 }

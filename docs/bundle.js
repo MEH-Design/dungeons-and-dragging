@@ -72,54 +72,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class GameObject {
     constructor() {
-        this.timedUpdates = [];
         this.attributes = {};
+        this.timedUpdates = [];
         GameObject.addObject(this);
     }
     static addObject(obj) {
         this.objects.push(obj);
-    }
-    static getEntity(...names) {
-        return GameObject.getResource(GameObject.getApp().root, 'findByName', names);
-    }
-    static getMouse() {
-        if (!GameObject.mouse) {
-            GameObject.mouse = new pc.Mouse(GameObject.getApp().root);
-            GameObject.mouse.attach(document.getElementById('canvas'));
-        }
-        return this.mouse;
-    }
-    static getAsset(path, assetType) {
-        if (this.knownAssets[path]) {
-            return new Promise((resolve) => {
-                resolve(this.knownAssets[path]);
-            });
-        }
-        return new Promise((resolve, reject) => {
-            GameObject.getApp().assets.loadFromUrl(path, assetType, (err, asset) => {
-                GameObject.knownAssets[path] = asset;
-                if (err) {
-                    reject(err);
-                }
-                resolve(asset);
-            });
-        });
-    }
-    static requireOverride() {
-        const error = new Error();
-        const functionName = ((error.stack).split('at ')[2]).trim().split(' ')[0];
-        error.message = `${functionName} needs to be overriden`;
-        throw error;
-    }
-    static getResource(root, functionName, names) {
-        let resource;
-        names.forEach((name) => {
-            resource = (resource || root)[functionName](name);
-        });
-        return resource;
-    }
-    static getApp() {
-        return pc.Application.getApplication();
     }
     setAttributes(...attributes) {
         attributes.forEach(Object.assign.bind(this, this.attributes));
@@ -142,7 +100,6 @@ class GameObject {
     }
 }
 GameObject.objects = [];
-GameObject.knownAssets = {};
 exports.default = GameObject;
 
 
@@ -158,15 +115,43 @@ const OrbitCamera_1 = __webpack_require__(5);
 const stages_1 = __webpack_require__(6);
 const GameObject_1 = __webpack_require__(0);
 class App extends pc.Application {
-    constructor(...args) {
-        super(...args);
+    constructor(canvas, options) {
+        super(canvas, options);
         this.lights = [];
+        this.knownAssets = {};
         super.start();
         super.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);
         super.setCanvasResolution(pc.RESOLUTION_AUTO);
         window.addEventListener('resize', () => {
             super.resizeCanvas();
         });
+        this.mouse = new pc.Mouse(canvas);
+    }
+    getEntity(...names) {
+        return this.getResource(this.root, 'findByName', names);
+    }
+    getAsset(path, assetType) {
+        if (this.knownAssets[path]) {
+            return new Promise((resolve) => {
+                resolve(this.knownAssets[path]);
+            });
+        }
+        return new Promise((resolve, reject) => {
+            this.assets.loadFromUrl(path, assetType, (err, asset) => {
+                this.knownAssets[path] = asset;
+                if (err) {
+                    reject(err);
+                }
+                resolve(asset);
+            });
+        });
+    }
+    getResource(root, functionName, names) {
+        let resource;
+        names.forEach((name) => {
+            resource = (resource || root)[functionName](name);
+        });
+        return resource;
     }
     start() {
         this.lights.push(this.createLight(new pc.Color(1, 1, 1), new pc.Vec3(45, 0, 0)));
@@ -175,22 +160,24 @@ class App extends pc.Application {
         const playerEntity = new pc.Entity();
         this.root.addChild(stageEntity);
         this.root.addChild(playerEntity);
-        this.stage = new stages_1.Stage(stageEntity, this.camera);
-        this.player = new Player_1.default(playerEntity, new pc.Vec3(0, 20, 0));
+        new stages_1.Stage(stageEntity, this.camera);
+        new Player_1.default(playerEntity, new pc.Vec3(0, 20, 0));
     }
     onUpdate(callback) {
         this.on('update', callback);
     }
     createLight(color, angle) {
-        const light = new pc.Entity('light');
+        const light = new pc.Entity();
         light.addComponent('light', {
             color: new pc.Color(1, 1, 1)
         });
         this.root.addChild(light);
         light.setEulerAngles(45, 0, 0);
+        return light;
     }
 }
-const app = new App(document.getElementById('canvas'), {});
+const appOptions = {};
+const app = new App(document.getElementById('canvas'), appOptions);
 app.onUpdate((dt) => {
     GameObject_1.default.objects.forEach((obj) => obj.update(dt));
 });
@@ -321,17 +308,16 @@ class MouseInput {
         this.lookButtonDown = false;
         this.panButtonDown = false;
         this.lastPoint = new pc.Vec2();
-        this.mouse = GameObject_1.default.getMouse();
         this.entity = orbitCamera.entity;
         if (this.orbitCamera) {
             const onMouseOut = () => this.onMouseOut();
-            this.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
-            this.mouse.on(pc.EVENT_MOUSEUP, this.onMouseUp, this);
-            this.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
-            this.mouse.on(pc.EVENT_MOUSEWHEEL, this.onMouseWheel, this);
+            app_1.default.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
+            app_1.default.mouse.on(pc.EVENT_MOUSEUP, this.onMouseUp, this);
+            app_1.default.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
+            app_1.default.mouse.on(pc.EVENT_MOUSEWHEEL, this.onMouseWheel, this);
             window.addEventListener('mouseout', onMouseOut, false);
         }
-        this.mouse.disableContextMenu();
+        app_1.default.mouse.disableContextMenu();
     }
     pan(screenPoint) {
         const fromWorldPoint = this.fromWorldPoint;
@@ -348,7 +334,7 @@ class MouseInput {
         const camera = this.entity.camera;
         const source = camera.screenToWorld(event.x, event.y, camera.nearClip);
         const target = camera.screenToWorld(event.x, event.y, camera.farClip);
-        const result = GameObject_1.default.getApp().systems.rigidbody.raycastFirst(source, target);
+        const result = app_1.default.systems.rigidbody.raycastFirst(source, target);
         if (result) {
             const player = Player_1.default.getByEntity(result.entity);
             if (player) {
@@ -383,7 +369,7 @@ class MouseInput {
             this.orbitCamera.yaw -= event.dx * this.orbitSensitivity;
         }
         else if (this.panButtonDown) {
-            this.pan(event);
+            this.pan(new pc.Vec2(event.x, event.y));
         }
         this.lastPoint.set(event.x, event.y);
     }
@@ -407,19 +393,19 @@ class OrbitCamera extends GameObject_1.default {
         this.inertiaFactor = 0;
         this.distanceFactor = 0.4;
         this.frameOnStart = true;
-        this.distanceBetween = pc.Vec3();
+        this.distanceBetween = new pc.Vec3();
         this.quatWithoutYaw = new pc.Quat();
         this.yawOffset = new pc.Quat();
         this._modelsAabb = new pc.BoundingBox();
         this._pivotPoint = new pc.Vec3();
         this.doesTransition = false;
-        this.entity = new pc.Entity('OrbitCamera');
+        this.entity = new pc.Entity();
         this.entity.addComponent('camera', {
             clearColor: clearColor
         });
         this.entity.setPosition(position);
         this.entity.setEulerAngles(eulerAngles);
-        GameObject_1.default.getApp().root.addChild(this.entity);
+        app_1.default.root.addChild(this.entity);
         this.mouseInput = new MouseInput(this);
         super.addTimedUpdate((dt) => {
             const t = this.inertiaFactor === 0 ? 1 : Math.min(dt / this.inertiaFactor, 1);
@@ -434,6 +420,7 @@ class OrbitCamera extends GameObject_1.default {
         this._checkAspectRatio();
         this._buildAabb(this.entity || app_1.default.root, 0);
         this.entity.lookAt(this._modelsAabb.center);
+        console.log(this._modelsAabb.center);
         this._pivotPoint.copy(this._modelsAabb.center);
         const cameraQuat = this.entity.getRotation();
         this._yaw = OrbitCamera._calcYaw(cameraQuat);
@@ -574,6 +561,7 @@ exports.default = OrbitCamera;
 Object.defineProperty(exports, "__esModule", { value: true });
 const noisejs_1 = __webpack_require__(7);
 const javascript_astar_1 = __webpack_require__(8);
+const app_1 = __webpack_require__(1);
 const GameObject_1 = __webpack_require__(0);
 const rand = (...arr) => {
     let args = arr;
@@ -589,9 +577,9 @@ class Terrain extends GameObject_1.default {
     constructor(parent, attributes = {}) {
         super();
         Promise.all([
-            GameObject_1.default.getAsset('assets/materials/grass.json', 'material'),
-            GameObject_1.default.getAsset('assets/materials/water.json', 'material'),
-            GameObject_1.default.getAsset('assets/materials/gray.json', 'material'),
+            app_1.default.getAsset('assets/materials/grass.json', 'material'),
+            app_1.default.getAsset('assets/materials/water.json', 'material'),
+            app_1.default.getAsset('assets/materials/gray.json', 'material'),
         ]).then((arr) => {
             const [terrainMaterial, waterMaterial, grayTerrainMaterial] = arr.map(asset => asset.resource);
             const defaultAttributes = {
@@ -626,7 +614,7 @@ class Terrain extends GameObject_1.default {
         const mapWidth = this.attributes.size.x - 2;
         const mapHeight = this.attributes.size.y - 2;
         let noiseMap = [];
-        const noise = new noisejs_1.default(Math.random());
+        const noise = new noisejs_1.Noise(Math.random());
         for (let y = 0; y < mapHeight; y += 1) {
             noiseMap[y] = [];
             for (let x = 0; x < mapWidth; x += 1) {
@@ -637,7 +625,7 @@ class Terrain extends GameObject_1.default {
         if (Math.random() <= this.attributes.riverProbability) {
             const edges = {
                 x: [0, mapHeight - 1],
-                y: [0, mapWidth - 1],
+                y: [0, mapWidth - 1]
             };
             for (let i = 0; i < 2; i += 1) {
                 const key = Object.keys(edges)[rand()];
@@ -661,7 +649,7 @@ class Terrain extends GameObject_1.default {
             });
             let noiseMask = noiseMap.map(row => row.map(point => Number(point <= 1)));
             const graph = new javascript_astar_1.Graph(noiseMask, {
-                diagonal: true,
+                diagonal: true
             });
             const start = graph.grid[actualEdges[0][0]][actualEdges[0][1]];
             const end = graph.grid[actualEdges[1][0]][actualEdges[1][1]];
@@ -693,14 +681,14 @@ class Terrain extends GameObject_1.default {
             }
         }
         else {
-            noiseMap.unshift(new Array(mapWidth).fill(0));
+            noiseMap.unshift(Array(mapWidth).fill(0));
         }
-        noiseMap.push(new Array(mapWidth).fill(0));
+        noiseMap.push(Array(mapWidth).fill(0));
         noiseMap = noiseMap.map(row => [0].concat(row, [0]));
         this.heightMap = noiseMap;
     }
     _createGround() {
-        const ground = new pc.Entity('Ground');
+        const ground = new pc.Entity();
         ground.addComponent('model', {
             type: 'box',
         });
@@ -710,7 +698,7 @@ class Terrain extends GameObject_1.default {
         this.entity.addChild(ground);
     }
     _createWater() {
-        const water = new pc.Entity('Water');
+        const water = new pc.Entity();
         water.addComponent('model', {
             type: 'box',
         });
@@ -739,7 +727,7 @@ class Terrain extends GameObject_1.default {
         }
         const normals = pc.calculateNormals(positions, indices);
         this.normals = normals;
-        const plane = pc.createMesh(GameObject_1.default.getApp().graphicsDevice, positions, {
+        const plane = pc.createMesh(app_1.default.graphicsDevice, positions, {
             indices,
             normals,
             uvs,
@@ -760,14 +748,14 @@ class Terrain extends GameObject_1.default {
             });
         }
         this.entity.collision.model = model;
-        GameObject_1.default.getApp().scene.addModel(model);
+        app_1.default.scene.addModel(model);
         const previousTerrainNode = this.entity.findByName('TerrainNode');
         if (previousTerrainNode) {
             this.entity.removeChild(previousTerrainNode);
         }
         this.entity.addChild(node);
         if (this.model) {
-            GameObject_1.default.getApp().scene.removeModel(this.model);
+            app_1.default.scene.removeModel(this.model);
         }
         this.model = model;
     }
@@ -775,11 +763,12 @@ class Terrain extends GameObject_1.default {
         const width = this.attributes.size.x;
         const height = this.attributes.size.y;
         for (let i = 0; i < rand(this.attributes.stoneRange.x, this.attributes.stoneRange.y); i += 1) {
-            const rock = GameObject_1.default.getEntity('Prefabs', 'Rock').clone();
+            const rock = app_1.default.getEntity('Prefabs', 'Rock').clone();
             rock.enabled = true;
             const y = rand(height * this.attributes.minStoneOffset, height * (1 - this.attributes.minStoneOffset));
             const x = rand(width * this.attributes.minStoneOffset, width * (1 - this.attributes.minStoneOffset));
-            rock.setPosition(...this.coord2pos(x, y));
+            const coord = this.coord2pos(x, y);
+            rock.setPosition(coord[0], coord[1], coord[2]);
         }
     }
     coord2pos(x, y) {
@@ -789,9 +778,9 @@ class Terrain extends GameObject_1.default {
         ];
     }
     grayOut() {
-        GameObject_1.default.getApp().scene.removeModel(this.model);
+        app_1.default.scene.removeModel(this.model);
         this.model.meshInstances[0].material = this.attributes.grayTerrainMaterial;
-        GameObject_1.default.getApp().scene.addModel(this.model);
+        app_1.default.scene.addModel(this.model);
         this.entity.findByName('Water').enabled = false;
         this.entity.findByName('Ground').model.material = this.attributes.grayTerrainMaterial;
     }
@@ -806,7 +795,7 @@ class Level extends GameObject_1.default {
             size: new pc.Vec2(15, 45),
             offset: new pc.Vec2(0, 0),
         }, attributes);
-        GameObject_1.default.getAsset('assets/materials/endzone.json', 'material').then((asset) => {
+        app_1.default.getAsset('assets/materials/endzone.json', 'material').then((asset) => {
             super.setAttributes({
                 endzoneMaterial: asset.resource,
             });
@@ -845,6 +834,7 @@ class Stage extends GameObject_1.default {
         super.setAttributes({
             levelCount: 3,
         }, attributes);
+        this.orbitCam = orbitCamera;
         entity.addChild(this.levelParent);
         this.createNextLevel();
     }

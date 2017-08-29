@@ -1,6 +1,7 @@
-import { Noise } from 'noisejs';
-import { astar, Graph } from 'javascript-astar';
+import app from 'app';
 import GameObject from 'GameObject';
+import { astar, Graph } from 'javascript-astar';
+import { Noise } from 'noisejs';
 
 const rand = (...arr: number[]) => {
   let args = arr;
@@ -11,27 +12,29 @@ const rand = (...arr: number[]) => {
     // use 1: rand(max)
     return Math.floor(Math.random() * args[0]);
   }
+
   // use 2: rand(min, max)
   return Math.floor((Math.random() * (args[1] - args[0])) + args[0]);
 };
 
 interface INoiseOptions {
-  extend?: number[]
+  extend?: number[];
 }
 
 export class Terrain extends GameObject {
-  entity: any;
-  topLeft: any;
-  heightMap: number[][];
-  normals: number[][];
-  model: any;
+  public entity: pc.Entity;
+  public heightMap: number[][];
+  public normals: number[];
+  public model: pc.Model;
 
-  constructor(parent: any, attributes = {}) {
+  private topLeft: pc.Vec2;
+
+  constructor(parent: pc.Entity, attributes: {} = {}) {
     super();
     Promise.all([
-      GameObject.getAsset('assets/materials/grass.json', 'material'),
-      GameObject.getAsset('assets/materials/water.json', 'material'),
-      GameObject.getAsset('assets/materials/gray.json', 'material'),
+      app.getAsset('assets/materials/grass.json', 'material'),
+      app.getAsset('assets/materials/water.json', 'material'),
+      app.getAsset('assets/materials/gray.json', 'material')
     ]).then((arr) => {
       const [terrainMaterial, waterMaterial, grayTerrainMaterial] =
       arr.map(asset => asset.resource);
@@ -47,7 +50,7 @@ export class Terrain extends GameObject {
         riverDepth: 0,
         stoneRange: [2, 7],
         minStoneOffset: 0.1,
-        groundThickness: 0.1,
+        groundThickness: 0.1
       };
 
       super.setAttributes(defaultAttributes, attributes);
@@ -70,8 +73,17 @@ export class Terrain extends GameObject {
     });
   }
 
+  public grayOut() {
+    app.scene.removeModel(this.model);
+    this.model.meshInstances[0].material = this.attributes.grayTerrainMaterial;
+    app.scene.addModel(this.model);
+
+    this.entity.findByName('Water').enabled = false;
+    this.entity.findByName('Ground').model.material = this.attributes.grayTerrainMaterial;
+  }
+
   // TODO: make this static
-  _createNoiseMap(options: INoiseOptions) {
+  private _createNoiseMap(options: INoiseOptions) {
     const mapWidth = this.attributes.size.x - 2;
     const mapHeight = this.attributes.size.y - 2;
 
@@ -90,14 +102,14 @@ export class Terrain extends GameObject {
 
     if (Math.random() <= this.attributes.riverProbability) {
       interface IEdges {
-        x: [number, number],
-        y: [number, number],
-        [key: string]: [number, number]
+        x: [number, number];
+        y: [number, number];
+        [key: string]: [number, number];
       }
 
       const edges: IEdges = {
         x: [0, mapHeight - 1],
-        y: [0, mapWidth - 1],
+        y: [0, mapWidth - 1]
       };
 
       for (let i = 0; i < 2; i += 1) {
@@ -124,13 +136,12 @@ export class Terrain extends GameObject {
       // 1 means walkable for astar, 0 means obstacle
       let noiseMask = noiseMap.map(row => row.map(point => Number(point <= 1)));
       const graph = new Graph(noiseMask, {
-        diagonal: true,
+        diagonal: true
       });
 
       const start = graph.grid[actualEdges[0][0]][actualEdges[0][1]];
       const end = graph.grid[actualEdges[1][0]][actualEdges[1][1]];
       const result = astar.search(graph, start, end);
-
 
       const flattened = noiseMap.reduce((a, b) => a.concat(b));
       const diffToMax = 1 - Math.max(...flattened);
@@ -163,17 +174,17 @@ export class Terrain extends GameObject {
         noiseMap[i] = noiseMap[i - 1].map((point, j) => point + delta[j]);
       }
     } else {
-      noiseMap.unshift(new Array(mapWidth).fill(0));
+      noiseMap.unshift(Array(mapWidth).fill(0));
     }
-    noiseMap.push(new Array(mapWidth).fill(0));
+    noiseMap.push(Array(mapWidth).fill(0));
     noiseMap = noiseMap.map(row => [0].concat(row, [0]));
 
     this.heightMap = noiseMap;
   }
-  _createGround() {
+  private _createGround() {
     const ground = new pc.Entity('Ground');
     ground.addComponent('model', {
-      type: 'box',
+      type: 'box'
     });
     ground.model.material = this.attributes.terrainMaterial;
 
@@ -182,10 +193,10 @@ export class Terrain extends GameObject {
       this.attributes.groundThickness, this.attributes.size.y - 1);
     this.entity.addChild(ground);
   }
-  _createWater() {
+  private _createWater() {
     const water = new pc.Entity('Water');
     water.addComponent('model', {
-      type: 'box',
+      type: 'box'
     });
     water.model.material = this.attributes.waterMaterial;
     water.setLocalScale(this.attributes.size.x - 4,
@@ -194,7 +205,7 @@ export class Terrain extends GameObject {
       this.attributes.waterLevel / 2, this.attributes.offset.y);
     this.entity.addChild(water);
   }
-  _createMesh() {
+  private _createMesh() {
     const width = this.attributes.size.x;
     const height = this.attributes.size.y;
 
@@ -226,10 +237,10 @@ export class Terrain extends GameObject {
     const normals = pc.calculateNormals(positions, indices);
     this.normals = normals;
 
-    const plane = pc.createMesh(GameObject.getApp().graphicsDevice, positions, {
+    const plane = pc.createMesh(app.graphicsDevice, positions, {
       indices,
       normals,
-      uvs,
+      uvs
     });
 
     const node = new pc.GraphNode('TerrainNode');
@@ -241,17 +252,17 @@ export class Terrain extends GameObject {
 
     if (!this.entity.rigidbody) {
       this.entity.addComponent('rigidbody', {
-        type: 'static',
+        type: 'static'
       });
     }
     if (!this.entity.collision) {
       this.entity.addComponent('collision', {
-        type: 'mesh',
+        type: 'mesh'
       });
     }
 
     this.entity.collision.model = model;
-    GameObject.getApp().scene.addModel(model);
+    app.scene.addModel(model);
 
     const previousTerrainNode = this.entity.findByName('TerrainNode');
     if (previousTerrainNode) {
@@ -260,85 +271,50 @@ export class Terrain extends GameObject {
     this.entity.addChild(node);
 
     if (this.model) {
-      GameObject.getApp().scene.removeModel(this.model);
+      app.scene.removeModel(this.model);
     }
     this.model = model;
   }
-  _createRocks() {
+  private _createRocks() {
     const width = this.attributes.size.x;
     const height = this.attributes.size.y;
 
     for (let i = 0; i < rand(this.attributes.stoneRange.x, this.attributes.stoneRange.y); i += 1) {
-      const rock = GameObject.getEntity('Prefabs', 'Rock').clone();
+      const rock = app.getEntity('Prefabs', 'Rock').clone();
       rock.enabled = true;
       const y = rand(height * this.attributes.minStoneOffset,
         height * (1 - this.attributes.minStoneOffset));
       const x = rand(width * this.attributes.minStoneOffset,
         width * (1 - this.attributes.minStoneOffset));
-      rock.setPosition(...this.coord2pos(x, y));
+      const coord = this.coord2pos(x, y);
+      rock.setPosition(coord[0], coord[1], coord[2]);
     }
   }
 
-  coord2pos(x: number, y: number) {
+  private coord2pos(x: number, y: number) {
     return [(this.topLeft.x + x),
       (this.heightMap[y][x] ** 3) * this.attributes.meshHeightMultiplier,
-      (this.topLeft.y - y),
+      (this.topLeft.y - y)
     ];
-  }
-
-  grayOut() {
-    GameObject.getApp().scene.removeModel(this.model);
-    this.model.meshInstances[0].material = this.attributes.grayTerrainMaterial;
-    GameObject.getApp().scene.addModel(this.model);
-
-    this.entity.findByName('Water').enabled = false;
-    this.entity.findByName('Ground').model.material = this.attributes.grayTerrainMaterial;
   }
 }
 
 export class Level extends GameObject {
-  endZone = new pc.Entity();
-  entity = new pc.Entity();
-  terrain: Terrain;
+  public endZone: pc.Entity = new pc.Entity();
+  public entity: pc.Entity = new pc.Entity();
+  public terrain: Terrain;
+  public isGrayedOut: boolean = false;
 
-  _createEndZone() {
-    this.endZone.addComponent('model', {
-      type: 'box',
-    });
-    this.endZone.model.material = this.attributes.endzoneMaterial;
-
-    this.endZone.setLocalScale(this.attributes.size.x - 1, 10, 5);
-    this.endZone.setLocalPosition(0, 5, (this.attributes.size.y / -2.0) + 3);
-    //
-    // super.addTimedUpdate(() => {
-    //   if (this.isCompleted() && !this.grayedOut) {
-    //     this.grayedOut = true;
-    //     this.terrain.grayOut();
-    //     this.endZone.destroy();
-    //
-    //     this.onComplete();
-    //   }
-    // }, 1);
-    this.entity.addChild(this.endZone);
-  }
-  isCompleted() {
-    // TODO: check if all players are in the endzone
-    return true;
-  }
-  onComplete() {
-    // this is usually overridden from an external function
-  }
-
-  constructor(parent: any, attributes = {}) {
+  constructor(parent: pc.Entity, attributes: {} = {}) {
     super();
     super.setAttributes({
       size: new pc.Vec2(15, 45),
-      offset: new pc.Vec2(0, 0),
+      offset: new pc.Vec2(0, 0)
     }, attributes);
 
-    GameObject.getAsset('assets/materials/endzone.json', 'material').then((asset) => {
+    app.getAsset('assets/materials/endzone.json', 'material').then((asset) => {
       super.setAttributes({
-        endzoneMaterial: asset.resource,
+        endzoneMaterial: asset.resource
       });
 
       this._createEndZone();
@@ -351,41 +327,66 @@ export class Level extends GameObject {
     this.entity.addChild(terrainEntity);
 
     this.terrain = new Terrain(terrainEntity, {
-      size: this.attributes.size,
+      size: this.attributes.size
     });
   }
+
+  public isCompleted() {
+    // TODO: check if all players are in the endzone
+    return false;
+  }
+  public onComplete() {
+    // this is usually overridden from an external function
+  }
+
+  private _createEndZone() {
+    this.endZone.addComponent('model', {
+      type: 'box'
+    });
+    this.endZone.model.material = this.attributes.endzoneMaterial;
+
+    this.endZone.setLocalScale(this.attributes.size.x - 1, 10, 5);
+    this.endZone.setLocalPosition(0, 5, (this.attributes.size.y / -2.0) + 3);
+
+    super.addTimedUpdate(() => {
+      if (this.isCompleted() && !this.isGrayedOut) {
+        this.isGrayedOut = true;
+        this.terrain.grayOut();
+        this.endZone.destroy();
+
+        this.onComplete();
+      }
+    }, 1);
+    this.entity.addChild(this.endZone);
+  }
+
 }
 
 export class Stage extends GameObject {
-  levels: any = [];
-  currentOffset: any = new pc.Vec2(0, 0);
-  orbitCam: any;
-  levelParent: any = new pc.Entity();
+  public levels: Level[] = [];
+  public currentOffset: pc.Vec2 = new pc.Vec2(0, 0);
+  public levelParent: pc.Entity = new pc.Entity();
 
-
-  constructor(entity: any, orbitCamera: any, attributes = {}) {
+  constructor(entity: pc.Entity, attributes: {} = {}) {
     super();
     super.setAttributes({
-      levelCount: 3,
+      levelCount: 3
     }, attributes);
 
-    this.orbitCam = orbitCamera;
     entity.addChild(this.levelParent);
     this.createNextLevel();
   }
 
-  createNextLevel() {
+  public createNextLevel() {
     const attributes = {
-      offset: this.currentOffset,
+      offset: this.currentOffset
     };
-
     if (this.levels.length > 0) {
       // attributes.extend = this.levels[this.levels.length - 1].terrain.heightMap[0];
     }
 
     const level = new Level(this.levelParent, attributes);
-
-    setTimeout(() => this.orbitCam.focus(level.entity, true), 500);
+    setTimeout(() => app.camera.focus(level.entity, true), 500);
 
     this.levels.push(level);
     this.currentOffset.y -= 43;

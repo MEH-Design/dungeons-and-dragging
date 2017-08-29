@@ -1,9 +1,9 @@
 import GameObject from 'GameObject';
 
 export default abstract class Character extends GameObject {
-  private targets: any[] = [];
+  private targets: pc.Entity[] = [];
 
-  constructor(public entity: any, position: any, attributes: {} = {}) {
+  constructor(public entity: pc.Entity, position: pc.Vec3, attributes: {} = {}) {
     super();
     super.setAttributes({
       searchInterval: 0.1,
@@ -22,22 +22,22 @@ export default abstract class Character extends GameObject {
     });
   }
 
-  public addTarget(target: any) {
+  public addTarget(target: pc.Entity) {
     this.targets.push(target);
   }
 
-  protected abstract handleTargets(dt: number, targetsInRange: any[], targetsOutOfRange: any[]): void;
+  protected abstract handleTargets(dt: number, targetsInRange: pc.Entity[], targetsOutOfRange: pc.Entity[]): void;
 
   private searchForTargets(dt: number) {
-    const targetsInRange: any[] = [];
-    const targetsOutOfRange: any[] = [];
+    const targetsInRange: pc.Entity[] = [];
+    const targetsOutOfRange: pc.Entity[] = [];
     this.targets.forEach((target) => {
       (this.isInRange(this.entity, target) ? targetsInRange : targetsOutOfRange).push(target);
     });
     this.handleTargets(dt, targetsInRange, targetsOutOfRange);
   }
 
-  private isInRange(entity: any, target: any) {
+  private isInRange(entity: pc.Entity, target: pc.Entity) {
     const distance = target.getPosition().clone().sub(entity.getPosition()).length();
 
     return distance <= this.attributes.range;

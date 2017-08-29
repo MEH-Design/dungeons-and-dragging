@@ -1,9 +1,9 @@
 import Character from 'characters/Character';
 
 export default class Player extends Character {
-  private static players: any[] = [];
+  private static players: Player[] = [];
 
-  constructor(parent: any, position: any) {
+  constructor(parent: pc.Entity, position: pc.Vec3) {
     const entity = new pc.Entity();
     parent.addChild(entity);
 
@@ -19,9 +19,9 @@ export default class Player extends Character {
     Player.addPlayer(this);
   }
 
-  public static getByEntity(entity: any): any {
+  public static getByEntity(entity: pc.Entity): Player {
     let result;
-    this.players.forEach((player: any) => {
+    this.players.forEach((player: Player) => {
       if (player.entity === entity) {
         result = player;
       }
@@ -30,7 +30,7 @@ export default class Player extends Character {
     return result;
   }
 
-  private static addPlayer(player: any) {
+  private static addPlayer(player: Player) {
     this.players = this.players || [];
     this.players.push(player);
   }

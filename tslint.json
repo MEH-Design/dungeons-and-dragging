@@ -9,7 +9,14 @@
       "no-default-export": false,
       "no-parameter-properties": false,
       "align": false,
+      "function-name": false,
+      "insecure-random": {
+        "severity": "warning"
+      },
       "no-console": {
+        "severity": "warning"
+      },
+      "no-suspicious-comment": {
         "severity": "warning"
       },
       "no-any": {
