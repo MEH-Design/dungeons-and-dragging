@@ -84,12 +84,12 @@ class MouseInput {
   public onMouseUp(event: pc.MouseEvent) {
     switch (event.button) {
       case pc.MOUSEBUTTON_LEFT:
-        this.lookButtonDown = false;
+        // this.lookButtonDown = false;
         break;
 
       case pc.MOUSEBUTTON_MIDDLE:
       case pc.MOUSEBUTTON_RIGHT:
-        this.panButtonDown = false;
+        this.lookButtonDown = false;
         break;
       default: break;
     }
