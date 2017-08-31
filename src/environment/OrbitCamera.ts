@@ -173,7 +173,6 @@ export default class OrbitCamera extends GameObject {
     // Find all the models in the scene that are under the focused entity
     this._buildAabb(this.entity || app.root, 0);
     this.entity.lookAt(this._modelsAabb.center);
-    console.log(this._modelsAabb.center);
     this._pivotPoint.copy(this._modelsAabb.center);
 
     // Calculate the camera euler angle rotation around x and y axes

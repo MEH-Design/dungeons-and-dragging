@@ -1,4 +1,5 @@
 import app from 'app';
+import Player from 'characters/player/Player';
 import GameObject from 'GameObject';
 import { astar, Graph } from 'javascript-astar';
 import { Noise } from 'noisejs';
@@ -17,6 +18,13 @@ const rand = (...arr: number[]) => {
   return Math.floor((Math.random() * (args[1] - args[0])) + args[0]);
 };
 
+const rand2DVector = (min: pc.Vec2, max: pc.Vec2) => {
+  const x = Math.random() * (max.x - min.x) + min.x;
+  const y = Math.random() * (max.y - min.y) + min.y;
+
+  return new pc.Vec2(x, y);
+};
+
 interface INoiseOptions {
   extend?: number[];
 }
@@ -26,60 +34,58 @@ export class Terrain extends GameObject {
   public heightMap: number[][];
   public normals: number[];
   public model: pc.Model;
-
-  private topLeft: pc.Vec2;
+  public topLeft: pc.Vec2;
 
   constructor(parent: pc.Entity, attributes: {} = {}) {
     super();
+    const defaultAttributes = {
+      offset: new pc.Vec2(0, 0),
+      size: new pc.Vec2(15, 45),
+      terrainMaterial: 'assets/materials/grass.json',
+      waterMaterial: 'assets/materials/water.json',
+      grayTerrainMaterial: 'assets/materials/gray.json',
+      waterLevel: 1,
+      meshHeightMultiplier: 5,
+      riverProbability: 1,
+      riverDepth: 0,
+      stoneRange: [2, 7],
+      minStoneOffset: 0.1,
+      groundThickness: 0.1
+    };
+    super.setAttributes(defaultAttributes, attributes);
+    // assets are cached once loaded so its good to start the request ASAP
     Promise.all([
-      app.getAsset('assets/materials/grass.json', 'material'),
-      app.getAsset('assets/materials/water.json', 'material'),
-      app.getAsset('assets/materials/gray.json', 'material')
-    ]).then((arr) => {
-      const [terrainMaterial, waterMaterial, grayTerrainMaterial] =
-      arr.map(asset => asset.resource);
-      const defaultAttributes = {
-        offset: new pc.Vec2(0, 0),
-        size: new pc.Vec2(15, 45),
-        terrainMaterial,
-        waterMaterial,
-        grayTerrainMaterial,
-        waterLevel: 1,
-        meshHeightMultiplier: 5,
-        riverProbability: 1,
-        riverDepth: 0,
-        stoneRange: [2, 7],
-        minStoneOffset: 0.1,
-        groundThickness: 0.1
-      };
+      app.getAsset(this.attributes.terrainMaterial, 'material'),
+      app.getAsset(this.attributes.waterMaterial, 'material'),
+      app.getAsset(this.attributes.grayTerrainMaterial, 'material')
+    ]);
 
-      super.setAttributes(defaultAttributes, attributes);
-      this.entity = parent;
-      this.topLeft = new pc.Vec2(-(this.attributes.offset.x + ((this.attributes.size.x - 1) / 2.0)),
-        this.attributes.offset.y + ((this.attributes.size.y - 1) / 2.0));
+    this.entity = parent;
+    this.topLeft = new pc.Vec2(-(this.attributes.offset.x + ((this.attributes.size.x - 1) / 2.0)),
+      this.attributes.offset.y + ((this.attributes.size.y - 1) / 2.0));
 
-      // this has to be called first in order for this.heightMap to exist
-      const noiseOptions: INoiseOptions = {};
-      if (this.attributes.extend) {
-        noiseOptions.extend = this.attributes.extend;
-      }
-      this._createNoiseMap(noiseOptions);
+    // this has to be called first in order for this.heightMap to exist
+    const noiseOptions: INoiseOptions = {};
+    if (this.attributes.extend) {
+      noiseOptions.extend = this.attributes.extend;
+    }
+    this._createNoiseMap(noiseOptions);
 
-      // these need this.heightMap
-      this._createMesh();
-      this._createGround();
-      this._createWater();
-      this._createRocks();
-    });
+    // these need this.heightMap
+    this._createMesh();
+    this._createGround();
+    this._createWater();
+    this._createRocks();
   }
 
-  public grayOut() {
+  public async grayOut() {
+    const grayResource = (await app.getAsset(this.attributes.grayTerrainMaterial, 'material')).resource;
     app.scene.removeModel(this.model);
-    this.model.meshInstances[0].material = this.attributes.grayTerrainMaterial;
+    this.model.meshInstances[0].material = grayResource;
     app.scene.addModel(this.model);
 
     this.entity.findByName('Water').enabled = false;
-    this.entity.findByName('Ground').model.material = this.attributes.grayTerrainMaterial;
+    this.entity.findByName('Ground').model.material = grayResource;
   }
 
   // TODO: make this static
@@ -181,31 +187,30 @@ export class Terrain extends GameObject {
 
     this.heightMap = noiseMap;
   }
-  private _createGround() {
+  private async _createGround() {
     const ground = new pc.Entity('Ground');
     ground.addComponent('model', {
       type: 'box'
     });
-    ground.model.material = this.attributes.terrainMaterial;
-
     ground.setLocalPosition(this.attributes.offset.x, 0, this.attributes.offset.y);
     ground.setLocalScale(this.attributes.size.x - 1,
       this.attributes.groundThickness, this.attributes.size.y - 1);
     this.entity.addChild(ground);
+    ground.model.material = (await app.getAsset(this.attributes.terrainMaterial, 'material')).resource;
   }
-  private _createWater() {
+  private async _createWater() {
     const water = new pc.Entity('Water');
     water.addComponent('model', {
       type: 'box'
     });
-    water.model.material = this.attributes.waterMaterial;
     water.setLocalScale(this.attributes.size.x - 4,
       this.attributes.waterLevel, this.attributes.size.y - 4);
     water.setLocalPosition(this.attributes.offset.x,
       this.attributes.waterLevel / 2, this.attributes.offset.y);
     this.entity.addChild(water);
+    water.model.material = (await app.getAsset(this.attributes.waterMaterial, 'material')).resource;
   }
-  private _createMesh() {
+  private async _createMesh() {
     const width = this.attributes.size.x;
     const height = this.attributes.size.y;
 
@@ -244,7 +249,7 @@ export class Terrain extends GameObject {
     });
 
     const node = new pc.GraphNode('TerrainNode');
-    const meshInstance = new pc.MeshInstance(node, plane, this.attributes.terrainMaterial);
+    const meshInstance = new pc.MeshInstance(node, plane, (await app.getAsset(this.attributes.terrainMaterial, 'material')).resource);
     const model = new pc.Model();
 
     model.graph = node;
@@ -305,6 +310,8 @@ export class Level extends GameObject {
   public terrain: Terrain;
   public isGrayedOut: boolean = false;
 
+  private topLeft: pc.Vec2;
+
   constructor(parent: pc.Entity, attributes: {} = {}) {
     super();
     super.setAttributes({
@@ -329,11 +336,36 @@ export class Level extends GameObject {
     this.terrain = new Terrain(terrainEntity, {
       size: this.attributes.size
     });
+    this.topLeft = this.terrain.topLeft.clone().add(this.attributes.offset);
+
+    Player.players.forEach((player: Player) => {
+      const spawnPos: pc.Vec2 = rand2DVector(
+        this.topLeft.clone().add(new pc.Vec2(1, 1)),
+        this.topLeft.clone().add(new pc.Vec2(this.attributes.size.x - 1, -10))
+      );
+      player.deselect();
+      player.entity.rigidbody.teleport(new pc.Vec3(spawnPos.x, 30, spawnPos.y));
+      player.entity.rigidbody.angularVelocity = pc.Vec3.ZERO;
+      player.entity.rigidbody.linearVelocity = pc.Vec3.ZERO;
+
+      player.setAreaConstraint(this.topLeft, this.topLeft.clone().add(new pc.Vec2(this.attributes.size.x, -this.attributes.size.y)));
+    });
   }
 
   public isCompleted() {
-    // TODO: check if all players are in the endzone
-    return false;
+    if (Player.players.length === 0) {
+      return false;
+    }
+    let allPlayersInside = true;
+    for (const player of Player.players) {
+      const boundingBox: pc.BoundingBox = this.endZone.model.meshInstances[0].aabb;
+      if (!boundingBox.containsPoint(player.entity.getPosition())) {
+        allPlayersInside = false;
+        break;
+      }
+    }
+
+    return allPlayersInside;
   }
   public onComplete() {
     // this is usually overridden from an external function
@@ -349,7 +381,7 @@ export class Level extends GameObject {
     this.endZone.setLocalPosition(0, 5, (this.attributes.size.y / -2.0) + 3);
 
     super.addTimedUpdate(() => {
-      if (this.isCompleted() && !this.isGrayedOut) {
+      if (!this.isGrayedOut && this.isCompleted()) {
         this.isGrayedOut = true;
         this.terrain.grayOut();
         this.endZone.destroy();

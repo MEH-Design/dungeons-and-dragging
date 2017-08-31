@@ -77,8 +77,8 @@ class App extends pc.Application {
     this.root.addChild(stageEntity);
     this.root.addChild(playerEntity);
 
-    const stage = new Stage(stageEntity, this.camera);
     const player = new Player(playerEntity, new pc.Vec3(0, 20, 0));
+    const stage = new Stage(stageEntity, this.camera);
   }
 
   public onUpdate(callback: (dt: number) => void): void {
