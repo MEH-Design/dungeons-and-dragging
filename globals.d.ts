@@ -81,12 +81,13 @@ declare module pc {
     private onManagerResume(): void;
   }
   class Color {
+    constructor();
     constructor(r: number, g: number, b: number, a?: number);
     clone(): pc.Color;
     copy(rhs: pc.Color): pc.Color;
     set(r: number, g: number, b: number, a?: number): pc.Color;
-    fromstring(hex: string): pc.Color;
-    tostring(): string;
+    fromString(hex: string): pc.Color;
+    toString(): string;
   }
   const config: any;
   const apps: any;

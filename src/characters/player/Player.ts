@@ -8,12 +8,14 @@ export default class Player extends Character {
     start: pc.Vec2,
     end: pc.Vec2,
     isOutside: boolean,
-    isSet: boolean
+    isSet: boolean,
+    getHeight(n: pc.Vec2): number
   } = {
     start: new pc.Vec2(),
     end: new pc.Vec2(),
     isOutside: false,
-    isSet: false
+    isSet: false,
+    getHeight: (n: pc.Vec2) => 0
   };
   private depth: number;
 
@@ -33,8 +35,13 @@ export default class Player extends Character {
       }
 
       const targetPosition: pc.Vec3 = new pc.Vec3();
+      const currentPosition: pc.Vec3 = this.entity.getPosition();
       app.camera.entity.camera.screenToWorld(app.mouse.x, app.mouse.y, this.depth, targetPosition);
       if (this.boundaries.isSet) {
+        const groundHeight = this.boundaries.getHeight(new pc.Vec2(currentPosition.x, currentPosition.z));
+        if (targetPosition.y < groundHeight) {
+          targetPosition.y = groundHeight;
+        }
         if (targetPosition.x < this.boundaries.start.x) {
           targetPosition.x = this.boundaries.start.x;
         }
@@ -49,7 +56,7 @@ export default class Player extends Character {
         }
       }
 
-      let diff = targetPosition.sub(this.entity.getPosition());
+      let diff = targetPosition.sub(currentPosition);
       diff = diff.scale(100);
 
       if (diff.length() > 2000) {
@@ -89,10 +96,11 @@ export default class Player extends Character {
   }
 
   // force the player to stay in a box from start to end.
-  public setAreaConstraint(start: pc.Vec2, end: pc.Vec2) {
+  public setAreaConstraint(start: pc.Vec2, end: pc.Vec2, getHeight: (pos: pc.Vec2) => number) {
     this.boundaries.isSet = true;
-    this.boundaries.start = start.add(new pc.Vec2(2, -2));
-    this.boundaries.end = end.add(new pc.Vec2(-2, 2));
+    this.boundaries.start = start;
+    this.boundaries.end = end;
+    this.boundaries.getHeight = getHeight;
     super.addTimedUpdate(() => {
       const pos = this.entity.getPosition();
       if (pos.x < start.x || pos.z > start.y || pos.x > end.x || pos.z < end.y) {

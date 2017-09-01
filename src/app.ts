@@ -69,7 +69,7 @@ class App extends pc.Application {
     this.lights.push(
       this.createLight(new pc.Color(1, 1, 1), new pc.Vec3(45, 0, 0))
     );
-    this.camera = new OrbitCamera(new pc.Color(1, 1, 1), new pc.Vec3(0, 20, 30), new pc.Vec3(-30, 0, 0));
+    this.camera = new OrbitCamera((new pc.Color()).fromString('#0A1117'), new pc.Vec3(0, 20, 30), new pc.Vec3(-30, 0, 0));
 
     const stageEntity: pc.Entity = new pc.Entity();
     const playerEntity: pc.Entity = new pc.Entity();

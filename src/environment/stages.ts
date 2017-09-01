@@ -88,6 +88,16 @@ export class Terrain extends GameObject {
     this.entity.findByName('Ground').model.material = grayResource;
   }
 
+  // TODO: interpolate in array
+  public getHeight(coord: pc.Vec2) {
+    const nearest = [Math.round(coord.x), Math.round(coord.y)];
+    if (this.heightMap[nearest[0]] && this.heightMap[nearest[0]][nearest[1]]) {
+      return this.heightMap[nearest[0]][nearest[1]];
+    }
+
+    return 0;
+  }
+
   // TODO: make this static
   private _createNoiseMap(options: INoiseOptions) {
     const mapWidth = this.attributes.size.x - 2;
@@ -187,6 +197,7 @@ export class Terrain extends GameObject {
 
     this.heightMap = noiseMap;
   }
+
   private async _createGround() {
     const ground = new pc.Entity('Ground');
     ground.addComponent('model', {
@@ -337,18 +348,22 @@ export class Level extends GameObject {
       size: this.attributes.size
     });
     this.topLeft = this.terrain.topLeft.clone().add(this.attributes.offset);
-
+    console.log(this.topLeft);
     Player.players.forEach((player: Player) => {
       const spawnPos: pc.Vec2 = rand2DVector(
-        this.topLeft.clone().add(new pc.Vec2(1, 1)),
-        this.topLeft.clone().add(new pc.Vec2(this.attributes.size.x - 1, -10))
+        this.topLeft.clone().add(new pc.Vec2(3, -3)),
+        this.topLeft.clone().add(new pc.Vec2(this.attributes.size.x - 3, -10))
       );
       player.deselect();
       player.entity.rigidbody.teleport(new pc.Vec3(spawnPos.x, 30, spawnPos.y));
       player.entity.rigidbody.angularVelocity = pc.Vec3.ZERO;
       player.entity.rigidbody.linearVelocity = pc.Vec3.ZERO;
 
-      player.setAreaConstraint(this.topLeft, this.topLeft.clone().add(new pc.Vec2(this.attributes.size.x, -this.attributes.size.y)));
+      player.setAreaConstraint(
+        this.topLeft,
+        this.topLeft.clone().add(new pc.Vec2(this.attributes.size.x, -this.attributes.size.y)),
+        this.terrain.getHeight.bind(this.terrain)
+      );
     });
   }
 
