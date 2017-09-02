@@ -45,11 +45,11 @@ export class Terrain extends GameObject {
       terrainMaterial: 'assets/materials/grass.json',
       waterMaterial: 'assets/materials/water.json',
       grayTerrainMaterial: 'assets/materials/gray.json',
-      waterLevel: 1,
+      waterLevel: 1.5,
       meshHeightMultiplier: 10,
-      riverProbability: 1,
+      riverProbability: 0,
       riverDepth: 0,
-      stoneRange: [2, 7],
+      stoneRange: [2, 5],
       minStoneOffset: 0.1,
       groundThickness: 0.1
     };
@@ -111,7 +111,7 @@ export class Terrain extends GameObject {
 
       for (let x = 0; x < mapWidth; x += 1) {
         // .simplex2d is between -1 and 1 per default, we need it between 0 and 1
-        noiseMap[y][x] = (noise.simplex2(y * 0.05, x * 0.05) + 1) * 0.5;
+        noiseMap[y][x] = (noise.simplex2(y * 0.04, x * 0.04) + 1) * 0.5;
         // clamp the noiseMap between 0.5 and 1, to make room for possible rivers (0 to 0.5)
         noiseMap[y][x] = (noiseMap[y][x] + 1) * 0.5;
       }
@@ -292,19 +292,27 @@ export class Terrain extends GameObject {
     }
     this.model = model;
   }
-  private _createRocks() {
+  private async _createRocks() {
     const width = this.attributes.size.x;
     const height = this.attributes.size.y;
 
-    for (let i = 0; i < rand(this.attributes.stoneRange.x, this.attributes.stoneRange.y); i += 1) {
-      const rock = app.getEntity('Prefabs', 'Rock').clone();
+    const rockTemplate = new pc.Entity();
+    rockTemplate.addComponent('model', {});
+    rockTemplate.enabled = false;
+    rockTemplate.model.material = new pc.PhongMaterial();
+    rockTemplate.model.asset = await app.getAsset('assets/models/small_rock.json', 'model');
+    app.root.addChild(rockTemplate);
+
+    for (let i = 0; i < rand(...this.attributes.stoneRange); i += 1) {
+      const rock = rockTemplate.clone();
       rock.enabled = true;
-      const y = rand(height * this.attributes.minStoneOffset,
-        height * (1 - this.attributes.minStoneOffset));
-      const x = rand(width * this.attributes.minStoneOffset,
-        width * (1 - this.attributes.minStoneOffset));
+      const y = rand(height * this.attributes.minStoneOffset, height * (1 - this.attributes.minStoneOffset));
+      const x = rand(width * this.attributes.minStoneOffset, width * (1 - this.attributes.minStoneOffset));
       const coord = this.coord2pos(x, y);
+
+      rock.setLocalScale(rand(2, 3), rand(2, 3), rand(2, 3));
       rock.setPosition(coord[0], coord[1], coord[2]);
+      app.root.addChild(rock);
     }
   }
 

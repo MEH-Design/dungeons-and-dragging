@@ -22,6 +22,8 @@ class App extends pc.Application {
 
     super.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);
     super.setCanvasResolution(pc.RESOLUTION_AUTO);
+    this.scene.gammaCorrection = pc.GAMMA_SRGB;
+    this.scene.ambientLight = new pc.Color(0.2, 0.2, 0.2);
 
     window.addEventListener('resize', () => {
       super.resizeCanvas();
@@ -69,7 +71,7 @@ class App extends pc.Application {
     this.lights.push(
       this.createLight(new pc.Color(1, 1, 1), new pc.Vec3(45, 0, 0))
     );
-    this.camera = new OrbitCamera((new pc.Color()).fromString('#0A1117'), new pc.Vec3(0, 20, 30), new pc.Vec3(-30, 0, 0));
+    this.camera = new OrbitCamera((new pc.Color()).fromString('#333333'), new pc.Vec3(0, 20, 30), new pc.Vec3(-30, 0, 0));
 
     const stageEntity: pc.Entity = new pc.Entity();
     const playerEntity: pc.Entity = new pc.Entity();

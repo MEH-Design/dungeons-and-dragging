@@ -446,7 +446,7 @@ declare module pc {
   class ComponentSystem {
     constructor(app: pc.Application);
     private store: Array<Object>;
-    private addComponent(entity: pc.Entity, data: Object): pc.Component;
+    private addComponent(entity: pc.Entity, data?: Object): pc.Component;
     private removeComponent(entity: pc.Entity): void;
     private cloneComponent(entity: pc.Entity, clone: pc.Entity): void;
     private initializeComponentData(): void;
@@ -461,7 +461,7 @@ declare module pc {
   class Entity extends pc.GraphNode {
     name: string;
     constructor(name?: string);
-    addComponent(type: string, data: Object): pc.Component;
+    addComponent(type: string, data?: Object): pc.Component;
     removeComponent(type: string): void;
     private getGuid(): string;
     private setGuid(guid: string): void;
@@ -1304,6 +1304,8 @@ declare module pc {
     material: pc.Material;
   }
   class Model {
+    asset: pc.Asset;
+    model: pc.ModelComponent;
     constructor();
     clone(): pc.Model;
     destroy(): void;
@@ -1391,7 +1393,13 @@ declare module pc {
   const LIGHTTYPE_SPOT: string;
   const PROJECTION_PERSPECTIVE: string;
   const PROJECTION_ORTHOGRAPHIC: string;
+  const GAMMA_SRGB: number;
+  const GAMMA_SRGBFAST: number;
+  const GAMMA_SRGBHDR: number;
+  const GAMMA_NONE: number;
   class Scene {
+    ambientLight: pc.Color;
+    gammaCorrection: number;
     constructor();
     addModel(model: pc.Model): void;
     removeModel(model: pc.Model): void;
