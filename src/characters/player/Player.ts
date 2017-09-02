@@ -20,7 +20,7 @@ export default class Player extends Character {
   private depth: number;
 
   constructor(parent: pc.Entity, position: pc.Vec3) {
-    super(parent, position);
+    super(position);
     Player.addPlayer(this);
 
     app.mouse.on(pc.EVENT_MOUSEUP, this.deselect, this);

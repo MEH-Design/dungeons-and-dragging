@@ -1,4 +1,5 @@
 import app from 'app';
+import MeleeEnemy from 'characters/enemies/MeleeEnemy';
 import Player from 'characters/player/Player';
 import GameObject from 'GameObject';
 import { astar, Graph } from 'javascript-astar';
@@ -45,7 +46,7 @@ export class Terrain extends GameObject {
       waterMaterial: 'assets/materials/water.json',
       grayTerrainMaterial: 'assets/materials/gray.json',
       waterLevel: 1,
-      meshHeightMultiplier: 5,
+      meshHeightMultiplier: 10,
       riverProbability: 1,
       riverDepth: 0,
       stoneRange: [2, 7],
@@ -110,7 +111,7 @@ export class Terrain extends GameObject {
 
       for (let x = 0; x < mapWidth; x += 1) {
         // .simplex2d is between -1 and 1 per default, we need it between 0 and 1
-        noiseMap[y][x] = (noise.simplex2(y * 0.1, x * 0.1) + 1) * 0.5;
+        noiseMap[y][x] = (noise.simplex2(y * 0.05, x * 0.05) + 1) * 0.5;
         // clamp the noiseMap between 0.5 and 1, to make room for possible rivers (0 to 0.5)
         noiseMap[y][x] = (noiseMap[y][x] + 1) * 0.5;
       }
@@ -309,7 +310,7 @@ export class Terrain extends GameObject {
 
   private coord2pos(x: number, y: number) {
     return [(this.topLeft.x + x),
-      (this.heightMap[y][x] ** 3) * this.attributes.meshHeightMultiplier,
+      (this.heightMap[y][x] ** 4) * this.attributes.meshHeightMultiplier,
       (this.topLeft.y - y)
     ];
   }
@@ -326,7 +327,7 @@ export class Level extends GameObject {
   constructor(parent: pc.Entity, attributes: {} = {}) {
     super();
     super.setAttributes({
-      size: new pc.Vec2(15, 45),
+      size: new pc.Vec2(25, 60),
       offset: new pc.Vec2(0, 0)
     }, attributes);
 
@@ -348,11 +349,16 @@ export class Level extends GameObject {
       size: this.attributes.size
     });
     this.topLeft = this.terrain.topLeft.clone().add(this.attributes.offset);
-    console.log(this.topLeft);
+
+    //spawn enemies
+    const enemy = new MeleeEnemy(new pc.Vec3(0, 10, 0));
+
+    // move player to spawn
     Player.players.forEach((player: Player) => {
+      const offset = 5;
       const spawnPos: pc.Vec2 = rand2DVector(
-        this.topLeft.clone().add(new pc.Vec2(3, -3)),
-        this.topLeft.clone().add(new pc.Vec2(this.attributes.size.x - 3, -10))
+        this.topLeft.clone().add(new pc.Vec2(offset, -offset)),
+        this.topLeft.clone().add(new pc.Vec2(this.attributes.size.x - offset, -10))
       );
       player.deselect();
       player.entity.rigidbody.teleport(new pc.Vec3(spawnPos.x, 30, spawnPos.y));
@@ -414,13 +420,13 @@ export class Stage extends GameObject {
   public currentOffset: pc.Vec2 = new pc.Vec2(0, 0);
   public levelParent: pc.Entity = new pc.Entity();
 
-  constructor(entity: pc.Entity, attributes: {} = {}) {
+  constructor(parent: pc.Entity, attributes: {} = {}) {
     super();
     super.setAttributes({
       levelCount: 3
     }, attributes);
 
-    entity.addChild(this.levelParent);
+    parent.addChild(this.levelParent);
     this.createNextLevel();
   }
 
@@ -436,7 +442,7 @@ export class Stage extends GameObject {
     setTimeout(() => app.camera.focus(level.entity, true), 500);
 
     this.levels.push(level);
-    this.currentOffset.y -= 43;
+    this.currentOffset.y -= 58;
     if (this.levels.length < this.attributes.levelCount) {
       level.onComplete = () => this.createNextLevel();
     }

@@ -459,6 +459,7 @@ declare module pc {
     constructor(app: pc.Application);
   }
   class Entity extends pc.GraphNode {
+    name: string;
     constructor(name?: string);
     addComponent(type: string, data: Object): pc.Component;
     removeComponent(type: string): void;

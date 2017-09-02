@@ -1,15 +1,17 @@
+import app from 'app';
 import GameObject from 'GameObject';
 
 export default abstract class Character extends GameObject {
   public entity: pc.Entity;
-  private targets: pc.Entity[] = [];
+  public targets: pc.Entity[] = [];
+  public health: number;
 
-  constructor(public parent: pc.Entity, position: pc.Vec3, attributes: {} = {}) {
+  constructor(position: pc.Vec3, attributes: {} = {}) {
     super();
     super.setAttributes({
       searchInterval: 0.1,
       range: 2,
-      material: new pc.PhongMaterial()
+      material: 'assets/materials/player.json'
     }, attributes);
     super.addTimedUpdate(this.searchForTargets, this.attributes.searchInterval);
     this.targets = [];
@@ -26,11 +28,13 @@ export default abstract class Character extends GameObject {
     this.entity.addComponent('rigidbody', {
       type: 'dynamic'
     });
+    this.entity.name = 'Character';
 
-    this.entity.model.material = this.attributes.material;
     this.entity.enabled = true;
-
-    parent.addChild(this.entity);
+    app.root.addChild(this.entity);
+    app.getAsset(this.attributes.material, 'material').then((asset) => {
+      this.entity.model.material = asset.resource;
+    });
   }
 
   public addTarget(target: pc.Entity) {
@@ -45,7 +49,9 @@ export default abstract class Character extends GameObject {
     this.targets.forEach((target) => {
       (this.isInRange(this.entity, target) ? targetsInRange : targetsOutOfRange).push(target);
     });
-    this.handleTargets(dt, targetsInRange, targetsOutOfRange);
+    if (this.targets) {
+      this.handleTargets(dt, targetsInRange, targetsOutOfRange);
+    }
   }
 
   private isInRange(entity: pc.Entity, target: pc.Entity) {
