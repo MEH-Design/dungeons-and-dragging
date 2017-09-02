@@ -31,8 +31,5 @@
     "url": "https://github.com/MEH-Design/dungeons-and-dragging/issues"
   },
   "homepage": "https://github.com/MEH-Design/dungeons-and-dragging#readme",
-  "dependencies": {
-    "@types/javascript-astar": "0.0.29",
-    "@types/noisejs": "0.0.28"
-  }
+  "dependencies": {}
 }

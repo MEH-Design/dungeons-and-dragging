@@ -15,6 +15,7 @@
         "node_modules"
     ],
     "files": [
-      "globals.d.ts"
+      "globals.d.ts",
+      "modules.d.ts"
     ]
 }
