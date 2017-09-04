@@ -275,6 +275,7 @@ declare module pc {
   class CollisionComponent extends pc.Component {
     model: pc.Model;
     constructor(system: pc.CollisionComponentSystem, entity: pc.Entity);
+    on(event: string, callback: (contactPoint: pc.ContactPoint) => void, something: any): void;
   }
 
   class CollisionComponentSystem extends pc.ComponentSystem {
@@ -366,6 +367,8 @@ declare module pc {
     constructor(localPoint: pc.Vec3, localPointOther: pc.Vec3, point: pc.Vec3, pointOther: pc.Vec3, normal: pc.Vec3);
   }
   class ContactResult {
+    other: pc.Entity;
+    contacts: pc.ContactPoint[];
     constructor(other: pc.Entity, contacts: pc.ContactPoint[]);
   }
   class RigidBodyComponentSystem extends pc.ComponentSystem {

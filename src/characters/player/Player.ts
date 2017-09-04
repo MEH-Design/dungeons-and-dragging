@@ -19,8 +19,11 @@ export default class Player extends Character {
   };
   private depth: number;
 
-  constructor(parent: pc.Entity, position: pc.Vec3) {
+  constructor(parent: pc.Entity, position: pc.Vec3, attributes: {} = {}) {
     super(position);
+    super.setAttributes({
+      health: 100
+    }, attributes);
     Player.addPlayer(this);
 
     app.mouse.on(pc.EVENT_MOUSEUP, this.deselect, this);
@@ -110,6 +113,11 @@ export default class Player extends Character {
         this.boundaries.isOutside = false;
       }
     }, 0);
+  }
+
+  public inflictDamage(damage: number) {
+    this.attributes.health -= damage;
+    console.log(this.attributes.health);
   }
 
   protected handleTargets() {

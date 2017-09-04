@@ -300,7 +300,7 @@ export class Terrain extends GameObject {
     rockTemplate.addComponent('model', {});
     rockTemplate.enabled = false;
     rockTemplate.model.material = new pc.PhongMaterial();
-    rockTemplate.model.asset = await app.getAsset('assets/models/small_rock.json', 'model');
+    rockTemplate.model.asset = await app.getAsset('assets/models/small_rock/small_rock.json', 'model');
     app.root.addChild(rockTemplate);
 
     for (let i = 0; i < rand(...this.attributes.stoneRange); i += 1) {
