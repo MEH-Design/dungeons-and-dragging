@@ -74,6 +74,7 @@ export default class Projectile extends GameObject {
     // this.entity.destroy();
   }
   private getPoint(n: number): pc.Vec3 {
+    // the function can be anything that has it's zero points at 1 (to hit the target) and 0 (to originate in the caster).
     const height = -((n * 2 - 1) ** 2) + 1; // see https://www.wolframalpha.com/input/?i=-((x*2-1)**2)%2B1
     const distanceFromStart = this.diff.clone().scale(-n);
     distanceFromStart.y += height * 10;
@@ -81,15 +82,11 @@ export default class Projectile extends GameObject {
     return this.start.clone().add(distanceFromStart);
   }
   private moveTowardsTarget(dt: number) {
-    this.counter = Math.min(this.counter + dt * this.attributes.speed, 1);
+    this.counter = this.counter + dt * this.attributes.speed;
     const current = this.counter;
 
     this.entity.rigidbody.linearVelocity = pc.Vec3.ZERO;
     this.entity.rigidbody.teleport(this.getPoint(current));
-    if (current === 1) {
-      this.entity.rigidbody.linearVelocity.y = 9.81;
-      super.removeTimedUpdate(this.moveTowardsTarget);
-    }
   }
 }
 
