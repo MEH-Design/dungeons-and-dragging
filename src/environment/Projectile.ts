@@ -14,7 +14,8 @@ export default class Projectile extends GameObject {
     super.setAttributes({
       speed: 1,
       size: 0.5,
-      shrinkSpeed: 1
+      shrinkSpeed: 1,
+      material: 'assets/materials/projectile.json'
     }, attributes);
     this.entity.setPosition(start);
     this.entity.addComponent('model', {
@@ -31,6 +32,9 @@ export default class Projectile extends GameObject {
     });
     this.entity.setLocalScale(this.attributes.size, this.attributes.size, this.attributes.size);
     this.entity.rigidbody.applyTorqueImpulse(1, 1, 1);
+    app.getAsset(this.attributes.material, 'material').then((asset) => {
+      this.entity.model.material = asset.resource;
+    });
 
     // neccessary to prevent detecting the shooter as a collision
     setTimeout(() => {
