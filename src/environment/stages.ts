@@ -1,6 +1,8 @@
 import app from 'app';
 import MeleeEnemy from 'characters/enemies/MeleeEnemy';
+import RangedEnemy from 'characters/enemies/RangedEnemy';
 import Player from 'characters/player/Player';
+import Projectile from 'environment/Projectile';
 import GameObject from 'GameObject';
 import { astar, Graph } from 'javascript-astar';
 import { Noise } from 'noisejs';
@@ -359,7 +361,7 @@ export class Level extends GameObject {
     this.topLeft = this.terrain.topLeft.clone().add(this.attributes.offset);
 
     //spawn enemies
-    const enemy = new MeleeEnemy(new pc.Vec3(0, 10, 0));
+    const enemy = new RangedEnemy(new pc.Vec3(0, 10, 0));
 
     // move player to spawn
     Player.players.forEach((player: Player) => {

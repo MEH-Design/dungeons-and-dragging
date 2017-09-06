@@ -331,6 +331,7 @@ declare module pc {
   class RigidBodyComponent extends pc.Component {
     linearVelocity: pc.Vec3;
     angularVelocity: pc.Vec3;
+    group: number;
     constructor(system: pc.RigidBodyComponentSystem, entity: pc.Entity);
     private createBody(): void;
     isActive(): Boolean;
@@ -534,6 +535,17 @@ declare module pc {
     height: number;
     maxAnisotropy: number;
   }
+  const BODYGROUP_STATIC: number;
+  const BODYGROUP_DYNAMIC: number;
+  const BODYGROUP_KINEMATIC: number;
+  const BODYGROUP_USER_1: number;
+  const BODYGROUP_USER_2: number;
+  const BODYGROUP_USER_3: number;
+  const BODYGROUP_USER_4: number;
+  const BODYGROUP_USER_5: number;
+  const BODYGROUP_USER_6: number;
+  const BODYGROUP_USER_7: number;
+  const BODYGROUP_USER_8: number;
   const ADDRESS_REPEAT: number;
   const ADDRESS_CLAMP_TO_EDGE: number;
   const ADDRESS_MIRRORED_REPEAT: number;

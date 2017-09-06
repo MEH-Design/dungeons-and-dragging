@@ -10,6 +10,7 @@
       "no-parameter-properties": false,
       "align": false,
       "function-name": false,
+      "no-bitwise": false,
       "insecure-random": {
         "severity": "warning"
       },

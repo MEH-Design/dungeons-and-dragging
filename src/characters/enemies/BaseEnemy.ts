@@ -4,14 +4,16 @@ import Player from 'characters/player/Player';
 
 export default abstract class BaseEnemy extends Character {
     private timeSinceLastAttack: number = 0;
-    constructor(position: pc.Vec3, attributes: {} = {}) {
+    constructor(position: pc.Vec3, range: number, attributes: {} = {}) {
         super(position, {
-          material: 'assets/materials/enemyred.json'
+          material: 'assets/materials/enemyred.json',
+          range: range
         });
         super.setAttributes({
-          speed: 500,
           attackSpeed: 1
         }, attributes);
+
+        this.entity.rigidbody.group = pc.BODYGROUP_USER_1;
         Player.players.forEach((player: Player) => {
           super.addTarget(player.entity);
         });
@@ -25,13 +27,14 @@ export default abstract class BaseEnemy extends Character {
               this.timeSinceLastAttack = 0;
             }
         } else {
-            this.moveToClosest(dt * this.attributes.speed);
+            this.moveToClosest(dt);
         }
     }
 
     public abstract attack(entity: pc.Entity): void;
+    public abstract handleClosest(diffToClosest: pc.Vec3, dt: number): void;
 
-    private moveToClosest(scale: number) {
+    private moveToClosest(dt: number) {
         const diffToTarget = this.targets.map((target) => {
             const result = app.systems.rigidbody.raycastFirst(this.entity.getPosition(), target.getPosition());
             if (result && result.entity.name === 'Character') {
@@ -41,9 +44,8 @@ export default abstract class BaseEnemy extends Character {
                 return targetPosition.sub(this.entity.getPosition());
             }
         }).filter(Boolean).sort((a, b) => Number(a.length() > b.length()))[0];
-        if (diffToTarget && !Number.isNaN(diffToTarget.clone().normalize().scale(scale).x)) {
-            // this.entity.rigidbody.linearVelocity = pc.Vec3.ZERO;
-            this.entity.rigidbody.applyForce(diffToTarget.normalize().scale(scale));
+        if (diffToTarget && !Number.isNaN(diffToTarget.clone().normalize().x)) {
+            this.handleClosest(diffToTarget, dt);
         }
     }
 }
