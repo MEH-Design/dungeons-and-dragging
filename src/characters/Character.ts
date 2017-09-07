@@ -37,6 +37,12 @@ export default abstract class Character extends GameObject {
     });
   }
 
+  public flashRed(strength: number) {
+      (<any>this.entity.model.material).emissiveUniform = new Float32Array([1, 0, 0]);
+      this.entity.model.material.update();
+      console.log(this.entity.model.material);
+  }
+
   public addTarget(target: pc.Entity) {
     this.targets.push(target);
   }

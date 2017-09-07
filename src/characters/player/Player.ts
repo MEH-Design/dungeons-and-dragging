@@ -25,6 +25,7 @@ export default class Player extends Character {
       health: 100
     }, attributes);
     Player.addPlayer(this);
+    super.flashRed(10);
 
     app.mouse.on(pc.EVENT_MOUSEUP, this.deselect, this);
     super.addTimedUpdate((dt) => {
@@ -117,7 +118,7 @@ export default class Player extends Character {
 
   public inflictDamage(damage: number) {
     this.attributes.health -= damage;
-    console.log(this.attributes.health);
+    super.flashRed(damage);
   }
 
   protected handleTargets() {

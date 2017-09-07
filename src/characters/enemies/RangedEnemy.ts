@@ -12,7 +12,7 @@ export default class RangedEnemy extends BaseEnemy {
   }
 
   public attack(target: pc.Entity) {
-    const projectile = new Projectile(this.entity.getPosition().clone(), target.getPosition().clone(), this.onHit);
+    const projectile = new Projectile(this.entity.getPosition().clone(), target.getPosition().clone(), this.onHit.bind(this));
   }
 
   public handleClosest(diffToClosest: pc.Vec3, dt: number) {
@@ -23,7 +23,7 @@ export default class RangedEnemy extends BaseEnemy {
     projectile.destroy();
     const player: Player = Player.getByEntity(contactResult.other);
     if (player) {
-      // player.inflictDamage(this.attributes.damage);
+      player.inflictDamage(this.attributes.damage);
     }
   }
 }
