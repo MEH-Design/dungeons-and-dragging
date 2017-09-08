@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --content-base docs/",
-    "lint": "jshint .",
-    "validate": "npm ls",
-    "build": "webpack"
+    "build": "webpack",
+    "lint": "tslint src/**/*.ts"
   },
   "author": "bminixhofer, cdminix",
   "license": "MIT",
@@ -19,7 +18,6 @@
     "eslint": "^4.5.0",
     "javascript-astar": "^0.4.1",
     "noisejs": "^2.1.0",
-    "pre-commit": "^1.2.2",
     "precommit-hook": "^3.0.0",
     "ts-loader": "^2.3.3",
     "tslint": "^5.7.0",
