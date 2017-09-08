@@ -1,3 +1,5 @@
+![build status](https://travis-ci.org/MEH-Design/dungeons-and-dragging.svg?branch=master)
+
 # Dungeons and Dragging
 
 This project is currently still in early development. 
