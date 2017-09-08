@@ -162,7 +162,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __webpack_require__(0);
 const Character_1 = __webpack_require__(3);
 class Player extends Character_1.default {
-    constructor(parent, position) {
+    constructor(parent, position, attributes = {}) {
         super(position);
         this.isSelected = false;
         this.boundaries = {
@@ -172,7 +172,11 @@ class Player extends Character_1.default {
             isSet: false,
             getHeight: (n) => 0
         };
+        super.setAttributes({
+            health: 100
+        }, attributes);
         Player.addPlayer(this);
+        super.flashRed(10);
         app_1.default.mouse.on(pc.EVENT_MOUSEUP, this.deselect, this);
         super.addTimedUpdate((dt) => {
             if (!this.isSelected) {
@@ -253,6 +257,10 @@ class Player extends Character_1.default {
             }
         }, 0);
     }
+    inflictDamage(damage) {
+        this.attributes.health -= damage;
+        super.flashRed(damage);
+    }
     handleTargets() {
         return;
     }
@@ -280,12 +288,20 @@ class GameObject {
     setAttributes(...attributes) {
         attributes.forEach(Object.assign.bind(this, this.attributes));
     }
+    clearInstance() {
+        this.timedUpdates = [];
+        GameObject.objects = GameObject.objects.filter((obj) => obj !== this);
+    }
     addTimedUpdate(callback, interval = 0.2) {
         this.timedUpdates.push({
             callback: callback.bind(this),
             interval,
-            counter: 0
+            counter: 0,
+            source: callback
         });
+    }
+    removeTimedUpdate(toRemove) {
+        this.timedUpdates = this.timedUpdates.filter((timedUpdate) => timedUpdate.source !== toRemove);
     }
     update(dt) {
         this.timedUpdates.forEach((tu) => {
@@ -338,6 +354,11 @@ class Character extends GameObject_1.default {
         app_1.default.getAsset(this.attributes.material, 'material').then((asset) => {
             this.entity.model.material = asset.resource;
         });
+    }
+    flashRed(strength) {
+        this.entity.model.material.emissiveUniform = new Float32Array([1, 0, 0]);
+        this.entity.model.material.update();
+        console.log(this.entity.model.material);
     }
     addTarget(target) {
         this.targets.push(target);
@@ -650,11 +671,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __webpack_require__(0);
-const MeleeEnemy_1 = __webpack_require__(7);
+const RangedEnemy_1 = __webpack_require__(7);
 const Player_1 = __webpack_require__(1);
 const GameObject_1 = __webpack_require__(2);
-const javascript_astar_1 = __webpack_require__(9);
-const noisejs_1 = __webpack_require__(10);
+const javascript_astar_1 = __webpack_require__(10);
+const noisejs_1 = __webpack_require__(11);
 const rand = (...arr) => {
     let args = arr;
     if (args.length === 0) {
@@ -885,7 +906,7 @@ class Terrain extends GameObject_1.default {
             rockTemplate.addComponent('model', {});
             rockTemplate.enabled = false;
             rockTemplate.model.material = new pc.PhongMaterial();
-            rockTemplate.model.asset = yield app_1.default.getAsset('assets/models/small_rock.json', 'model');
+            rockTemplate.model.asset = yield app_1.default.getAsset('assets/models/small_rock/small_rock.json', 'model');
             app_1.default.root.addChild(rockTemplate);
             for (let i = 0; i < rand(...this.attributes.stoneRange); i += 1) {
                 const rock = rockTemplate.clone();
@@ -931,7 +952,7 @@ class Level extends GameObject_1.default {
             size: this.attributes.size
         });
         this.topLeft = this.terrain.topLeft.clone().add(this.attributes.offset);
-        const enemy = new MeleeEnemy_1.default(new pc.Vec3(0, 10, 0));
+        const enemy = new RangedEnemy_1.default(new pc.Vec3(0, 10, 0));
         Player_1.default.players.forEach((player) => {
             const offset = 5;
             const spawnPos = rand2DVector(this.topLeft.clone().add(new pc.Vec2(offset, -offset)), this.topLeft.clone().add(new pc.Vec2(this.attributes.size.x - offset, -10)));
@@ -1015,16 +1036,31 @@ exports.Stage = Stage;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const BaseEnemy_1 = __webpack_require__(8);
-class MeleeEnemy extends BaseEnemy_1.default {
+const Player_1 = __webpack_require__(1);
+const Projectile_1 = __webpack_require__(9);
+class RangedEnemy extends BaseEnemy_1.default {
     constructor(position, attributes = {}) {
-        super(position);
-        super.setAttributes(attributes);
+        super(position, 20, {
+            speed: 100,
+            attackSpeed: 0.2,
+            damage: 15
+        });
     }
-    attack() {
-        return;
+    attack(target) {
+        const projectile = new Projectile_1.default(this.entity.getPosition().clone(), target.getPosition().clone(), this.onHit.bind(this));
+    }
+    handleClosest(diffToClosest, dt) {
+        this.entity.rigidbody.applyForce(diffToClosest.normalize().scale(-dt * this.attributes.speed));
+    }
+    onHit(projectile, contactResult) {
+        projectile.destroy();
+        const player = Player_1.default.getByEntity(contactResult.other);
+        if (player) {
+            player.inflictDamage(this.attributes.damage);
+        }
     }
 }
-exports.default = MeleeEnemy;
+exports.default = RangedEnemy;
 
 
 /***/ }),
@@ -1038,26 +1074,33 @@ const app_1 = __webpack_require__(0);
 const Character_1 = __webpack_require__(3);
 const Player_1 = __webpack_require__(1);
 class BaseEnemy extends Character_1.default {
-    constructor(position, attributes = {}) {
+    constructor(position, range, attributes = {}) {
         super(position, {
-            material: 'assets/materials/enemyred.json'
+            material: 'assets/materials/enemyred.json',
+            range: range
         });
+        this.timeSinceLastAttack = 0;
         super.setAttributes({
-            speed: 500
+            attackSpeed: 1
         }, attributes);
+        this.entity.rigidbody.group = pc.BODYGROUP_USER_1;
         Player_1.default.players.forEach((player) => {
             super.addTarget(player.entity);
         });
     }
     handleTargets(dt, targetsInRange, targetsOutOfRange) {
+        this.timeSinceLastAttack += dt;
         if (targetsInRange.length > 0) {
-            this.attack(targetsInRange[0]);
+            if (this.timeSinceLastAttack >= 1 / this.attributes.attackSpeed) {
+                this.attack(targetsInRange[0]);
+                this.timeSinceLastAttack = 0;
+            }
         }
         else {
-            this.moveToClosest(dt * this.attributes.speed);
+            this.moveToClosest(dt);
         }
     }
-    moveToClosest(scale) {
+    moveToClosest(dt) {
         const diffToTarget = this.targets.map((target) => {
             const result = app_1.default.systems.rigidbody.raycastFirst(this.entity.getPosition(), target.getPosition());
             if (result && result.entity.name === 'Character') {
@@ -1066,8 +1109,8 @@ class BaseEnemy extends Character_1.default {
                 return targetPosition.sub(this.entity.getPosition());
             }
         }).filter(Boolean).sort((a, b) => Number(a.length() > b.length()))[0];
-        if (diffToTarget && !Number.isNaN(diffToTarget.clone().normalize().scale(scale).x)) {
-            this.entity.rigidbody.applyForce(diffToTarget.normalize().scale(scale));
+        if (diffToTarget && !Number.isNaN(diffToTarget.clone().normalize().x)) {
+            this.handleClosest(diffToTarget, dt);
         }
     }
 }
@@ -1076,6 +1119,104 @@ exports.default = BaseEnemy;
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const app_1 = __webpack_require__(0);
+const GameObject_1 = __webpack_require__(2);
+class Projectile extends GameObject_1.default {
+    constructor(start, target, onHit, attributes = {}) {
+        super();
+        this.start = start;
+        this.target = target;
+        this.entity = new pc.Entity();
+        this.counter = 0;
+        this.willBeDestroyed = false;
+        super.setAttributes({
+            speed: 1,
+            size: 0.5,
+            shrinkSpeed: 1,
+            material: 'assets/materials/projectile.json'
+        }, attributes);
+        this.entity.setPosition(start);
+        this.entity.addComponent('model', {
+            type: 'box'
+        });
+        this.entity.addComponent('collision', {
+            type: 'box'
+        });
+        this.entity.addComponent('rigidbody', {
+            type: 'dynamic',
+            group: pc.BODYGROUP_USER_2,
+            mask: ~pc.BODYGROUP_USER_1
+        });
+        this.entity.setLocalScale(this.attributes.size, this.attributes.size, this.attributes.size);
+        this.entity.rigidbody.applyTorqueImpulse(1, 1, 1);
+        app_1.default.getAsset(this.attributes.material, 'material').then((asset) => {
+            this.entity.model.material = asset.resource;
+        });
+        setTimeout(() => {
+            this.entity.collision.on('collisionstart', (contactResult) => {
+                if (!this.willBeDestroyed) {
+                    super.removeTimedUpdate(this.moveTowardsTarget);
+                    onHit(this, contactResult);
+                }
+            }, this);
+        }, 300);
+        this.diff = this.start.clone().sub(this.target);
+        app_1.default.root.addChild(this.entity);
+        super.addTimedUpdate(this.moveTowardsTarget, 0);
+    }
+    destroy() {
+        if (this.willBeDestroyed) {
+            return;
+        }
+        this.willBeDestroyed = true;
+        let size = 1;
+        const shrinkEntity = (dt) => {
+            size = Math.max(size - dt * this.attributes.shrinkSpeed, 0);
+            const relativeSize = easeIn(size) * this.attributes.size;
+            this.entity.setLocalScale(relativeSize, relativeSize, relativeSize);
+            if (size === 0) {
+                this.entity.destroy();
+                super.clearInstance();
+            }
+        };
+        setTimeout(() => {
+            super.addTimedUpdate(shrinkEntity, 0);
+        }, 1000);
+    }
+    getPoint(n) {
+        const height = -(Math.pow((n * 2 - 1), 2)) + 1;
+        const distanceFromStart = this.diff.clone().scale(-n);
+        distanceFromStart.y += height * 10;
+        return this.start.clone().add(distanceFromStart);
+    }
+    moveTowardsTarget(dt) {
+        this.counter = this.counter + dt * this.attributes.speed;
+        const current = this.counter;
+        this.entity.rigidbody.linearVelocity = pc.Vec3.ZERO;
+        this.entity.rigidbody.teleport(this.getPoint(current));
+    }
+}
+exports.default = Projectile;
+function easeInOut(t) {
+    t /= 1 / 2;
+    if (t < 1) {
+        return 1 / 2 * Math.pow(t, 2);
+    }
+    t -= 1;
+    return -1 / 2 * (t * (t - 2) - 1);
+}
+function easeIn(t) {
+    return Math.pow(t, 3);
+}
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// javascript-astar 0.4.1
@@ -1491,7 +1632,7 @@ return {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
