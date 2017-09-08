@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --content-base docs/",
     "build": "webpack",
-    "lint": "tslint src/**/*.ts"
+    "lint": "tslint src/**/*.ts",
   },
   "author": "bminixhofer, cdminix",
   "license": "MIT",
@@ -36,6 +36,6 @@
   "homepage": "https://github.com/MEH-Design/dungeons-and-dragging#readme",
   "dependencies": {},
   "pre-commit": [
-    "lint", "webpack"
+    "lint", "build"
   ]
 }
